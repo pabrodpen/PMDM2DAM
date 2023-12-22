@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+   <RadioGroup
+       android:id="@+id/radioGroup"
+       android:layout_width="172dp"
+       android:layout_height="243dp"
+       android:layout_marginTop="12dp"
+       android:onClick="onCheckedChanged"
+       android:orientation="vertical"
+       app:layout_constraintBottom_toBottomOf="parent"
+       app:layout_constraintEnd_toEndOf="parent"
+       app:layout_constraintHorizontal_bias="0.497"
+       app:layout_constraintStart_toStartOf="parent"
+       app:layout_constraintTop_toBottomOf="@+id/textView"
+       app:layout_constraintVertical_bias="0.0">
+
+
+      <RadioButton
+          android:id="@+id/radioButton1"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="32dp"
+          android:checked="true"
+          android:text="Albacete"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintHorizontal_bias="0.252"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/textView"
+          app:layout_constraintVertical_bias="0.0" />
+
+      <RadioButton
+          android:id="@+id/radioButton2"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:checked="false"
+          android:text="Talavera"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintHorizontal_bias="0.252"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/radioButton1"
+          app:layout_constraintVertical_bias="0.0" />
+
+      <RadioButton
+          android:id="@+id/radioButton3"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:checked="false"
+          android:text="Alcazar"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintHorizontal_bias="0.252"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/radioButton2"
+          app:layout_constraintVertical_bias="0.0" />
+
+      <RadioButton
+          android:id="@+id/radioButton4"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:checked="false"
+          android:text="Otros"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintHorizontal_bias="0.252"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/radioButton3"
+          app:layout_constraintVertical_bias="0.0" />
+
+   </RadioGroup>
+
+
+   <TextView
+       android:id="@+id/textView"
+       android:layout_width="200dp"
+       android:layout_height="48dp"
+       android:text="¿Cuál es tu equipo favorito?"
+       android:textSize="20sp"
+       app:layout_constraintBottom_toBottomOf="parent"
+       app:layout_constraintEnd_toEndOf="parent"
+       app:layout_constraintHorizontal_bias="0.431"
+       app:layout_constraintStart_toStartOf="parent"
+       app:layout_constraintTop_toTopOf="parent"
+       app:layout_constraintVertical_bias="0.039" />
+
+   <TextView
+       android:id="@+id/textView2"
+       android:layout_width="100dp"
+       android:layout_height="30dp"
+       android:layout_marginTop="51dp"
+       android:text=""
+       app:layout_constraintBottom_toBottomOf="parent"
+       app:layout_constraintEnd_toStartOf="@+id/checkBox"
+       app:layout_constraintStart_toStartOf="parent"
+       app:layout_constraintTop_toBottomOf="@+id/radioGroup"
+       app:layout_constraintVertical_bias="0.0" />
+
+   <CheckBox
+       android:id="@+id/checkBox"
+       android:layout_width="100dp"
+       android:layout_height="30dp"
+       android:layout_marginTop="37dp"
+       android:text="CheckBox"
+       app:layout_constraintBottom_toBottomOf="parent"
+       app:layout_constraintEnd_toEndOf="parent"
+       app:layout_constraintHorizontal_bias="0.836"
+       app:layout_constraintStart_toStartOf="parent"
+       app:layout_constraintTop_toBottomOf="@+id/radioGroup"
+       app:layout_constraintVertical_bias="0.013" />
+
+   <ImageView
+       android:id="@+id/imageView"
+       android:layout_width="79dp"
+       android:layout_height="71dp"
+       android:layout_marginBottom="100dp"
+       android:src="@drawable/walter"
+       app:layout_constraintBottom_toBottomOf="parent"
+       app:layout_constraintEnd_toEndOf="parent"
+       app:layout_constraintStart_toStartOf="parent" />
+
+   <ImageButton
+       android:id="@+id/imageButton"
+       android:layout_width="83dp"
+       android:layout_height="54dp"
+       android:layout_marginStart="36dp"
+       android:layout_marginTop="58dp"
+       android:layout_marginBottom="52dp"
+       android:src="@drawable/tfno"
+       app:layout_constraintBottom_toTopOf="@+id/imageView"
+       app:layout_constraintEnd_toEndOf="parent"
+       app:layout_constraintHorizontal_bias="0.076"
+       app:layout_constraintStart_toEndOf="@+id/textView3"
+       app:layout_constraintTop_toBottomOf="@+id/checkBox" />
+
+   <TextView
+       android:id="@+id/textView3"
+       android:layout_width="70dp"
+       android:layout_height="wrap_content"
+       android:layout_marginTop="48dp"
+       android:layout_marginBottom="52dp"
+       android:text="Pulsa para llamar a Walter"
+       app:layout_constraintBottom_toTopOf="@+id/imageView"
+       app:layout_constraintEnd_toEndOf="parent"
+       app:layout_constraintHorizontal_bias="0.348"
+       app:layout_constraintStart_toStartOf="parent"
+       app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

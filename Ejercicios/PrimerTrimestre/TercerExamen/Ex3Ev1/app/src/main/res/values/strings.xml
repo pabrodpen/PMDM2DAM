@@ -1,0 +1,55 @@
+<resources>
+    <string name="app_name">PabloRodriguexEx</string>
+
+        <string-array name="product_details">
+            <item> Características de una computadora portátil.
+            Una computadora portátil funciona con una batería recargable,contiene
+                una pantalla LED o LCD, teclado, panel táctil o touchpad,
+                una unidad de estado sólido o disco duro, puertos como USB o
+                HDMI, cámara, etc. y puede tener diferentes sistemas operativos
+                como MacOS, Linux, Windows y Chrome OS.
+            </item>
+            <item> Un altavoz (también conocido como parlante, altoparlante,
+                bocina o corneta, mayormente en América del Sur) es un
+                transductor electroacústico, esto es, un dispositivo que
+                una señal eléctrica de audio en ondas mecánicas de sonido
+                .​ Un sistema de altavoz, generalmente referido
+                simplemente como altavoz, incluye uno o más transductores,
+                un bafle, conexiones eléctricas, y posiblemente incluya
+                un filtro de cruce.
+            </item>
+            <item> Características de un ratón de ordenador.
+                Además de mover un cursor, el mouse tiene uno o más botones para
+                permitir operaciones como la selección de un elemento
+                de menú en una pantalla. El mouse también suele contar
+                con otros elementos, como superficies táctiles y ruedas
+                de desplazamiento, que permiten un control adicional y
+                entrada dimensional.
+            </item>
+            <item> ¿Cuál es la función del mouse pad?.
+                La alfombrilla de ratón, alfombrilla posa ratón, almohadilla de ratón
+                o mousepad es la superficie sobre la que se apoya y se
+                desliza el ratón o mouse de la computadora, de manera
+                análoga al movimiento del puntero en la pantalla.
+            </item>
+            <item> Características de los micrófonos.
+            Las características principales que debemos valorar a la
+                hora de decantarnos por un micrófono u otro son las siguientes:
+            El nivel de presión acústica máxima.
+            Nivel de ruido propio.
+            Relación señal a ruido.
+            Sensibilidad.
+            Impedancia.
+            Límite de saturación.
+            </item>
+            <item> El Bus Universal en Serie (BUS) (en inglés:
+                Universal Serial Bus), más conocido por la sigla USB,
+                es un bus de comunicaciones que sigue un estándar que
+                define los cables, conectores y protocolos usados en un
+                bus para conectar, comunicar y proveer de alimentación
+                eléctrica entre computadoras, periféricos y dispositivos
+                electrónicos.
+            </item>
+        </string-array>
+
+</resources>

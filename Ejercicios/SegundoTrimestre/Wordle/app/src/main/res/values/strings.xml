@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Wordle</string>
+    <string-array name="palabrasAleatorias">
+        <item>RATON</item>
+        <item>GAFAS</item>
+        <item>GORRO</item>
+        <item>LAPIZ</item>
+    </string-array>
+</resources>
