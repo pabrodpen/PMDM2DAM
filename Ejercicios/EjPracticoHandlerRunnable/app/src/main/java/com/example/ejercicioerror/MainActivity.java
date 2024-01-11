@@ -31,8 +31,6 @@ public class MainActivity extends AppCompatActivity {
         mImageView.setImageResource(R.drawable.img1);
         t = findViewById(R.id.textView2);
 
-        // Funcionalidad 1: Actualizaciones en el Hilo Principal
-        //showToastFromHandler("Hola desde un Handler");
 
         // POSTDELAYED-->QUITAMOS LA IMG A LOS 5 SEG
         //updateImageDelayed();
@@ -40,15 +38,9 @@ public class MainActivity extends AppCompatActivity {
         // POSTDELAYED-->CAMBIAMOS DE ACTIVIDAD
         //switchActivityDelayed();
 
-        // Handler asociado al hilo principal
-        // Enviamos un mensaje desde el hilo principal
-        //sendMessageFromHandler("Enviando un mensaje desde un Handler");
 
-        // Si quisieramos enviar un mensaje desde un hilo secundario:
-        // Nos ponemos en el caso de que hay una tarea que dura 7 segundos,
-        // por lo que para hacer otra tarea distinta la programamos en el hilo
-        // secundario, por lo que a los 7 seg saldra el toast
-        //simulateTaskAndSendMessage();
+
+
     }
 
     private void setupToolbar() {
@@ -63,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         new Handler().post(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), "Hola desde un Handler", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -85,7 +77,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void sendMessageFromHandler(String message) {
-        Handler messageHandler = new Handler() {
+        // Enviamos un mensaje desde el hilo principal
+        Handler messageHandler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
                 Bundle data = msg.getData();
@@ -101,33 +94,45 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void simulateTaskAndSendMessage() {
+        // Si quisieramos enviar un mensaje desde un hilo secundario:
+        // Nos ponemos en el caso de que hay una tarea que dura 7 segundos,
+        // por lo que para hacer otra tarea distinta la programamos en el hilo
+        // secundario, por lo que a los 7 seg saldra el toast
         new Thread(new Runnable() {
             @Override
             public void run() {
                 // Simular una tarea
                 try {
-                    Thread.sleep(20000);
+                    Thread.sleep(5000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
 
                 // Enviar un mensaje al hilo principal
-                new Handler(getMainLooper()).post(new Runnable() {
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
-                        Message msg = new Message();
-                        Bundle datos=new Bundle();
-                        datos.putString("palabra","Enviando un mensaje desde un Handler");
+                        Message msg = Message.obtain();
+                        Bundle data = new Bundle();
+                        data.putString("palabra", "Enviando un mensaje desde un Handler");
+                        msg.setData(data);
 
-                        msg.setData(datos);
+                        // Mover la lógica del Toast al handleMessage del Handler
+                        Handler messageHandler = new Handler(Looper.getMainLooper()) {
+                            @Override
+                            public void handleMessage(Message msg) {
+                                Bundle bundle = msg.getData();
+                                showToastFromHandler(bundle.getString("palabra"));
+                            }
+                        };
+
                         messageHandler.sendMessage(msg);
-
                     }
                 });
-
             }
         }).start();
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -139,8 +144,11 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_change) {
+        if (id == R.id.action_send) {
             performBackgroundTask();
+            return true;
+        }else if(id==R.id.action_config){
+            simulateTaskAndSendMessage();
             return true;
         }
 
@@ -148,6 +156,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void performBackgroundTask() {
+        // Funcionalidad 1: Actualizaciones en el Hilo Principal
         new Thread(new Runnable() {
             Handler handler = new Handler(Looper.getMainLooper());
             @Override
