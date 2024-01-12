@@ -31,16 +31,6 @@ public class MainActivity extends AppCompatActivity {
         mImageView.setImageResource(R.drawable.img1);
         t = findViewById(R.id.textView2);
 
-
-        // POSTDELAYED-->QUITAMOS LA IMG A LOS 5 SEG
-        //updateImageDelayed();
-
-        // POSTDELAYED-->CAMBIAMOS DE ACTIVIDAD
-        //switchActivityDelayed();
-
-
-
-
     }
 
     private void setupToolbar() {
@@ -51,16 +41,17 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setBackgroundColor(color);
     }
 
-    private void showToastFromHandler(String message) {
+    /*private void showToastFromHandler(String message) {
         new Handler().post(new Runnable() {
             @Override
             public void run() {
                 Toast.makeText(getBaseContext(), "Hola desde un Handler", Toast.LENGTH_SHORT).show();
             }
         });
-    }
+    }*/
 
-    private void updateImageDelayed() {
+    private void sustituirImg() {
+        // POSTDELAYED-->QUITAMOS LA IMG A LOS 5 SEG
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -69,14 +60,20 @@ public class MainActivity extends AppCompatActivity {
         },5000);
     }
 
-    private void switchActivityDelayed() {
-        new Handler().postDelayed(() -> {
-            Intent intent = new Intent(getBaseContext(), Main2.class);
-            startActivity(intent);
-        }, 10000);
+    private void cambiarAct() {
+        // POSTDELAYED-->CAMBIAMOS DE ACTIVIDAD
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(getBaseContext(), Main2.class);
+                startActivity(intent);
+            }
+        },3000);
+
     }
 
-    private void sendMessageFromHandler(String message) {
+
+    private void mnsjHandler(String message) {
         // Enviamos un mensaje desde el hilo principal
         Handler messageHandler = new Handler(Looper.getMainLooper()) {
             @Override
@@ -93,7 +90,65 @@ public class MainActivity extends AppCompatActivity {
         messageHandler.sendMessage(msg);
     }
 
-    private void simulateTaskAndSendMessage() {
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.nav_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_send) {
+            mnsjHandler("Hola desde un Handler");
+            return true;
+        }else if(id==R.id.action_UI){
+            cambiarTextView();
+            return true;
+        }else if(id==R.id.action_image){
+            sustituirImg();
+            return true;
+        }else if(id==R.id.action_activity){
+            cambiarAct();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void cambiarTextView() {
+        // Funcionalidad 1: Actualizaciones en el Hilo Principal
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // Tarea secundaria
+
+
+                // Intenta actualizar la interfaz de usuario directamente desde el hilo secundario
+                // Esto provocará un error
+                //t.setText("Tarea completada en hilo secundario");
+
+                // Utiliza Handler y Runnable para actualizar la interfaz
+                // de usuario desde el hilo principal
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        t.setText("TAREA COMPLETADA EN EL HILO PRINCIPAL");
+                    }
+                });
+            }
+        }).start();
+    }
+
+
+
+
+
+
+     /*private void mnsjHandlerHiloSecundario() {
         // Si quisieramos enviar un mensaje desde un hilo secundario:
         // Nos ponemos en el caso de que hay una tarea que dura 7 segundos,
         // por lo que para hacer otra tarea distinta la programamos en el hilo
@@ -131,51 +186,5 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         }).start();
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.nav_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_send) {
-            performBackgroundTask();
-            return true;
-        }else if(id==R.id.action_config){
-            simulateTaskAndSendMessage();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void performBackgroundTask() {
-        // Funcionalidad 1: Actualizaciones en el Hilo Principal
-        new Thread(new Runnable() {
-            Handler handler = new Handler(Looper.getMainLooper());
-            @Override
-            public void run() {
-                // Tarea secundaria
-
-
-                // Intenta actualizar la interfaz de usuario directamente desde el hilo secundario
-                // Esto provocará un error
-                //t.setText("Tarea completada en hilo secundario");
-
-                // Utiliza Handler y Runnable para actualizar la interfaz de usuario desde el hilo principal
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        t.setText("TAREA COMPLETADA EN EL HILO PRINCIPAL");
-                    }
-                });
-            }
-        }).start();
-    }
+    }*/
 }
