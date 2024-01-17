@@ -32,6 +32,30 @@
             }
           },
           {
+            "id": "618fe354065b66c3",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "SHAREDPREFERENCES.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "39624d244dde210b",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "PREFERENCEACTIVITY.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
             "id": "dff6f710ee4cb810",
             "type": "leaf",
             "state": {
@@ -56,7 +80,7 @@
             }
           }
         ],
-        "currentTab": 1
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -122,7 +146,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "ListView.md",
+                "file": "PREFERENCEACTIVITY.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -139,7 +163,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "ListView.md",
+                "file": "PREFERENCEACTIVITY.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -162,7 +186,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "ListView.md"
+                "file": "PREFERENCEACTIVITY.md"
               }
             }
           }
@@ -185,17 +209,26 @@
       "markdown-importer:Abrir el importador de Markdown": false
     }
   },
-  "active": "99977cd1d41906b6",
+  "active": "39624d244dde210b",
   "lastOpenFiles": [
+    "Main2.png",
+    "Main1.png",
+    "cap5.png",
+    "cap4.png",
+    "cap3 1.png",
+    "cap2.png",
+    "cap1.png",
+    "Settings.png",
+    "Main 1.png",
+    "SHAREDPREFERENCES.md",
+    "PREFERENCEACTIVITY.md",
+    "Captura2 1.png",
+    "caaaap.png",
+    "ListView.md",
     "ActionBar.md",
     "Spinner 987e5116cc3e481b9d512e0f414024e4.md",
-    "ListView.md",
     "List.md",
     "Navigation Drawer ec3b5952e7d6482e84c8d7fbbad7c759/Navigation Drawer ec3b5952e7d6482e84c8d7fbbad7c759.md",
-    "cap3.png",
-    "Captura2.png",
-    "Captura 1.png",
-    "Captura.png",
     "DialogFragment.md",
     "Elementos Gráficos 6f0b274b2c6f4f279e082b0ee40da881.md",
     "Intent Implícitos 0812376ad63f49adbefd8ef4c4107e9f.md",
@@ -203,15 +236,9 @@
     "TOAST y SNACKBAR b4ad63b70abd43d9ad828b40550de215.md",
     "Intent Explicitos 2b7ad1ceea85456e80587d905971f1a5/Intent Explicitos 2b7ad1ceea85456e80587d905971f1a5.md",
     "PLANTILLA.md",
-    "Comunicación entre fragments/Captura.png",
     "Comunicación entre fragments f99b987cf9ff4673862584a438ee5435/Captura.png.md",
     "Comunicación entre fragments/Comunicación entre fragments f99b987cf9ff4673862584a438ee5435.md",
-    "Vista horizontal sin fragments/vis6.png",
-    "Vista horizontal sin fragments/vis5.png",
-    "Vista horizontal sin fragments/vis4.png",
-    "Vista horizontal sin fragments/vis3.png",
     "Vista horizontal sin fragments/Vista horizontal sin fragments b1aae70e0054428a8ee22bea3c947af2.md",
-    "Vista horizontal sin fragments/vis2.png",
     "Fragments Dinámicos/Fragments Dinámicos 8590280de90047e19b8bfba4a2938630.md",
     "Fragments Dinámicos/Peek_2023-11-20_09-20.mp4",
     "Fragments Dinámicos 8590280de90047e19b8bfba4a2938630/Peek_2023-11-20_09-20.mp4.md",

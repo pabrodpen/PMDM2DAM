@@ -22,6 +22,7 @@
             android:summary="Habilitar el tema oscuro"
             android:defaultValue="false"
             />
+
     </PreferenceCategory>
 
     <PreferenceScreen
