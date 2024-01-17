@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">PreferencesActivityEj2</string>
+    <string-array name="pais">
+        <item>España</item>
+        <item>Francia</item>
+        <item>Alemania</item>
+    </string-array>
+    <string-array name="codigopais">
+        <item>ESP</item>
+        <item>FRA</item>
+        <item>ALE</item>
+    </string-array>
+</resources>
