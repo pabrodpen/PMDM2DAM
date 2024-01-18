@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        int color = ContextCompat.getColor(this, R.color.blue);
+        int color = ContextCompat.getColor(this, R.color.colorToolbar);
         toolbar.setBackgroundColor(color);
     }
 }
