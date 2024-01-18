@@ -49,7 +49,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "PREFERENCEACTIVITY.md",
+                "file": "ActionBar.md",
                 "mode": "source",
                 "source": false
               }
@@ -146,7 +146,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "PREFERENCEACTIVITY.md",
+                "file": "ActionBar.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -163,7 +163,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "PREFERENCEACTIVITY.md",
+                "file": "ActionBar.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -186,7 +186,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "PREFERENCEACTIVITY.md"
+                "file": "ActionBar.md"
               }
             }
           }
@@ -199,18 +199,20 @@
   },
   "left-ribbon": {
     "hiddenItems": {
-      "switcher:Abrir selector rápido": false,
-      "graph:Abrir vista gráfica": false,
-      "canvas:Crear nuevo canvas": false,
-      "daily-notes:Abrir la nota de hoy": false,
-      "templates:Insertar plantilla": false,
-      "command-palette:Abrir paleta de comandos": false,
-      "audio-recorder:Empezar/Parar de grabar": false,
-      "markdown-importer:Abrir el importador de Markdown": false
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "markdown-importer:Open format converter": false,
+      "audio-recorder:Start/stop recording": false
     }
   },
   "active": "39624d244dde210b",
   "lastOpenFiles": [
+    "ListView.md",
+    "PREFERENCEACTIVITY.md",
     "Main2.png",
     "Main1.png",
     "cap5.png",
@@ -221,10 +223,7 @@
     "Settings.png",
     "Main 1.png",
     "SHAREDPREFERENCES.md",
-    "PREFERENCEACTIVITY.md",
     "Captura2 1.png",
-    "caaaap.png",
-    "ListView.md",
     "ActionBar.md",
     "Spinner 987e5116cc3e481b9d512e0f414024e4.md",
     "List.md",
