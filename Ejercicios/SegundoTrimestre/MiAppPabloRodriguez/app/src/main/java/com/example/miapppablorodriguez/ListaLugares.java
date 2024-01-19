@@ -28,7 +28,7 @@ public class ListaLugares extends Fragment {
         View view = inflater.inflate(R.layout.lista_lugares, container, false);
 
         // Inicializar la lista de lugares y el adaptador
-        lugares = obtenerListaDeLugares();  // Implementa este método para obtener tus lugares
+        //lugares = obtenerListaDeLugares();
         adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, lugares);
 
         // Configurar el ListView
@@ -38,15 +38,8 @@ public class ListaLugares extends Fragment {
         return view;
     }
 
-    // Método para obtener la lista de lugares (debes implementarlo según tus necesidades)
-    private ArrayList<Lugar> obtenerListaDeLugares() {
-        // Implementa este método para obtener y devolver tu lista de lugares
-        // Puedes cargar datos de un origen de datos, base de datos, etc.
-        // Aquí solo se proporciona un ejemplo básico
-        ArrayList<Lugar> lugares = new ArrayList<>();
-        //lugares.add(new Lugar("Nombre1", "Dirección1", /* otros atributos */));
-        //lugares.add(new Lugar("Nombre2", "Dirección2", /* otros atributos */));
-        // Agrega más lugares según sea necesario
-        return lugares;
-    }
+    // Método para obtener la lista de lugares
+    //private ArrayList<Lugar> obtenerListaDeLugares() {
+
+    //}
 }

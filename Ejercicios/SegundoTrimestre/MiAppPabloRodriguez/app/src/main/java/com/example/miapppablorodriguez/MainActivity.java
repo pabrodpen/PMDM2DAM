@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         int color = ContextCompat.getColor(this, R.color.colorToolbar);
         toolbar.setBackgroundColor(color);
 
-        // Infla el menú del Toolbar
+        // Inflar el menú del Toolbar
         toolbar.inflateMenu(R.menu.menu_main);
     }
 

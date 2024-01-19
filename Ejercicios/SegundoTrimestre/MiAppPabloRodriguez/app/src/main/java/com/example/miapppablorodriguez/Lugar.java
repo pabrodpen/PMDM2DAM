@@ -1,12 +1,12 @@
 package com.example.miapppablorodriguez;
 
 import android.media.Image;
+import android.widget.ImageView;
 
 public class Lugar {
-    String nombre,direccion,url,comentario,valoracion;
+    String nombre,direccion,url,comentario,fotoId,valoracionId;
     GeoPunto longitud,latitud;
     TipoLugar tipo;
-    Image foto;
 
     public String getNombre() {
         return nombre;
@@ -40,12 +40,12 @@ public class Lugar {
         this.comentario = comentario;
     }
 
-    public String getValoracion() {
-        return valoracion;
+    public String getValoracionId() {
+        return valoracionId;
     }
 
-    public void setValoracion(String valoracion) {
-        this.valoracion = valoracion;
+    public void setValoracion(String valoracionId) {
+        this.valoracionId = valoracionId;
     }
 
     public GeoPunto getLongitud() {
@@ -72,25 +72,23 @@ public class Lugar {
         this.tipo = tipo;
     }
 
-    public Image getFoto() {
-        return foto;
+    public String getFotoId() {
+        return fotoId;
     }
 
-    public void setFoto(Image foto) {
-        this.foto = foto;
-    }
+    public void setFotoId(String fotoId) {this.fotoId = fotoId;}
 
-    public Lugar(String nombre, String direccion, String url, String comentario, String valoracion,
-                 GeoPunto longitud, GeoPunto latitud, TipoLugar tipo, Image foto) {
+    public Lugar(String nombre, String direccion, String url, String comentario, String valoracionId,
+                 GeoPunto longitud, GeoPunto latitud, TipoLugar tipo, String fotoId) {
         this.nombre = nombre;
         this.direccion = direccion;
         this.url = url;
         this.comentario = comentario;
-        this.valoracion = valoracion;
+        this.valoracionId = valoracionId;
         this.longitud = longitud;
         this.latitud = latitud;
         this.tipo = tipo;
-        this.foto = foto;
+        this.fotoId = fotoId;
     }
 
 

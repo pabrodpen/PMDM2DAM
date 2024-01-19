@@ -1,10 +1,13 @@
 package com.example.miapppablorodriguez;
 
 import android.content.Context;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,6 +32,17 @@ public class AdaptadorLugar extends ArrayAdapter<Lugar> {
         }
         Lugar lugar=getItem(position);
 
+
+        ImageView imagen = itemView.findViewById(R.id.image);
+        TextView nombre = itemView.findViewById(R.id.textViewNombre);
+        TextView direccion = itemView.findViewById(R.id.textViewDireccion);
+
+        if (lugar != null) {
+            imagen.setImageResource(lugar.getFotoId());
+            nombre.setText(lugar.getNombre());
+            direccion.setText(String.valueOf(elemento.getPrecio()));
+        }
+//nombre,direcc,valoracion,img
         return itemView;
     }
 

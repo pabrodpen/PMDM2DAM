@@ -1,7 +1,9 @@
 package com.example.miapppablorodriguez;
 
+import java.util.ArrayList;
+
 public interface RepositorioLugares {
-    public void agregarLugar();
-    public void eliminarLugar();
-    public void actLugar();
+    public ArrayList<Lugar> agregarLugar();
+    public ArrayList<Lugar> eliminarLugar();
+    public ArrayList<Lugar> actLugar();
 }
