@@ -80,6 +80,18 @@
             }
           },
           {
+            "id": "1eae194573b3ae1b",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "AUDIO Y VÍDEO.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
             "id": "dff6f710ee4cb810",
             "type": "leaf",
             "state": {
@@ -104,7 +116,7 @@
             }
           }
         ],
-        "currentTab": 5
+        "currentTab": 6
       }
     ],
     "direction": "vertical"
@@ -170,7 +182,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "GEOLOCALIZACIÓN.md",
+                "file": "AUDIO Y VÍDEO.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -187,7 +199,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "GEOLOCALIZACIÓN.md",
+                "file": "AUDIO Y VÍDEO.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -210,7 +222,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "GEOLOCALIZACIÓN.md"
+                "file": "AUDIO Y VÍDEO.md"
               }
             }
           }
@@ -233,24 +245,26 @@
       "audio-recorder:Empezar/Parar de grabar": false
     }
   },
-  "active": "7795719405c98ad3",
+  "active": "1eae194573b3ae1b",
   "lastOpenFiles": [
-    "DIÁLOGOS.md",
+    "cap3 2.png",
+    "cap2 2.png",
+    "cap 1.png",
+    "Capturahhgj.png",
+    "cap2 1.png",
+    "AUDIO Y VÍDEO.md",
+    "java3.png",
+    "java2.png",
+    "Captura 3.png",
+    "cap.png",
     "GEOLOCALIZACIÓN.md",
+    "DIÁLOGOS.md",
     "ListView.md",
     "ActionBar.md",
     "PREFERENCEACTIVITY.md",
     "Main2.png",
     "Main1.png",
-    "cap5.png",
-    "cap4.png",
-    "cap3 1.png",
-    "cap2.png",
-    "cap1.png",
-    "Settings.png",
-    "Main 1.png",
     "SHAREDPREFERENCES.md",
-    "Captura2 1.png",
     "Spinner 987e5116cc3e481b9d512e0f414024e4.md",
     "List.md",
     "Navigation Drawer ec3b5952e7d6482e84c8d7fbbad7c759/Navigation Drawer ec3b5952e7d6482e84c8d7fbbad7c759.md",

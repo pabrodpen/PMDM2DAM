@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class MainActivity extends AppCompatActivity {
 
     private MediaPlayer mediaPlayer;
-    private Button btnPlay;
+    private Button btnPlay, btnPause, btnStop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,23 +18,53 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         btnPlay = findViewById(R.id.btnPlay);
+        btnPause = findViewById(R.id.btnPause);
+        btnStop = findViewById(R.id.btnStop);
 
         // Configurar el MediaPlayer con el sonido
         mediaPlayer = MediaPlayer.create(this, R.raw.sound);
 
-        // Configurar el clic del botón
+        // Configurar clics de botones
         btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 playSound();
             }
         });
+
+        btnPause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pauseSound();
+            }
+        });
+
+        btnStop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stopSound();
+            }
+        });
     }
 
     private void playSound() {
-        if (mediaPlayer != null) {
-            // Iniciar la reproducción del sonido
+        if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
             mediaPlayer.start();
+        }
+    }
+
+    private void pauseSound() {
+        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+            mediaPlayer.pause();
+        }
+    }
+
+    private void stopSound() {
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            // Es importante resetear el MediaPlayer después de detenerlo
+            mediaPlayer.reset();
+            mediaPlayer = MediaPlayer.create(this, R.raw.sound);
         }
     }
 
