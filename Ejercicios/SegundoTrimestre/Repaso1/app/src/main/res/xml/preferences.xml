@@ -1,0 +1,35 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="Configuración General">
+
+        <EditTextPreference
+            android:key="key_user_name"
+            android:title="Nombre de Usuario"
+            android:summary="Introduce tu nombre de usuario"
+            android:inputType="text"
+            android:defaultValue="usuario"
+            />
+        <CheckBoxPreference
+            android:key="key_oscuro"
+            android:title="Habilitar Función"
+            android:summary="Habilitar o deshabilitar esta función"
+            android:defaultValue="false"
+
+
+    </PreferenceCategory>
+
+    <PreferenceScreen
+        android:key="pref_key_back_to_main"
+        android:title="Volver a la pantalla principal"
+        android:icon="@drawable/ic_launcher_background"
+        android:summary="Haz clic para volver a la pantalla principal">
+
+        <intent
+            android:action="android.intent.action.MAIN"
+            android:targetPackage="com.example.repaso1"
+            android:targetClass="com.example.repaso1.MainActivity"
+            />
+    </PreferenceScreen>
+
+</PreferenceScreen>

@@ -25,7 +25,7 @@
     <!-- Include your main content -->
 
     <include
-        android:id="@+id/include"
+        android:id="@+id/container"
         layout="@layout/content_main"
         android:layout_width="418dp"
         android:layout_height="491dp"

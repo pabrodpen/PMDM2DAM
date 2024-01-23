@@ -52,6 +52,80 @@ Por último configuramos el MediaController para que se adelante o retroceda 5 s
 ~~~
 
 
+EJERCICIO ENTERO
+~~~
+public class MainActivity extends AppCompatActivity {
+
+    private VideoView videoView;
+    private MediaController mediaController;
+    private TextView textView;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // Obtener la referencia del VideoView desde el diseño
+        videoView = findViewById(R.id.videoView);
+
+        String videoPath = "android.resource://" + getPackageName() + "/" + R.raw.sample;
+        Uri uri = Uri.parse(videoPath);
+
+        // Configurar MediaController para agregar controles de reproducción
+        mediaController = new MediaController(this);
+        mediaController.setAnchorView(videoView);
+        videoView.setMediaController(mediaController);
+
+        // Establecer la URI del video al VideoView
+        videoView.setVideoURI(uri);
+
+        // Iniciar la reproducción del video
+        videoView.start();
+
+        // Botones flotantes y TextView
+        FloatingActionButton fabControles = findViewById(R.id.fabControles);
+        fabControles.setOnClickListener(v -> {
+            mediaController.show(5000);
+        });
+
+        FloatingActionButton fabEsconder = findViewById(R.id.fabEsconder);
+        fabEsconder.setOnClickListener(v -> {
+            mediaController.hide();
+        });
+
+        FloatingActionButton fabDetener = findViewById(R.id.fabDetener);
+        fabDetener.setOnClickListener(v -> {
+            videoView.stopPlayback();
+        });
+
+        FloatingActionButton fabIrA = findViewById(R.id.fabIrA);
+
+
+        fabIrA.setOnClickListener(v -> {
+            videoView.seekTo(15000);
+        });
+
+        FloatingActionButton fabReiniciar = findViewById(R.id.fabReiniciar);
+        fabReiniciar.setOnClickListener(v -> {
+            videoView.resume();
+        });
+
+        // Configurar listeners para avanzar y retroceder
+        mediaController.setPrevNextListeners(
+                v -> {
+                    // Lógica para avanzar
+                    videoView.seekTo(videoView.getCurrentPosition() + 5000);
+                    Toast.makeText(this, "Avanzado 5 segundos", Toast.LENGTH_SHORT).show();
+                },
+                v -> {
+                    // Lógica para retroceder
+                    videoView.seekTo(videoView.getCurrentPosition() - 5000);
+                    Toast.makeText(this, "Retrocedido 5 segundos", Toast.LENGTH_SHORT).show();
+                });
+    }
+~~~
+
+
 ### GRABACIÓN AUDIO
 
 **Usamos las clases MediaRecorder y MediaPlayer**
@@ -229,6 +303,175 @@ public void onStop() {
 ~~~
 
 
+CODIGO ENTERO
+public class MainActivity extends AppCompatActivity {
+
+    private static final String LOG_TAG = "AudioRecordTest";
+    private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
+    private static String fileName = null;
+
+    private RecordButton recordButton = null;
+    private MediaRecorder recorder = null;
+
+    private PlayButton   playButton = null;
+    private MediaPlayer   player = null;
+
+    // Requesting permission to RECORD_AUDIO
+    private boolean permissionToRecordAccepted = false;
+    private String [] permissions = {Manifest.permission.RECORD_AUDIO};
+    private int bufferSize;
+
+    public MainActivity() throws IOException {
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode){
+            case REQUEST_RECORD_AUDIO_PERMISSION:
+                permissionToRecordAccepted  = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                break;
+        }
+        if (!permissionToRecordAccepted ) finish();
+
+    }
+
+    private void onRecord(boolean start) {
+        if (start) {
+            startRecording();
+        } else {
+            stopRecording();
+        }
+    }
+
+    private void onPlay(boolean start) {
+        if (start) {
+            startPlaying();
+        } else {
+            stopPlaying();
+        }
+    }
+
+    private void startPlaying() {
+        player = new MediaPlayer();
+        try {
+            player.setDataSource(fileName);
+            player.prepare();
+            player.start();
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "prepare() failed");
+        }
+    }
+
+    private void stopPlaying() {
+        player.release();
+        player = null;
+    }
+
+    private void startRecording() {
+        recorder = new MediaRecorder();
+        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        recorder.setOutputFile(fileName);
+        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        try {
+            recorder.prepare();
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "prepare() failed");
+        }
+        recorder.start();
+    }
+
+    private void stopRecording() {
+        recorder.stop();
+        recorder.release();
+        recorder = null;
+    }
+
+    class RecordButton extends androidx.appcompat.widget.AppCompatButton {
+        boolean mStartRecording = true;
+
+        OnClickListener clicker = new OnClickListener() {
+            public void onClick(View v) {
+                onRecord(mStartRecording);
+                if (mStartRecording) {
+                    setText("Stop recording");
+                } else {
+                    setText("Start recording");
+                }
+                mStartRecording = !mStartRecording;
+            }
+        };
+
+        public RecordButton(Context ctx) {
+            super(ctx);
+            setText("Start recording");
+            setOnClickListener(clicker);
+        }
+    }
+
+    class PlayButton extends androidx.appcompat.widget.AppCompatButton {
+        boolean mStartPlaying = true;
+
+        OnClickListener clicker = new OnClickListener() {
+            public void onClick(View v) {
+                onPlay(mStartPlaying);
+                if (mStartPlaying) {
+                    setText("Stop playing");
+                } else {
+                    setText("Start playing");
+                }
+                mStartPlaying = !mStartPlaying;
+            }
+        };
+
+        public PlayButton(Context ctx) {
+            super(ctx);
+            setText("Start playing");
+            setOnClickListener(clicker);
+        }
+    }
+
+    @Override
+    public void onCreate(Bundle icicle) {
+        super.onCreate(icicle);
+
+        // Record to the external cache directory for visibility
+        fileName = getExternalCacheDir().getAbsolutePath();
+        fileName += "/audiorecordtest.3gp";
+
+        ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION);
+
+        LinearLayout ll = new LinearLayout(this);
+        recordButton = new RecordButton(this);
+        ll.addView(recordButton,
+                new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        0));
+        playButton = new PlayButton(this);
+        ll.addView(playButton,
+                new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        0));
+        setContentView(ll);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (recorder != null) {
+            recorder.release();
+            recorder = null;
+        }
+
+        if (player != null) {
+            player.release();
+            player = null;
+        }
+    }
+
 ### GRABAR VIDEO
 UNICA CLASE(MAIN JAVA)-->EN EL XML SOLO PONEMOS UNA IMAGEN DE LA CAMARA
 ~~~
@@ -326,7 +569,14 @@ EN EL XML
 
 CONFIGURAR LA CLASE MAEDIAPLAYER CON EL SONIDO
 ~~~
-// Configurar el MediaPlayer con el sonido mediaPlayer = MediaPlayer.create(this, R.raw.sound); // Configurar clics de botones btnPlay.setOnClickListener(new View.OnClickListener() { @Override public void onClick(View v) { playSound(); } });
+// Configurar el MediaPlayer con el sonido 
+mediaPlayer = MediaPlayer.create(this, R.raw.sound); 
+// Configurar clics de botones 
+btnPlay.setOnClickListener(new View.OnClickListener() {
+@Override public void onClick(View v) { 
+playSound(); 
+} 
+});
 ~~~
 
 SE DECLARAN 3 BOTONES PARA REPRODUCIR,PAUSAR Y REINICIAR
@@ -385,3 +635,78 @@ mediaPlayer = null;
 }
 ~~~
 EN EL XML SOLO SE PONEN LOS 3 BOTONES
+
+CODIGO ENTERO
+
+~~~
+public class MainActivity extends AppCompatActivity {
+
+    private MediaPlayer mediaPlayer;
+    private Button btnPlay, btnPause, btnStop;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        btnPlay = findViewById(R.id.btnPlay);
+        btnPause = findViewById(R.id.btnPause);
+        btnStop = findViewById(R.id.btnStop);
+
+        // Configurar el MediaPlayer con el sonido
+        mediaPlayer = MediaPlayer.create(this, R.raw.sound);
+
+        // Configurar clics de botones
+        btnPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playSound();
+            }
+        });
+
+        btnPause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pauseSound();
+            }
+        });
+
+        btnStop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stopSound();
+            }
+        });
+    }
+
+    private void playSound() {
+        if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
+            mediaPlayer.start();
+        }
+    }
+
+    private void pauseSound() {
+        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+            mediaPlayer.pause();
+        }
+    }
+
+    private void stopSound() {
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            // Es importante resetear el MediaPlayer después de detenerlo
+            mediaPlayer.reset();
+            mediaPlayer = MediaPlayer.create(this, R.raw.sound);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Liberar recursos del MediaPlayer al cerrar la actividad
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+    }
+~~~

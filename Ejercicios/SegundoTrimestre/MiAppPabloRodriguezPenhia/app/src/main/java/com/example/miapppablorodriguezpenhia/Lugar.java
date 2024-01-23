@@ -2,14 +2,19 @@ package com.example.miapppablorodriguezpenhia;
 
 import android.media.Image;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Lugar {
-    String nombre,direccion,url,comentario,valoracion,tfno;
+public class Lugar implements Serializable {
+    String nombre,direccion,url,comentario,valoracion,tfno,rutaFoto;
     GeoPunto longitud,latitud;
     TipoLugar tipo;
-    Image foto;
     String fecha,hora;
+
+    public Lugar() {
+
+    }
+
 
     public String getNombre() {
         return nombre;
@@ -17,6 +22,14 @@ public class Lugar {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public String getRutaFoto() {
+        return rutaFoto;
+    }
+
+    public void setRutaFoto(String rutaFoto) {
+        this.rutaFoto = rutaFoto;
     }
 
     public String getDireccion() {
@@ -83,14 +96,6 @@ public class Lugar {
         this.tipo = tipo;
     }
 
-    public Image getFoto() {
-        return foto;
-    }
-
-    public void setFoto(Image foto) {
-        this.foto = foto;
-    }
-
     /*public Lugar(String nombre, String direccion, String url, String comentario, String valoracion,
                  GeoPunto longitud, GeoPunto latitud, TipoLugar tipo, Image foto) {
         this.nombre = nombre;
@@ -120,13 +125,16 @@ public class Lugar {
         this.hora = hora;
     }
 
-    public Lugar(String nombre, String direccion, String tfno, String url,String f,String h) {
+    public Lugar(String nombre, String direccion, String tfno, String url,String f,String h,String rutaFoto) {
         this.nombre = nombre;
         this.direccion = direccion;
         this.url = url;
         this.tfno=tfno;
         this.fecha=f;
         this.hora=h;
+        //asignamos un tipo de lugar por defecto para que no de error
+        this.tipo=TipoLugar.CAFETERÍA;
+        this.rutaFoto=rutaFoto;
     }
 
     @Override
@@ -135,6 +143,8 @@ public class Lugar {
                 ", direccion:" + direccion + '\'' +
                 ", url:" + url+ '\''+",telefono:"+tfno;
     }
+
+
 }
 
 

@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Repaso1</string>
+
+    <string-array name="product_details">
+    <item> Detalles 1
+        Una computadora portátil funciona con una batería recargable,contiene
+        una pantalla LED o LCD, teclado, panel táctil o touchpad,
+        una unidad de estado sólido o disco duro, puertos como USB o
+        HDMI, cámara, etc. y puede tener diferentes sistemas operativos
+        como MacOS, Linux, Windows y Chrome OS.
+    </item>
+    <item> Detalles 2
+        bocina o corneta, mayormente en América del Sur) es un
+        transductor electroacústico, esto es, un dispositivo que
+        una señal eléctrica de audio en ondas mecánicas de sonido
+        .​ Un sistema de altavoz, generalmente referido
+        simplemente como altavoz, incluye uno o más transductores,
+        un bafle, conexiones eléctricas, y posiblemente incluya
+        un filtro de cruce.
+    </item>
+    <item> Detalles 3
+        Además de mover un cursor, el mouse tiene uno o más botones para
+        permitir operaciones como la selección de un elemento
+        de menú en una pantalla. El mouse también suele contar
+        con otros elementos, como superficies táctiles y ruedas
+        de desplazamiento, que permiten un control adicional y
+        entrada dimensional.
+    </item>
+    </string-array>
+</resources>

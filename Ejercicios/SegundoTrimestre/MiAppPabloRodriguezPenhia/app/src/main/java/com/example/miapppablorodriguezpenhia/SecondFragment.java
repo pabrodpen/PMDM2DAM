@@ -1,15 +1,21 @@
 // SecondFragment.java
 package com.example.miapppablorodriguezpenhia;
 
+import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,6 +28,9 @@ public class SecondFragment extends Fragment implements DialogLista.OnTipoLugarS
     String datoTipoLugar;
     Button dialogLista;
     FeedReaderDbHelper dbHelper;
+
+    private static final int REQUEST_CODE_GALERIA = 1001;  // Puedes usar cualquier número
+
 
     @Nullable
     @Override
@@ -44,6 +53,17 @@ public class SecondFragment extends Fragment implements DialogLista.OnTipoLugarS
                 dialogLista.show(getFragmentManager(), "DialogLista");
             }
         });
+
+        Button buttonSeleccionarImagen = view.findViewById(R.id.buttonImg);
+        buttonSeleccionarImagen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Iniciar la galería para seleccionar una imagen
+                seleccionarImagenDeGaleria();
+            }
+        });
+
+
 
         Button buttonInsertar = view.findViewById(R.id.buttonInsertar);
         buttonInsertar.setOnClickListener(new View.OnClickListener() {
@@ -69,6 +89,11 @@ public class SecondFragment extends Fragment implements DialogLista.OnTipoLugarS
         String telefono = editTextTfno.getText().toString();
         String url = editTextURL.getText().toString();
 
+        //para coger la ruta de la img a partir de la seleccio de la galeria
+        // Obtener el objeto Lugar del bundle
+        Bundle bundle = getArguments();
+        Lugar lugar = (Lugar) bundle.getSerializable("lugar");
+
 
         Log.d("INSERT_OPERATION", "Insertando datos:");
         Log.d("INSERT_OPERATION", "Nombre: " + nombre);
@@ -82,6 +107,8 @@ public class SecondFragment extends Fragment implements DialogLista.OnTipoLugarS
         values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_DIRECCION, direccion);
         values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_TFNO, telefono);
         values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_URL, url);
+        values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_RUTA_FOTO, lugar.getRutaFoto());
+
 
         long newRowId = db.insert(FeedReaderContract.FeedEntry.TABLE_NAME, null, values);
 
@@ -115,4 +142,54 @@ public class SecondFragment extends Fragment implements DialogLista.OnTipoLugarS
             firstFragment.actualizarListaDesdeBD();
         }
     }
+
+    //para iniciar la actividad de selección de imágenes:
+    private void seleccionarImagenDeGaleria() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        startActivityForResult(intent, REQUEST_CODE_GALERIA);
+    }
+
+    // para manejar el resultado de la selección de imágenes:
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Lugar lugar = new Lugar(); // Asegúrate de importar la clase Lugar
+
+
+        if (requestCode == REQUEST_CODE_GALERIA && resultCode == Activity.RESULT_OK && data != null) {
+            // La imagen se seleccionó exitosamente
+            Uri imagenUri = data.getData();
+
+            // Actualiza tu objeto Lugar con la ruta de la imagen seleccionada
+            String rutaFoto = obtenerRutaDesdeUri(imagenUri);
+            lugar.setRutaFoto(rutaFoto);
+
+            // Actualiza la vista previa de la imagen en tu interfaz de usuario si es necesario
+            ImageView imageView = requireView().findViewById(R.id.image);
+            if (rutaFoto != null) {
+                imageView.setImageURI(imagenUri);
+            } else {
+                imageView.setImageResource(R.drawable.ic_launcher_background);
+            }
+        }
+    }
+
+    //para convertir la URI de la imagen seleccionada en la ruta del archivo real:
+    private String obtenerRutaDesdeUri(Uri uri) {
+        String[] projection = {MediaStore.Images.Media.DATA};
+        Cursor cursor = requireActivity().getContentResolver().query(uri, projection, null, null, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            String ruta = cursor.getString(columnIndex);
+            cursor.close();
+            return ruta;
+        }
+
+        return null;
+    }
+
+
 }

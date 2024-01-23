@@ -85,7 +85,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AUDIO Y VÍDEO.md",
+                "file": "PREFERENCEACTIVITY.md",
                 "mode": "source",
                 "source": false
               }
@@ -182,7 +182,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "AUDIO Y VÍDEO.md",
+                "file": "PREFERENCEACTIVITY.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -199,7 +199,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "AUDIO Y VÍDEO.md",
+                "file": "PREFERENCEACTIVITY.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -222,7 +222,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "AUDIO Y VÍDEO.md"
+                "file": "PREFERENCEACTIVITY.md"
               }
             }
           }
@@ -247,12 +247,14 @@
   },
   "active": "1eae194573b3ae1b",
   "lastOpenFiles": [
+    "SHAREDPREFERENCES.md",
+    "PREFERENCEACTIVITY.md",
+    "AUDIO Y VÍDEO.md",
     "cap3 2.png",
     "cap2 2.png",
     "cap 1.png",
     "Capturahhgj.png",
     "cap2 1.png",
-    "AUDIO Y VÍDEO.md",
     "java3.png",
     "java2.png",
     "Captura 3.png",
@@ -261,10 +263,7 @@
     "DIÁLOGOS.md",
     "ListView.md",
     "ActionBar.md",
-    "PREFERENCEACTIVITY.md",
     "Main2.png",
-    "Main1.png",
-    "SHAREDPREFERENCES.md",
     "Spinner 987e5116cc3e481b9d512e0f414024e4.md",
     "List.md",
     "Navigation Drawer ec3b5952e7d6482e84c8d7fbbad7c759/Navigation Drawer ec3b5952e7d6482e84c8d7fbbad7c759.md",

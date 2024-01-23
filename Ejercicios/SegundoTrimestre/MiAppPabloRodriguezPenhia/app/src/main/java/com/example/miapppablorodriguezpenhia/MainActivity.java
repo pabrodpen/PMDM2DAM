@@ -58,13 +58,11 @@ public class MainActivity extends AppCompatActivity implements DialogLista.OnTip
         if (id == R.id.action_switch_fragment) {
             // Verifica si debemos cargar el fragmento 1 o el fragmento 2
             if (cargarFragmento2) {
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.container, new SecondFragment())
-                        .commit();
+                // Navega al fragmento SecondFragment utilizando NavController
+                navController.navigate(R.id.action_FirstFragment_to_SecondFragment);
             } else {
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.container, new FirstFragment())
-                        .commit();
+                // Navega al fragmento FirstFragment utilizando NavController
+                navController.navigate(R.id.action_SecondFragment_to_FirstFragment);
             }
 
             // Invierte el valor de cargarFragmento2
@@ -73,15 +71,13 @@ public class MainActivity extends AppCompatActivity implements DialogLista.OnTip
             return true;
         }
 
-        if(id==R.id.action_switch2_fragment){
+        if (id == R.id.action_switch2_fragment) {
             if (cargarFragmento3) {
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.container, new DetallesLugar())
-                        .commit();
+                // Navega al fragmento DetallesLugar utilizando NavController
+                navController.navigate(R.id.action_first_to_detalles);
             } else {
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.container, new FirstFragment())
-                        .commit();
+                // Navega al fragmento FirstFragment utilizando NavController
+                navController.navigate(R.id.action_detalles_to_first);
             }
         }
 

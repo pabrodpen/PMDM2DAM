@@ -12,6 +12,8 @@ public final class FeedReaderContract {
     public static class FeedEntry implements BaseColumns {
         public static final String TABLE_NAME = "TABLA_PRUEBA";
         public static final String COLUMN_NAME_NOMBRE = "NOMBRE";
+
+        public static final String COLUMN_NAME_RUTA_FOTO="RUTA_FOTO";
         public static final String COLUMN_NAME_TIPO = "TIPO";
         public static final String COLUMN_NAME_DIRECCION = "DIRECCION";
         public static final String COLUMN_NAME_TFNO = "TELEFONO";  // Columna TELEFONO en la definición de la tabla

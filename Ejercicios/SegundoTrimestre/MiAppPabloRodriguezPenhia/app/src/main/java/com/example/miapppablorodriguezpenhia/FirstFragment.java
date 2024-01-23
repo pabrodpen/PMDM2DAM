@@ -42,7 +42,7 @@ public class FirstFragment extends Fragment  {
 
         // Inicializar la lista de lugares y el adaptador
         lugares = obtenerListaDeLugaresDesdeBD();
-        adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, lugares);
+        adapter = new AdaptadorLugar(requireContext(), lugares);
 
         // Configurar el ListView
         listView = view.findViewById(R.id.listView);
@@ -54,11 +54,15 @@ public class FirstFragment extends Fragment  {
                 // Obtener el lugar seleccionado
                 Lugar lugarSeleccionado = lugares.get(position);
 
+                // Crear un Bundle y poner el objeto Lugar como argumento
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("lugarSeleccionado", lugarSeleccionado);
+
                 // Obtener el NavController desde el NavHostFragment
                 NavController navController = NavHostFragment.findNavController(FirstFragment.this);
 
-                navController.navigate(R.id.action_first_to_detalles);
-                firstFragment.obtenerDatosListView();
+                // Navegar a la siguiente pantalla con el Bundle
+                navController.navigate(R.id.action_first_to_detalles, bundle);
             }
         });
 
@@ -102,15 +106,16 @@ public class FirstFragment extends Fragment  {
             String direccion = cursor.getString(cursor.getColumnIndexOrThrow(FeedReaderContract.FeedEntry.COLUMN_NAME_DIRECCION));
             String tfno=cursor.getString(cursor.getColumnIndexOrThrow(FeedReaderContract.FeedEntry.COLUMN_NAME_TFNO));
             String url = cursor.getString(cursor.getColumnIndexOrThrow(FeedReaderContract.FeedEntry.COLUMN_NAME_URL));
+            String ruta=cursor.getString(cursor.getColumnIndexOrThrow(FeedReaderContract.FeedEntry.COLUMN_NAME_RUTA_FOTO));
+
     //no hace falta el tipo xq no lo ponemos cuando se muestra en el listview, sino en los detalles
             SimpleDateFormat formato1 = new SimpleDateFormat("yyyy-MM-dd");
             String fechaInsercion=formato1.format(new Date());
-
             SimpleDateFormat formato2 = new SimpleDateFormat("HH:mm:ss");
             String horaInsercion=formato2.format(new Date());
 
 
-            lugaresList.add(new Lugar(nombre, direccion,tfno, url,fechaInsercion,horaInsercion));
+            lugaresList.add(new Lugar(nombre, direccion,tfno, url,fechaInsercion,horaInsercion,ruta));
         }
 
         cursor.close();

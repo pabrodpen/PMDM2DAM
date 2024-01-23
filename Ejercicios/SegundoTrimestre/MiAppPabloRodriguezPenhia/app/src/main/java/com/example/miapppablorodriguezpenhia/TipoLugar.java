@@ -2,9 +2,14 @@ package com.example.miapppablorodriguezpenhia;
 
 public enum TipoLugar {
     CAFETERÍA("Cafetería"),
-    RESTAURANTE("Restaurante"),
-    HOTEL("Hotel"),
-    PARQUE("Parque");
+    GOURMET("Gourmet"),
+    PESCADOS_Y_MARISCOS("Pescados Y Mariscos"),
+    ASADOR("Asador"),
+
+    TAPAS("Tapas");
+
+
+    //display name para coger el string del nombre
 
     private final String displayName;
 

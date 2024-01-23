@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class FeedReaderDbHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 2;//IMP ACT LA VERSION A 2(CON 1 NO FUNCIONA)
+    public static final int DATABASE_VERSION = 3;//IMP ACT LA VERSION A 2(CON 1 NO FUNCIONA)
     public static final String DATABASE_NAME = "FeedReader.db";
 
     // Define las consultas SQL aquí
@@ -18,8 +18,10 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
                     FeedReaderContract.FeedEntry.COLUMN_NAME_TIPO + " TEXT," +
                     FeedReaderContract.FeedEntry.COLUMN_NAME_DIRECCION + " TEXT," +
                     FeedReaderContract.FeedEntry.COLUMN_NAME_URL + " TEXT," +
-                    FeedReaderContract.FeedEntry.COLUMN_NAME_TFNO + " TEXT" +
+                    FeedReaderContract.FeedEntry.COLUMN_NAME_TFNO + " TEXT," +
+                    FeedReaderContract.FeedEntry.COLUMN_NAME_RUTA_FOTO + " TEXT" +
                     ")";
+
 
 
 
