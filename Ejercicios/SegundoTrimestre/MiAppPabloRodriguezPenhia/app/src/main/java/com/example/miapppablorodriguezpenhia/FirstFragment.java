@@ -57,12 +57,13 @@ public class FirstFragment extends Fragment  {
                 // Obtener el NavController desde el NavHostFragment
                 NavController navController = NavHostFragment.findNavController(FirstFragment.this);
 
-                /*Navegar al fragmento DetallesLugar y pasar el lugar como argumento
-                Bundle bundle = new Bundle();
-                bundle.putParcelable("lugar", lugarSeleccionado);*/
                 navController.navigate(R.id.action_first_to_detalles);
+                firstFragment.obtenerDatosListView();
             }
         });
+
+
+
 
 
         return view;

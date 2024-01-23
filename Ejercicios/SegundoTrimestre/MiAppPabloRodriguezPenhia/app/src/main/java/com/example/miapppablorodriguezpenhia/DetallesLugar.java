@@ -29,6 +29,17 @@ public class DetallesLugar extends Fragment {
         tFecha=view.findViewById(R.id.textViewFecha);
         tHora=view.findViewById(R.id.textViewHora);
 
+
+        // Obtener el Bundle de argumentos
+        //REPASAR
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            // Obtener el objeto Lugar del Bundle
+            Lugar lugarSeleccionado = (Lugar) bundle.getSerializable("lugarSeleccionado");
+            // Llamar al método para actualizar la vista con los datos del lugar
+            obtenerDatosListView(lugarSeleccionado);
+        }
+
         return view;
     }
 
