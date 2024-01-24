@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+<androidx.appcompat.widget.Toolbar
+android:id="@+id/toolbar2"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:background="?attr/colorPrimary"
+android:minHeight="?attr/actionBarSize"
+android:theme="?attr/actionBarTheme" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="3dp"
+        tools:layout_editor_absoluteY="-82dp">
+
+
+        <EditText
+            android:id="@+id/editTextUrl"
+            android:layout_width="250dp"
+            android:layout_height="82dp"
+            android:layout_marginStart="11dp"
+            android:gravity="bottom"
+            android:text="TextView"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/imageView8"
+            tools:layout_editor_absoluteY="387dp" />
+
+        <EditText
+            android:id="@+id/editTextFecha"
+            android:layout_width="250dp"
+            android:layout_height="82dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="116dp"
+            android:gravity="bottom"
+            android:text="TextView"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/imageView6"
+            app:layout_constraintTop_toBottomOf="@+id/editTextUrl" />
+
+        <ImageView
+            android:id="@+id/imageView8"
+            android:layout_width="97dp"
+            android:layout_height="82dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView7"
+            app:srcCompat="@drawable/baseline_map_24"
+            tools:srcCompat="@drawable/baseline_map_24" />
+
+        <ImageView
+            android:id="@+id/imageView7"
+            android:layout_width="97dp"
+            android:layout_height="82dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView5"
+            app:srcCompat="@drawable/baseline_local_phone_24"
+            tools:srcCompat="@drawable/baseline_local_phone_24" />
+
+        <EditText
+            android:id="@+id/ediTextTfno"
+            android:layout_width="250dp"
+            android:layout_height="82dp"
+            android:layout_marginStart="11dp"
+            android:gravity="bottom"
+            android:text="TextView"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/editTextUrl"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/imageView7" />
+
+        <EditText
+            android:id="@+id/editTextUbicacion"
+            android:layout_width="250dp"
+            android:layout_height="82dp"
+            android:layout_marginStart="11dp"
+            android:gravity="bottom"
+            android:text="TextView"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/ediTextTfno"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/imageView5" />
+
+        <ImageView
+            android:id="@+id/imageView6"
+            android:layout_width="97dp"
+            android:layout_height="82dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView8"
+            app:layout_constraintVertical_bias="0.0"
+            app:srcCompat="@drawable/baseline_calendar_month_24"
+            tools:srcCompat="@drawable/baseline_calendar_month_24" />
+
+        <ImageView
+            android:id="@+id/imageView5"
+            android:layout_width="97dp"
+            android:layout_height="82dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="3dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView4"
+            app:srcCompat="@drawable/baseline_location_on_24"
+            tools:srcCompat="@drawable/baseline_location_on_24" />
+
+        <EditText
+            android:id="@+id/editTextNombre"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="55dp"
+            android:gravity="center"
+            android:text="NOMBRE DEL LUGAR"
+            android:textSize="30sp"
+            app:layout_constraintBottom_toTopOf="@+id/editTextTipo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="97dp"
+            android:layout_height="82dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="52dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextNombre"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <EditText
+            android:id="@+id/editTextTipo"
+            android:layout_width="250dp"
+            android:layout_height="82dp"
+            android:layout_marginStart="11dp"
+            android:gravity="bottom"
+            android:text="TextView"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/editTextUbicacion"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/imageView4" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+

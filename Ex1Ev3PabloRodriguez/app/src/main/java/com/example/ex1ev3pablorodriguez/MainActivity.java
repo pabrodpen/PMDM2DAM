@@ -42,8 +42,10 @@ public class MainActivity extends AppCompatActivity {
         itemList.add(new ListItem(R.drawable.im_pinguino, "android.resource://" + getPackageName() + "/" + R.raw.pinguino));
 
 
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, itemList);
+        // Reemplaza la creación del adaptador con tu propio adaptador personalizado
+        adapter = new SoundAdapter(this, itemList);
         listView.setAdapter(adapter);
+
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
