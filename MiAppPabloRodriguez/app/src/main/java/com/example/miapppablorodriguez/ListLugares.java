@@ -55,7 +55,6 @@ public class ListLugares extends AppCompatActivity {
         listView.setAdapter(adapter);
 
 
-
         Log.d("LIST_DEBUG", "Número de elementos en la lista: " + lugares.size());
 
 
@@ -71,10 +70,11 @@ public class ListLugares extends AppCompatActivity {
                 // Crear una instancia de DetallesLugar y pasar los detalles del lugar como extras en el Intent
                 Intent detallesIntent = new Intent(ListLugares.this, DetallesLugar.class);
                 detallesIntent.putExtra("nombre", lugarSeleccionado.getNombre());
-                detallesIntent.putExtra("tipo", lugarSeleccionado.getTipo());
+                detallesIntent.putExtra("tipo", lugarSeleccionado.getTipo().toString());
                 detallesIntent.putExtra("fecha", lugarSeleccionado.getFecha());
                 detallesIntent.putExtra("url", lugarSeleccionado.getUrl());
                 detallesIntent.putExtra("tfno", lugarSeleccionado.getTfno());
+                detallesIntent.putExtra("direccion", lugarSeleccionado.getDireccion());
 
                 startActivity(detallesIntent);
             }
@@ -82,9 +82,8 @@ public class ListLugares extends AppCompatActivity {
 
         // Habilitar opciones de menú
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
 
-    // Método para obtener la lista de lugares desde la base de datos
+    }
     // Método para obtener la lista de lugares desde la base de datos
     private ArrayList<Lugar> obtenerListaDeLugaresDesdeBD() {
         FeedReaderDbHelper dbHelper = new FeedReaderDbHelper(this);
@@ -95,9 +94,9 @@ public class ListLugares extends AppCompatActivity {
                 FeedReaderContract.FeedEntry.COLUMN_NAME_DIRECCION,
                 FeedReaderContract.FeedEntry.COLUMN_NAME_URL,
                 FeedReaderContract.FeedEntry.COLUMN_NAME_DATE,
-                FeedReaderContract.FeedEntry.COLUMN_NAME_TFNO
+                FeedReaderContract.FeedEntry.COLUMN_NAME_TFNO,
+                FeedReaderContract.FeedEntry.COLUMN_NAME_TIPO
         };
-
 
         String selection = "1";
         String sortOrder = FeedReaderContract.FeedEntry.COLUMN_NAME_NOMBRE + " ASC";
@@ -120,9 +119,15 @@ public class ListLugares extends AppCompatActivity {
             String tfno = cursor.getString(cursor.getColumnIndexOrThrow(FeedReaderContract.FeedEntry.COLUMN_NAME_TFNO));
             String url = cursor.getString(cursor.getColumnIndexOrThrow(FeedReaderContract.FeedEntry.COLUMN_NAME_URL));
             String fecha = cursor.getString(cursor.getColumnIndexOrThrow(FeedReaderContract.FeedEntry.COLUMN_NAME_DATE));
+            String tipoString = cursor.getString(cursor.getColumnIndexOrThrow(FeedReaderContract.FeedEntry.COLUMN_NAME_TIPO));
+
+            Log.d("TIPO DE LUGAR",tipoString);
 
 
-            lugaresList.add(new Lugar(nombre, direccion, tfno, url, fecha,null));
+            // Obtener el recurso de imagen correspondiente (aquí se asume que tienes imágenes llamadas imagen1, imagen2, etc.)
+            int imagen = getResources().getIdentifier("imagen" + lugaresList.size(), "drawable", getPackageName());
+
+            lugaresList.add(new Lugar(nombre, direccion, tfno, url, fecha, tipoString, imagen));
         }
 
         cursor.close();
@@ -147,9 +152,10 @@ public class ListLugares extends AppCompatActivity {
             Intent insertarIntent = new Intent(this, InsertarLugar.class);
             startActivity(insertarIntent);
             return true;
-        } else if (id == android.R.id.home) {
-            // Manejar la acción de navegación hacia atrás
-            onBackPressed();
+        } else if (id == R.id.eliminarTodos) {
+           eliminarTodosLosLugares();
+           actualizarLista();
+
             return true;
         }
 
@@ -171,6 +177,34 @@ public class ListLugares extends AppCompatActivity {
         }
     }
 
+
+    private void eliminarTodosLosLugares() {
+        FeedReaderDbHelper dbHelper = new FeedReaderDbHelper(this);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        // Eliminar todos los registros de la tabla
+        db.delete(FeedReaderContract.FeedEntry.TABLE_NAME, null, null);
+
+        // Cerrar la conexión con la base de datos
+        db.close();
+        dbHelper.close();
+    }
+
+
+    public static void eliminarLugarPorNombre(String nombre) {
+        if (instance != null && instance.adapter != null) {
+            // Buscar el lugar en la lista por su nombre
+            for (Lugar lugar : instance.lugares) {
+                if (lugar.getNombre().equals(nombre)) {
+                    // Remover el lugar de la lista
+                    instance.lugares.remove(lugar);
+                    // Notificar al adaptador que los datos han cambiado
+                    instance.adapter.notifyDataSetChanged();
+                    break;
+                }
+            }
+        }
+    }
 
 }
 

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/drawable/icon_size.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/baseline_reply_24" android:width="32dp" android:height="32dp" android:gravity="center"/>
+</layer-list>

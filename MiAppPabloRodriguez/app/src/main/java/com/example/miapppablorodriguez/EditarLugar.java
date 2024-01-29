@@ -1,36 +1,40 @@
 package com.example.miapppablorodriguez;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
+import android.app.DatePickerDialog;
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.provider.MediaStore;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class EditarLugar extends AppCompatActivity {
+import java.util.Calendar;
 
-    EditText editTextNombre, editTextTipo, editTextFecha, editTextUrl, editTextHora, editTextTfno, editTextUbicacion;
+public class EditarLugar extends AppCompatActivity implements DialogLista.OnTipoLugarSelectedListener{
 
-    private static final int REQUEST_CODE_GALERIA = 1001;
+    EditText editTextNombre, editTextTipo, editTextFecha, editTextUrl, editTextTfno, editTextUbicacion;
+
     Lugar lugar;
+
+    private String datoTipoLugar, datoFecha,fechaSeleccionada;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_editar);
+        setContentView(R.layout.fragment_actualizar);
 
         // Inicializar EditTexts
-        editTextNombre = findViewById(R.id.editTextNombre);
-        editTextTipo = findViewById(R.id.editTextTipo);
-        editTextFecha = findViewById(R.id.editTextDate);
-        editTextUrl = findViewById(R.id.editTextUrl);
-        editTextTfno = findViewById(R.id.editTextPhone);
-        editTextUbicacion = findViewById(R.id.editTextUbicacion);
+        editTextNombre = findViewById(R.id.editTextNombreEditar);
+        editTextTipo = findViewById(R.id.editTextTipoEditar);
+        editTextFecha = findViewById(R.id.editTextFechaEditar);
+        editTextUrl = findViewById(R.id.editTextUrlEditar);
+        editTextTfno = findViewById(R.id.editTextTfnoEditar);
+        editTextUbicacion = findViewById(R.id.editTextDireccionEditar);
 
         // Obtener datos del Intent
         Bundle extras = getIntent().getExtras();
@@ -48,58 +52,131 @@ public class EditarLugar extends AppCompatActivity {
             editTextTipo.setHint(tipo);
             editTextFecha.setHint(fecha);
             editTextUrl.setHint(url);
-            editTextHora.setHint(hora);
             editTextTfno.setHint(tfno);
             editTextUbicacion.setHint(ubicacion);
-        }
-    }
 
-    // Métodos para seleccionar imágenes de la galería
-    private void seleccionarImagenDeGaleria() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        startActivityForResult(intent, REQUEST_CODE_GALERIA);
+        }
+
+
+        Button buttonActualizar = findViewById(R.id.buttonActualizar);
+        buttonActualizar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Llamar al método para actualizar el lugar
+                actualizarLugar();
+            }
+        });
+
+
+
+        Button dialogLista = findViewById(R.id.buttonTipoEditar);
+        dialogLista.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DialogLista dialogLista = new DialogLista();
+                dialogLista.show(getSupportFragmentManager(), "DialogLista");
+            }
+        });
+
+
+        Button buttonFecha = findViewById(R.id.buttonFechaEditar);
+
+        buttonFecha.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar calendar = Calendar.getInstance();
+                int anio = calendar.get(Calendar.YEAR);
+                int mes = calendar.get(Calendar.MONTH);
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(
+                        EditarLugar.this,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                                // Formatear la fecha en el formato deseado (yyyy-MM-dd)
+                                fechaSeleccionada = String.format("%04d-%02d-%02d", year, month + 1, dayOfMonth);
+                                datoFecha = fechaSeleccionada;
+
+                                // Mostrar la fecha en un Toast (opcional)
+                                Toast.makeText(EditarLugar.this, "Fecha seleccionada: " + fechaSeleccionada, Toast.LENGTH_SHORT).show();
+                            }
+                        }, anio, mes, day
+                );
+                datePickerDialog.show();
+            }
+        });
+
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    public void onTipoLugarSelected(String tipoLugar) {
+        // Actualizar el EditText de tipo con el tipo seleccionado
+        editTextTipo.setText(tipoLugar);
+    }
 
-        if (requestCode == REQUEST_CODE_GALERIA && resultCode == Activity.RESULT_OK && data != null) {
-            Uri imagenUri = data.getData();
 
-            // Actualizar la ruta de la foto en el objeto lugar
-            String rutaFoto = obtenerRutaDesdeUri(imagenUri);
-            if (lugar != null) {
-                lugar.setRutaFoto(rutaFoto);
-            }
 
-            // Actualizar la imagen en el ImageView
-            ImageView imageView = findViewById(R.id.image);
-            if (rutaFoto != null) {
-                imageView.setImageURI(imagenUri);
-            } else {
-                imageView.setImageResource(R.drawable.baseline_photo_24);
-            }
+    // Método para actualizar un lugar
+    private void actualizarLugar() {
+        // Obtener los nuevos datos de los EditTexts
+        String nombre = editTextNombre.getText().toString();
+        String tipo = editTextTipo.getText().toString();
+        String url = editTextUrl.getText().toString();
+        String tfno = editTextTfno.getText().toString();
+        String ubicacion = editTextUbicacion.getText().toString();
+
+        // Validar que se haya ingresado el nombre (puedes agregar más validaciones según tus necesidades)
+        if (TextUtils.isEmpty(nombre)) {
+            Toast.makeText(this, "Por favor, ingresa el nombre del lugar", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Crear un objeto Lugar con los nuevos datos
+        Lugar nuevoLugar = new Lugar(nombre, ubicacion, tfno, url, fechaSeleccionada, tipo, R.drawable.baseline_photo_24);
+
+        // Actualizar el lugar en la base de datos
+        if (actualizarLugarEnBD(nuevoLugar)) {
+            // Actualizar la lista en la actividad principal (ListLugares)
+            ListLugares.actualizarLista();
+
+            // Cerrar la actividad actual después de actualizar
+            finish();
+        } else {
+            // Mostrar un mensaje de error si la actualización falla
+            Toast.makeText(this, "Error al actualizar el lugar", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private String obtenerRutaDesdeUri(Uri uri) {
-        String[] projection = {MediaStore.Images.Media.DATA};
-        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+    // Método para actualizar un lugar en la base de datos
+    private boolean actualizarLugarEnBD(Lugar lugarActualizado) {
+        FeedReaderDbHelper dbHelper = new FeedReaderDbHelper(this);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        if (cursor != null) {
-            try {
-                if (cursor.moveToFirst()) {
-                    int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                    return cursor.getString(columnIndex);
-                }
-            } finally {
-                cursor.close();
-            }
-        }
+        ContentValues values = new ContentValues();
+        values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_NOMBRE, lugarActualizado.getNombre());
+        values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_TIPO, lugarActualizado.getTipo());
+        values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_DIRECCION, lugarActualizado.getDireccion());
+        values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_TFNO, lugarActualizado.getTfno());
+        values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_URL, lugarActualizado.getUrl());
+        values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_DATE, lugarActualizado.getFecha());
 
-        return null;
+        // Puedes agregar la actualización de la imagen si es necesario
+
+        String selection = FeedReaderContract.FeedEntry.COLUMN_NAME_NOMBRE + " LIKE ?";
+        String[] selectionArgs = { lugarActualizado.getNombre() };
+
+        int updatedRows = db.update(
+                FeedReaderContract.FeedEntry.TABLE_NAME,
+                values,
+                selection,
+                selectionArgs);
+
+        db.close();
+        dbHelper.close();
+
+        // Si se actualizó al menos una fila, se considera exitoso
+        return updatedRows > 0;
     }
 }
 

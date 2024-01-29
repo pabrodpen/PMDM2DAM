@@ -1,22 +1,23 @@
 package com.example.miapppablorodriguez;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -28,13 +29,13 @@ import java.util.Locale;
 
 public class DetallesLugar extends AppCompatActivity {
 
-    EditText tNombre, tTipo, tFecha, tUrl, tTfno, tUbicacion;
+    TextView tNombre, tTipo, tFecha, tUrl, tTfno, tUbicacion;
 
+    String direccion;
     private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
     private static final int REQUEST_IMAGE_CAPTURE = 2;
     private static final int REQUEST_IMAGE_GALLERY = 3;
     private Uri imagenUri;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +56,8 @@ public class DetallesLugar extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         tNombre = findViewById(R.id.editTextNombre);
-        tTipo = findViewById(R.id.editTextTipo);
-        tFecha = findViewById(R.id.editTextFecha);
+        tTipo = findViewById(R.id.editTextTipoEditar);
+        tFecha = findViewById(R.id.editTextFechaEditar);
         tUrl = findViewById(R.id.editTextUrl);
         tTfno = findViewById(R.id.ediTextTfno);
         tUbicacion = findViewById(R.id.editTextUbicacion);
@@ -81,8 +82,102 @@ public class DetallesLugar extends AppCompatActivity {
             tUrl.setText(url);
             tTfno.setText(tfno);
             tUbicacion.setText(direccion);
-            mostrarGeolocalizacion(direccion);
+
+            // Determinar la imagen según el tipo de lugar
+            if ("Cafetería".equals(tipo)) {
+                // Es un restaurante, establecer la imagen correspondiente
+                ImageView imageView4 = findViewById(R.id.imageView4);
+                imageView4.setImageResource(R.drawable.baseline_coffee_24);
+            } else if ("Gourmet".equals(tipo)) {
+                // Es un parque, establecer la imagen correspondiente
+                ImageView imageView4 = findViewById(R.id.imageView4);
+                imageView4.setImageResource(R.drawable.baseline_workspace_premium_24);
+            } else if ("Pescados Y Mariscos".equals(tipo)) {
+                // Es un parque, establecer la imagen correspondiente
+                ImageView imageView4 = findViewById(R.id.imageView4);
+                imageView4.setImageResource(R.drawable.baseline_set_meal_24);
+            } else if ("Asador".equals(tipo)) {
+                // Es un parque, establecer la imagen correspondiente
+                ImageView imageView4 = findViewById(R.id.imageView4);
+                imageView4.setImageResource(R.drawable.baseline_outdoor_grill_24);
+            } else if ("Tapas".equals(tipo)) {
+                // Es un parque, establecer la imagen correspondiente
+                ImageView imageView4 = findViewById(R.id.imageView4);
+                imageView4.setImageResource(R.drawable.baseline_tapas_24);
+            } else if ("Fast Food".equals(tipo)) {
+                // Es un parque, establecer la imagen correspondiente
+                ImageView imageView4 = findViewById(R.id.imageView4);
+                imageView4.setImageResource(R.drawable.baseline_fastfood_24);
+            } else if ("Copas".equals(tipo)) {
+                // Es un parque, establecer la imagen correspondiente
+                ImageView imageView4 = findViewById(R.id.imageView4);
+                imageView4.setImageResource(R.drawable.baseline_local_bar_24);
+            }
         }
+
+        // En el método onCreate o donde configuras tus vistas
+        tUrl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Obtén la URL del EditText
+                String url = tUrl.getText().toString();
+
+                // Verifica que la URL no esté vacía
+                if (!TextUtils.isEmpty(url)) {
+                    try {
+                        // Crea un Intent para abrir la URL en un navegador web
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                        startActivity(browserIntent);
+                    } catch (Exception e) {
+                        // Maneja cualquier excepción que pueda surgir al abrir la URL
+                        Toast.makeText(DetallesLugar.this, "Error al abrir la URL", Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        tTfno.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Obtén el número de teléfono del EditText
+                String tfno = tTfno.getText().toString();
+
+                // Verifica que el número de teléfono no esté vacío
+                if (!TextUtils.isEmpty(tfno)) {
+                    try {
+                        // Crea un Intent para ver el contacto con el número de teléfono
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("tel:" + tfno));
+                        startActivity(intent);
+                    } catch (Exception e) {
+                        // Maneja cualquier excepción que pueda surgir al abrir la aplicación de contactos
+                        Toast.makeText(DetallesLugar.this, "Error al abrir la aplicación de contactos", Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        tUbicacion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String direccion = tUbicacion.getText().toString();
+
+                // Verifica que la dirección no esté vacía o sea nula
+                if (!TextUtils.isEmpty(direccion)) {
+                    // La dirección tiene un valor, llamar a mostrarGeolocalizacion
+                    boolean geolocalizacionExitosa = mostrarGeolocalizacion(direccion);
+
+                    if (!geolocalizacionExitosa) {
+                        // Muestra un mensaje indicando que no se encontraron resultados
+                        Toast.makeText(DetallesLugar.this, "No se encontraron resultados para la dirección", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    // La dirección está vacía, muestra un mensaje o realiza alguna acción adecuada
+                    Toast.makeText(DetallesLugar.this, "La dirección está vacía", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     @Override
@@ -101,16 +196,29 @@ public class DetallesLugar extends AppCompatActivity {
             return true;
         } else if (id == R.id.hacerFoto) {
             tomarFoto();
+            return true;
         } else if (id == R.id.fotoGaleria) {
             seleccionarFotoDeGaleria();
+            return true;
+        } else if (id == R.id.eliminar) {
+            String nombreLugar = tNombre.getText().toString();
+            ListLugares.eliminarLugarPorNombre(nombreLugar);
+            finish();
+            return true;
+        } else if (id == R.id.editar) {
+            Intent intent = new Intent(DetallesLugar.this, EditarLugar.class);
+            startActivity(intent);
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void mostrarGeolocalizacion(String direccion) {
+    private boolean mostrarGeolocalizacion(String direccion) {
         if (direccion == null || direccion.isEmpty()) {
-            return;
+            // La dirección está vacía, muestra un mensaje o realiza alguna acción adecuada
+            Toast.makeText(DetallesLugar.this, "La dirección está vacía", Toast.LENGTH_SHORT).show();
+            return false;  // Retorna false indicando que la geolocalización no fue exitosa
         }
 
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
@@ -118,23 +226,37 @@ public class DetallesLugar extends AppCompatActivity {
         try {
             List<Address> addresses = geocoder.getFromLocationName(direccion, 1);
 
-            if (!addresses.isEmpty()) {
+            if (addresses != null && !addresses.isEmpty()) {
                 Address address = addresses.get(0);
                 double latitud = address.getLatitude();
                 double longitud = address.getLongitude();
 
-                // Ahora puedes utilizar latitud y longitud como desees
-                // Puedes mostrarlos en un mapa, etc.
+                // Crear un objeto GeoPunto con latitud y longitud
+                GeoPunto geoPunto = new GeoPunto(latitud, longitud);
+
+                // Ahora puedes utilizar geoPunto.getLongitud() y geoPunto.getLatitud() como desees
+                // Por ejemplo, puedes abrir un mapa con estas coordenadas
+                Uri gmmIntentUri = Uri.parse("geo:" + latitud + "," + longitud + "?z=15");
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps"); // Asegura que se abra en Google Maps
+                startActivity(mapIntent);
+                return true;  // Retorna true indicando que la geolocalización fue exitosa
             } else {
                 // No se encontraron resultados para la dirección
                 // Maneja esta situación según tus necesidades
+                Toast.makeText(DetallesLugar.this, "No se encontraron resultados para la dirección", Toast.LENGTH_SHORT).show();
+                return false;  // Retorna false indicando que la geolocalización no fue exitosa
             }
         } catch (IOException e) {
             e.printStackTrace();
             // Maneja el error de geocodificación según tus necesidades
+            Toast.makeText(DetallesLugar.this, "Error de geocodificación", Toast.LENGTH_SHORT).show();
+            return false;  // Retorna false indicando que la geolocalización no fue exitosa
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
             // Maneja el error de argumento no válido según tus necesidades
+            Toast.makeText(DetallesLugar.this, "Argumento no válido", Toast.LENGTH_SHORT).show();
+            return false;  // Retorna false indicando que la geolocalización no fue exitosa
         }
     }
 
@@ -157,23 +279,29 @@ public class DetallesLugar extends AppCompatActivity {
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             // Foto tomada con éxito
-            // ...
+
+            // Obtén la imagen de la cámara desde el objeto Intent
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+
+            // Actualiza la imagen en el ImageView
+            ImageView imageView4 = findViewById(R.id.imageView4);
+            imageView4.setImageBitmap(imageBitmap);
         } else if (requestCode == REQUEST_IMAGE_GALLERY && resultCode == RESULT_OK && data != null) {
             // Foto seleccionada de la galería
             imagenUri = data.getData();
-            // Actualizar la imagen en el ImageView o hacer lo que necesites con la URI
-            // ...
+
+            // Actualiza la imagen en el ImageView
+            ImageView imageView4 = findViewById(R.id.imageView4);
+            imageView4.setImageURI(imagenUri);
         }
     }
+
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        // Aquí puedes agregar cualquier lógica que necesites cuando la actividad se reanude
-        // Por ejemplo, podrías verificar si la imagenUri no es nula y realizar alguna acción
+
     }
 }
-
-
-

@@ -5,11 +5,25 @@ import java.io.Serializable;
 public class Lugar implements Serializable {
     String nombre, direccion, url, comentario, valoracion, tfno, rutaFoto;
     GeoPunto longitud, latitud;
-    TipoLugar tipo;
+    String tipo;
     String fecha;
 
-    public Lugar() {
-        // Constructor vacío
+    int imagen;
+
+
+
+
+
+    public Lugar(String nombre, String direccion, String tfno, String url, String fecha, String tipoString, int imagen) {
+        this.nombre = nombre;
+        this.direccion = direccion;
+        this.url = url;
+        this.tfno = tfno;
+        this.fecha = fecha;
+        // Asignamos un tipo de lugar por defecto para que no dé error
+        this.tipo =tipoString;
+        this.imagen = imagen;  // Nuevo atributo para la imagen
+
     }
 
     public String getNombre() {
@@ -84,11 +98,11 @@ public class Lugar implements Serializable {
         this.latitud = latitud;
     }
 
-    public TipoLugar getTipo() {
+    public String getTipo() {
         return tipo;
     }
 
-    public void setTipo(TipoLugar tipo) {
+    public void setTipo(String tipo) {
         this.tipo = tipo;
     }
 
@@ -102,15 +116,7 @@ public class Lugar implements Serializable {
 
 
 
-    public Lugar(String nombre, String direccion, String tfno, String url, String f, String rutaFoto) {
-        this.nombre = nombre;
-        this.direccion = direccion;
-        this.url = url;
-        this.tfno = tfno;
-        this.fecha = f;
-        // asignamos un tipo de lugar por defecto para que no dé error
-        this.tipo = TipoLugar.CAFETERÍA;
-        this.rutaFoto = rutaFoto;
-    }
+
+
 
 }

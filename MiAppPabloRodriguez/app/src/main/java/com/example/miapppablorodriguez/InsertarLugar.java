@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -28,12 +29,16 @@ import com.example.miapppablorodriguez.Lugar;
 import com.example.miapppablorodriguez.R;
 
 import java.util.Calendar;
+import java.util.Locale;
 
 public class InsertarLugar extends AppCompatActivity implements DialogLista.OnTipoLugarSelectedListener {
 
     private static final int REQUEST_CODE_GALERIA = 1001;
+    private static final int REQUEST_IMAGE_CAPTURE = 1002;
+    private static final int REQUEST_IMAGE_GALLERY = 1003;
+
     private EditText editTextNombre, editTextDirecc, editTextTfno, editTextURL;
-    private String datoTipoLugar,datoFecha;
+    private String datoTipoLugar, datoFecha;
     private FeedReaderDbHelper dbHelper;
     private Lugar lugar;  // Utilizar la instancia global
 
@@ -62,14 +67,6 @@ public class InsertarLugar extends AppCompatActivity implements DialogLista.OnTi
             }
         });
 
-        Button buttonSeleccionarImagen = findViewById(R.id.buttonImg);
-        buttonSeleccionarImagen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Iniciar la galería para seleccionar una imagen
-                seleccionarImagenDeGaleria();
-            }
-        });
 
         Button buttonInsertar = findViewById(R.id.buttonInsertar);
         buttonInsertar.setOnClickListener(new View.OnClickListener() {
@@ -87,7 +84,7 @@ public class InsertarLugar extends AppCompatActivity implements DialogLista.OnTi
             }
         });
 
-        Button buttonFecha=findViewById(R.id.buttonDate);
+        Button buttonFecha = findViewById(R.id.buttonDate);
 
         buttonFecha.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,6 +109,24 @@ public class InsertarLugar extends AppCompatActivity implements DialogLista.OnTi
                         }, anio, mes, day
                 );
                 datePickerDialog.show();
+            }
+        });
+
+        ImageButton buttonCamara = findViewById(R.id.imageButtonCamera);
+
+        buttonCamara.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tomarFoto();
+            }
+        });
+
+        ImageButton buttonGaleria=findViewById(R.id.imageButtonGaleria);
+
+        buttonGaleria.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                seleccionarFotoDeGaleria();
             }
         });
 
@@ -143,7 +158,7 @@ public class InsertarLugar extends AppCompatActivity implements DialogLista.OnTi
             values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_DIRECCION, direccion);
             values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_TFNO, telefono);
             values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_URL, url);
-            values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_DATE,datoFecha);
+            values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_DATE, datoFecha);
 
             // Obtener la ruta de la foto
             if (lugar != null) {
@@ -175,7 +190,11 @@ public class InsertarLugar extends AppCompatActivity implements DialogLista.OnTi
     @Override
     public void onTipoLugarSelected(String tipoLugar) {
         datoTipoLugar = tipoLugar;
+        Log.d("TIPO_LUGAR", "Tipo de lugar seleccionado: " + tipoLugar);
+
     }
+
+
 
 
     // Métodos para seleccionar imágenes de la galería
@@ -183,6 +202,27 @@ public class InsertarLugar extends AppCompatActivity implements DialogLista.OnTi
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         startActivityForResult(intent, REQUEST_CODE_GALERIA);
+    }
+
+    public void tomarFoto() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
+
+    private void seleccionarFotoDeGaleria() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        startActivityForResult(intent, REQUEST_IMAGE_GALLERY);
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
     }
 
     @Override
@@ -226,4 +266,7 @@ public class InsertarLugar extends AppCompatActivity implements DialogLista.OnTi
 
         return null;
     }
+
+
+
 }

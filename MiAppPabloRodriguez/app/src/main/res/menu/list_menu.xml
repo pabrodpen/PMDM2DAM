@@ -8,4 +8,11 @@
         android:icon="@drawable/baseline_add_circle_24"
         app:showAsAction="always"
         />
+
+    <item
+        android:id="@+id/eliminarTodos"
+        android:title="ELIMINAR TODOS"
+        android:icon="@drawable/baseline_cake_24"
+        app:showAsAction="always"
+        />
 </menu>

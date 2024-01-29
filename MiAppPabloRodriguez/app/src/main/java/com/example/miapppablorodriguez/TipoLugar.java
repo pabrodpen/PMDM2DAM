@@ -6,7 +6,9 @@ public enum TipoLugar {
     PESCADOS_Y_MARISCOS("Pescados Y Mariscos"),
     ASADOR("Asador"),
 
-    TAPAS("Tapas");
+    TAPAS("Tapas"),
+    FAST_FOOD("Fast Food"),
+    COPAS("Copas");
 
 
     //display name para coger el string del nombre
