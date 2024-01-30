@@ -3,28 +3,35 @@ package com.example.miapppablorodriguez;
 import java.io.Serializable;
 
 public class Lugar implements Serializable {
-    String nombre, direccion, url, comentario, valoracion, tfno, rutaFoto;
+    String nombre;
+    String direccion;
+    String url;
+    String comentario;
+    float valoracion;
+    String tfno;
+    String rutaFoto;
     GeoPunto longitud, latitud;
     String tipo;
     String fecha;
 
-    int imagen;
 
 
 
 
-
-    public Lugar(String nombre, String direccion, String tfno, String url, String fecha, String tipoString, int imagen) {
+    public Lugar(String nombre, String direccion, String tfno, String url, String fecha, String tipoString, String rutaFoto, float valoracion) {
         this.nombre = nombre;
         this.direccion = direccion;
         this.url = url;
         this.tfno = tfno;
         this.fecha = fecha;
         // Asignamos un tipo de lugar por defecto para que no dé error
-        this.tipo =tipoString;
-        this.imagen = imagen;  // Nuevo atributo para la imagen
-
+        this.tipo = tipoString;
+        this.rutaFoto = rutaFoto;  // Nuevo atributo para la imagen
+        this.valoracion = valoracion;
     }
+
+
+
 
     public String getNombre() {
         return nombre;
@@ -74,11 +81,11 @@ public class Lugar implements Serializable {
         this.comentario = comentario;
     }
 
-    public String getValoracion() {
+    public float getValoracion() {
         return valoracion;
     }
 
-    public void setValoracion(String valoracion) {
+    public void setValoracion(float valoracion) {
         this.valoracion = valoracion;
     }
 

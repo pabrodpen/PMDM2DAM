@@ -10,9 +10,9 @@
         />
 
     <item
-        android:id="@+id/eliminarTodos"
-        android:title="ELIMINAR TODOS"
-        android:icon="@drawable/baseline_cake_24"
+        android:id="@+id/auxiliar"
+        android:title="CAMBIAR"
         app:showAsAction="always"
         />
+
 </menu>

@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +37,9 @@ public class DetallesLugar extends AppCompatActivity {
     private static final int REQUEST_IMAGE_CAPTURE = 2;
     private static final int REQUEST_IMAGE_GALLERY = 3;
     private Uri imagenUri;
+
+    RatingBar ratingBar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,12 +65,17 @@ public class DetallesLugar extends AppCompatActivity {
         tUrl = findViewById(R.id.editTextUrl);
         tTfno = findViewById(R.id.ediTextTfno);
         tUbicacion = findViewById(R.id.editTextUbicacion);
+        ratingBar = findViewById(R.id.ratingBar2);
 
         // Configurar la ActionBar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Leer los extras del Intent
         Intent intent = getIntent();
+
+
+
+
         if (intent != null) {
             String nombre = intent.getStringExtra("nombre");
             String direccion = getIntent().getStringExtra("direccion");
@@ -74,6 +83,7 @@ public class DetallesLugar extends AppCompatActivity {
             String fecha = intent.getStringExtra("fecha");
             String url = intent.getStringExtra("url");
             String tfno = intent.getStringExtra("tfno");
+            float valoracion = intent.getFloatExtra("valoracion",0);
 
             // Actualizar los EditText con los valores
             tNombre.setText(nombre);
@@ -82,6 +92,7 @@ public class DetallesLugar extends AppCompatActivity {
             tUrl.setText(url);
             tTfno.setText(tfno);
             tUbicacion.setText(direccion);
+            ratingBar.setRating(valoracion);
 
             // Determinar la imagen según el tipo de lugar
             if ("Cafetería".equals(tipo)) {
@@ -114,6 +125,8 @@ public class DetallesLugar extends AppCompatActivity {
                 imageView4.setImageResource(R.drawable.baseline_local_bar_24);
             }
         }
+
+
 
         // En el método onCreate o donde configuras tus vistas
         tUrl.setOnClickListener(new View.OnClickListener() {
@@ -201,11 +214,16 @@ public class DetallesLugar extends AppCompatActivity {
             seleccionarFotoDeGaleria();
             return true;
         } else if (id == R.id.eliminar) {
+            // Dentro de tu clase donde estás tratando de llamar a eliminarLugarPorNombre
             String nombreLugar = tNombre.getText().toString();
+
+// Asumiendo que instance es una instancia de ListLugares, si no, debes obtener una instancia válida de alguna manera.
+
             ListLugares.eliminarLugarPorNombre(nombreLugar);
             finish();
+
             return true;
-        } else if (id == R.id.editar) {
+        }else if (id == R.id.editar) {
             Intent intent = new Intent(DetallesLugar.this, EditarLugar.class);
             startActivity(intent);
             return true;

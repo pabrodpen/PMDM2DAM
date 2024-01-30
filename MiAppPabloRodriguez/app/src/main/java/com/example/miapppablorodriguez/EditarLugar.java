@@ -1,5 +1,6 @@
 package com.example.miapppablorodriguez;
 
+
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
@@ -9,19 +10,24 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RatingBar;
 import android.widget.Toast;
+
 
 import androidx.appcompat.app.AppCompatActivity;
 
+
 import java.util.Calendar;
 
-public class EditarLugar extends AppCompatActivity implements DialogLista.OnTipoLugarSelectedListener{
+
+public class EditarLugar extends AppCompatActivity implements DialogLista.OnTipoLugarSelectedListener {
 
     EditText editTextNombre, editTextTipo, editTextFecha, editTextUrl, editTextTfno, editTextUbicacion;
+    RatingBar ratingBar; // Agregado
 
     Lugar lugar;
 
-    private String datoTipoLugar, datoFecha,fechaSeleccionada;
+    private String datoTipoLugar, datoFecha, fechaSeleccionada;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +41,9 @@ public class EditarLugar extends AppCompatActivity implements DialogLista.OnTipo
         editTextUrl = findViewById(R.id.editTextUrlEditar);
         editTextTfno = findViewById(R.id.editTextTfnoEditar);
         editTextUbicacion = findViewById(R.id.editTextDireccionEditar);
+
+        /* Agregar RatingBar
+        //ratingBar = findViewById(R.id.ratingBar2); // Agregado
 
         // Obtener datos del Intent
         Bundle extras = getIntent().getExtras();
@@ -55,8 +64,10 @@ public class EditarLugar extends AppCompatActivity implements DialogLista.OnTipo
             editTextTfno.setHint(tfno);
             editTextUbicacion.setHint(ubicacion);
 
+            // Mostrar la valoración actual en el RatingBar
+            float valoracion = extras.getFloat("valoracion");
+            ratingBar.setRating(valoracion); // Agregado
         }
-
 
         Button buttonActualizar = findViewById(R.id.buttonActualizar);
         buttonActualizar.setOnClickListener(new View.OnClickListener() {
@@ -67,8 +78,6 @@ public class EditarLugar extends AppCompatActivity implements DialogLista.OnTipo
             }
         });
 
-
-
         Button dialogLista = findViewById(R.id.buttonTipoEditar);
         dialogLista.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,35 +87,13 @@ public class EditarLugar extends AppCompatActivity implements DialogLista.OnTipo
             }
         });
 
-
         Button buttonFecha = findViewById(R.id.buttonFechaEditar);
-
         buttonFecha.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Calendar calendar = Calendar.getInstance();
-                int anio = calendar.get(Calendar.YEAR);
-                int mes = calendar.get(Calendar.MONTH);
-                int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-                DatePickerDialog datePickerDialog = new DatePickerDialog(
-                        EditarLugar.this,
-                        new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                                // Formatear la fecha en el formato deseado (yyyy-MM-dd)
-                                fechaSeleccionada = String.format("%04d-%02d-%02d", year, month + 1, dayOfMonth);
-                                datoFecha = fechaSeleccionada;
-
-                                // Mostrar la fecha en un Toast (opcional)
-                                Toast.makeText(EditarLugar.this, "Fecha seleccionada: " + fechaSeleccionada, Toast.LENGTH_SHORT).show();
-                            }
-                        }, anio, mes, day
-                );
-                datePickerDialog.show();
+                // ... (código para mostrar el DatePickerDialog)
             }
         });
-
     }
 
     @Override
@@ -114,8 +101,6 @@ public class EditarLugar extends AppCompatActivity implements DialogLista.OnTipo
         // Actualizar el EditText de tipo con el tipo seleccionado
         editTextTipo.setText(tipoLugar);
     }
-
-
 
     // Método para actualizar un lugar
     private void actualizarLugar() {
@@ -132,8 +117,10 @@ public class EditarLugar extends AppCompatActivity implements DialogLista.OnTipo
             return;
         }
 
+
+
         // Crear un objeto Lugar con los nuevos datos
-        Lugar nuevoLugar = new Lugar(nombre, ubicacion, tfno, url, fechaSeleccionada, tipo, R.drawable.baseline_photo_24);
+        //Lugar nuevoLugar = new Lugar(nombre, ubicacion, tfno, url, fechaSeleccionada, tipo, ratingBar.getRating());
 
         // Actualizar el lugar en la base de datos
         if (actualizarLugarEnBD(nuevoLugar)) {
@@ -148,10 +135,13 @@ public class EditarLugar extends AppCompatActivity implements DialogLista.OnTipo
         }
     }
 
+
+
     // Método para actualizar un lugar en la base de datos
     private boolean actualizarLugarEnBD(Lugar lugarActualizado) {
         FeedReaderDbHelper dbHelper = new FeedReaderDbHelper(this);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
+
 
         ContentValues values = new ContentValues();
         values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_NOMBRE, lugarActualizado.getNombre());
@@ -161,10 +151,13 @@ public class EditarLugar extends AppCompatActivity implements DialogLista.OnTipo
         values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_URL, lugarActualizado.getUrl());
         values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_DATE, lugarActualizado.getFecha());
 
+
         // Puedes agregar la actualización de la imagen si es necesario
+
 
         String selection = FeedReaderContract.FeedEntry.COLUMN_NAME_NOMBRE + " LIKE ?";
         String[] selectionArgs = { lugarActualizado.getNombre() };
+
 
         int updatedRows = db.update(
                 FeedReaderContract.FeedEntry.TABLE_NAME,
@@ -172,11 +165,18 @@ public class EditarLugar extends AppCompatActivity implements DialogLista.OnTipo
                 selection,
                 selectionArgs);
 
+
         db.close();
         dbHelper.close();
 
+
         // Si se actualizó al menos una fila, se considera exitoso
         return updatedRows > 0;
+    }*/
+    }
+
+    @Override
+    public void onTipoLugarSelected(String tipoLugar) {
+
     }
 }
-

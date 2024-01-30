@@ -24,6 +24,7 @@
         <activity android:name=".InsertarLugar"></activity>
         <activity android:name=".DetallesLugar"></activity>
         <activity android:name=".EditarLugar"></activity>
+
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
 

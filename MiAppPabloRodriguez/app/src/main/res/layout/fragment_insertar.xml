@@ -83,10 +83,9 @@
                     android:text="Insertar Información"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.482"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/buttonDialogo"
-                    app:layout_constraintVertical_bias="0.675" />
+                    app:layout_constraintVertical_bias="0.853" />
 
                 <Button
                     android:id="@+id/buttonDate"
@@ -122,8 +121,8 @@
                     android:layout_marginTop="60dp"
                     android:layout_marginEnd="100dp"
 
-                    android:layout_marginBottom="67dp"
-                    app:layout_constraintBottom_toTopOf="@+id/buttonInsertar"
+                    android:layout_marginBottom="24dp"
+                    app:layout_constraintBottom_toTopOf="@+id/ratingBar"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView5"
                     app:srcCompat="@drawable/baseline_photo_24" />
@@ -137,6 +136,18 @@
                     app:layout_constraintBottom_toTopOf="@+id/imageButtonCamera"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
+
+                <RatingBar
+                    android:id="@+id/ratingBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    app:layout_constraintBottom_toTopOf="@+id/buttonInsertar"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.497"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/imageButtonCamera"
+                    app:layout_constraintVertical_bias="0.0" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

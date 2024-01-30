@@ -122,12 +122,11 @@
         android:id="@+id/editTextNombre"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:layout_marginTop="76dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginTop="8dp"
         android:gravity="center"
         android:text="NOMBRE DEL LUGAR"
         android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/editTextTipoEditar"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar2" />
@@ -156,5 +155,17 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/imageView4"
         app:layout_constraintTop_toBottomOf="@+id/editTextNombre" />
+
+    <RatingBar
+        android:id="@+id/ratingBar2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="39dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextFechaEditar"
+        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

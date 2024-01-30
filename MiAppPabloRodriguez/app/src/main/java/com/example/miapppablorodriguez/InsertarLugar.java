@@ -2,10 +2,12 @@ package com.example.miapppablorodriguez;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -16,6 +18,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -28,17 +31,19 @@ import com.example.miapppablorodriguez.ListLugares;
 import com.example.miapppablorodriguez.Lugar;
 import com.example.miapppablorodriguez.R;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Calendar;
 import java.util.Locale;
 
 public class InsertarLugar extends AppCompatActivity implements DialogLista.OnTipoLugarSelectedListener {
 
-    private static final int REQUEST_CODE_GALERIA = 1001;
     private static final int REQUEST_IMAGE_CAPTURE = 1002;
     private static final int REQUEST_IMAGE_GALLERY = 1003;
 
     private EditText editTextNombre, editTextDirecc, editTextTfno, editTextURL;
-    private String datoTipoLugar, datoFecha;
+    private String datoTipoLugar, datoFecha, rutaFoto;
     private FeedReaderDbHelper dbHelper;
     private Lugar lugar;  // Utilizar la instancia global
 
@@ -67,7 +72,6 @@ public class InsertarLugar extends AppCompatActivity implements DialogLista.OnTi
             }
         });
 
-
         Button buttonInsertar = findViewById(R.id.buttonInsertar);
         buttonInsertar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,7 +89,6 @@ public class InsertarLugar extends AppCompatActivity implements DialogLista.OnTi
         });
 
         Button buttonFecha = findViewById(R.id.buttonDate);
-
         buttonFecha.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -100,7 +103,7 @@ public class InsertarLugar extends AppCompatActivity implements DialogLista.OnTi
                             @Override
                             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                                 // Formatear la fecha en el formato deseado (yyyy-MM-dd)
-                                String fechaSeleccionada = String.format("%04d-%02d-%02d", year, month + 1, dayOfMonth);
+                                String fechaSeleccionada = String.format(Locale.getDefault(), "%04d-%02d-%02d", year, month + 1, dayOfMonth);
                                 datoFecha = fechaSeleccionada;
 
                                 // Mostrar la fecha en un Toast (opcional)
@@ -113,7 +116,6 @@ public class InsertarLugar extends AppCompatActivity implements DialogLista.OnTi
         });
 
         ImageButton buttonCamara = findViewById(R.id.imageButtonCamera);
-
         buttonCamara.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,17 +123,13 @@ public class InsertarLugar extends AppCompatActivity implements DialogLista.OnTi
             }
         });
 
-        ImageButton buttonGaleria=findViewById(R.id.imageButtonGaleria);
-
+        ImageButton buttonGaleria = findViewById(R.id.imageButtonGaleria);
         buttonGaleria.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 seleccionarFotoDeGaleria();
             }
         });
-
-
-
     }
 
     private void insertarInformacion() {
@@ -151,7 +149,6 @@ public class InsertarLugar extends AppCompatActivity implements DialogLista.OnTi
             Log.d("INSERT_OPERATION", "Fecha: " + datoFecha);
             Log.d("INSERT_OPERATION", "Tipo: " + datoTipoLugar);
 
-
             ContentValues values = new ContentValues();
             values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_NOMBRE, nombre);
             values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_TIPO, datoTipoLugar);
@@ -159,11 +156,12 @@ public class InsertarLugar extends AppCompatActivity implements DialogLista.OnTi
             values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_TFNO, telefono);
             values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_URL, url);
             values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_DATE, datoFecha);
+            values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_RUTA_FOTO, rutaFoto);
 
-            // Obtener la ruta de la foto
-            if (lugar != null) {
-                values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_RUTA_FOTO, lugar.getRutaFoto());
-            }
+
+            // Nueva columna para almacenar la calificación
+            float calificacion = obtenerCalificacion();
+            values.put(FeedReaderContract.FeedEntry.COLUMN_VALORACION, calificacion);
 
             long newRowId = db.insert(FeedReaderContract.FeedEntry.TABLE_NAME, null, values);
 
@@ -191,19 +189,9 @@ public class InsertarLugar extends AppCompatActivity implements DialogLista.OnTi
     public void onTipoLugarSelected(String tipoLugar) {
         datoTipoLugar = tipoLugar;
         Log.d("TIPO_LUGAR", "Tipo de lugar seleccionado: " + tipoLugar);
-
     }
 
-
-
-
-    // Métodos para seleccionar imágenes de la galería
-    private void seleccionarImagenDeGaleria() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        startActivityForResult(intent, REQUEST_CODE_GALERIA);
-    }
-
+    // Métodos para la gestión de imágenes
     public void tomarFoto() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -217,56 +205,84 @@ public class InsertarLugar extends AppCompatActivity implements DialogLista.OnTi
         startActivityForResult(intent, REQUEST_IMAGE_GALLERY);
     }
 
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == REQUEST_CODE_GALERIA && resultCode == Activity.RESULT_OK && data != null) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK && data != null) {
+            Bundle extras = data.getExtras();
+            if (extras != null) {
+                // Obtener la imagen capturada
+                Bitmap imageBitmap = (Bitmap) extras.get("data");
+
+                // Guardar la imagen en la galería y obtener la ruta
+                rutaFoto = guardarImagenEnGaleria(imageBitmap);
+
+
+            }
+        } else if (requestCode == REQUEST_IMAGE_GALLERY && resultCode == Activity.RESULT_OK && data != null) {
             Uri imagenUri = data.getData();
 
-            // Actualizar la ruta de la foto en el objeto lugar
-            String rutaFoto = obtenerRutaDesdeUri(imagenUri);
-            if (lugar != null) {
-                lugar.setRutaFoto(rutaFoto);
-            }
+            // Obtener la ruta de la foto desde la galería
+            rutaFoto = obtenerRutaDesdeUri(imagenUri);
 
-            // Actualizar la imagen en el ImageView
-            ImageView imageView = findViewById(R.id.image);
-            if (rutaFoto != null) {
-                imageView.setImageURI(imagenUri);
-            } else {
-                imageView.setImageResource(R.drawable.baseline_photo_24);
-            }
         }
     }
 
+    private String guardarImagenEnGaleria(Bitmap imageBitmap) {
+        String rutaImagen = null;
+        String imageFileName = "JPEG_" + System.currentTimeMillis() + ".jpg";
+        ContentResolver resolver = getContentResolver();
+
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, imageFileName);
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+
+        // Guardar la imagen en la galería
+        Uri uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+        try {
+            OutputStream out = resolver.openOutputStream(uri);
+            if (out != null) {
+                imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                out.close();
+                rutaImagen = uri.toString();
+            }
+        } catch (IOException e) {
+            Log.e("SAVE_IMAGE_ERROR", "Error al guardar la imagen en la galería: " + e.getMessage());
+        }
+
+        return rutaImagen;
+    }
 
     private String obtenerRutaDesdeUri(Uri uri) {
-        String[] projection = {MediaStore.Images.Media.DATA};
-        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+        if (uri.getScheme() != null && uri.getScheme().equals("content")) {
+            String[] projection = {MediaStore.Images.Media.DATA};
+            Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
 
-        if (cursor != null) {
-            try {
-                if (cursor.moveToFirst()) {
-                    int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                    return cursor.getString(columnIndex);
+            if (cursor != null) {
+                try {
+                    if (cursor.moveToFirst()) {
+                        int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                        return cursor.getString(columnIndex);
+                    }
+                } finally {
+                    cursor.close();
                 }
-            } finally {
-                cursor.close();
             }
+        } else if (uri.getScheme() != null && uri.getScheme().equals("file")) {
+            // Si la URI utiliza el esquema "file", simplemente devuelve la ruta directamente
+            return uri.getPath();
         }
 
         return null;
     }
 
-
-
+    private float obtenerCalificacion() {
+        RatingBar ratingBar = findViewById(R.id.ratingBar);
+        return ratingBar.getRating();
+    }
 }
+
+
+
