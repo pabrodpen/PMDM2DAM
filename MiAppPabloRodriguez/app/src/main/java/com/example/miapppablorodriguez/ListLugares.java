@@ -64,7 +64,7 @@ public class ListLugares extends AppCompatActivity {
            @Override
            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-               Log.d("CLICK", "CLICK EN EL ELEMENTO");
+               Toast.makeText(getBaseContext(),"Hago clic",Toast.LENGTH_SHORT).show();
 
                Lugar lugarSeleccionado = lugares.get(position);
 
@@ -77,7 +77,7 @@ public class ListLugares extends AppCompatActivity {
                detallesIntent.putExtra("tfno", lugarSeleccionado.getTfno());
                detallesIntent.putExtra("direccion", lugarSeleccionado.getDireccion());
                detallesIntent.putExtra("rutaFoto", lugarSeleccionado.getRutaFoto());
-               detallesIntent.putExtra("valoracion", lugarSeleccionado.getValoracion());
+               //detallesIntent.putExtra("valoracion", lugarSeleccionado.getValoracion());
 
                startActivity(detallesIntent);
            }
@@ -116,8 +116,8 @@ public class ListLugares extends AppCompatActivity {
                 FeedReaderContract.FeedEntry.COLUMN_NAME_DATE,
                 FeedReaderContract.FeedEntry.COLUMN_NAME_TFNO,
                 FeedReaderContract.FeedEntry.COLUMN_NAME_TIPO,
-                FeedReaderContract.FeedEntry.COLUMN_NAME_RUTA_FOTO,
-                FeedReaderContract.FeedEntry.COLUMN_VALORACION
+                FeedReaderContract.FeedEntry.COLUMN_NAME_RUTA_FOTO
+                //FeedReaderContract.FeedEntry.COLUMN_VALORACION
         };
 
         String selection = "1";
@@ -143,11 +143,11 @@ public class ListLugares extends AppCompatActivity {
             String fecha = cursor.getString(cursor.getColumnIndexOrThrow(FeedReaderContract.FeedEntry.COLUMN_NAME_DATE));
             String tipoString = cursor.getString(cursor.getColumnIndexOrThrow(FeedReaderContract.FeedEntry.COLUMN_NAME_TIPO));
             String rutaFoto = cursor.getString(cursor.getColumnIndexOrThrow(FeedReaderContract.FeedEntry.COLUMN_NAME_RUTA_FOTO));
-            float valoracion = cursor.getFloat(cursor.getColumnIndexOrThrow(FeedReaderContract.FeedEntry.COLUMN_VALORACION));
+            //float valoracion = cursor.getFloat(cursor.getColumnIndexOrThrow(FeedReaderContract.FeedEntry.COLUMN_VALORACION));
 
-            Log.d("TIPO_LUGAR", "Tipo de lugar seleccionado: " + valoracion);
+            //Log.d("TIPO_LUGAR", "Tipo de lugar seleccionado: " + valoracion);
 
-            lugaresList.add(new Lugar(nombre, direccion, tfno, url, fecha, tipoString, rutaFoto, valoracion));
+            lugaresList.add(new Lugar(nombre, direccion, tfno, url, fecha, tipoString, rutaFoto));
         }
 
         cursor.close();
@@ -204,14 +204,14 @@ public class ListLugares extends AppCompatActivity {
         }
     }
 
-    public static void actualizarValoracionLugar(String nombre, float nuevaValoracion) {
+    /*public static void actualizarValoracionLugar(String nombre, float nuevaValoracion) {
         // Obtener la instancia actual de ListLugares y actualizar la lista
         if (instance != null) {
             instance.actualizarValoracionEnBD(nombre, nuevaValoracion);
         }
-    }
+    }*/
 
-    private void actualizarValoracionEnBD(String nombre, float nuevaValoracion) {
+    /*private void actualizarValoracionEnBD(String nombre, float nuevaValoracion) {
         FeedReaderDbHelper dbHelper = new FeedReaderDbHelper(this);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
@@ -227,7 +227,7 @@ public class ListLugares extends AppCompatActivity {
         // Cerrar la conexión con la base de datos
         db.close();
         dbHelper.close();
-    }
+    }*/
 
     public static void eliminarLugarPorNombre(String nombre) {
         if (instance != null && instance.adapter != null) {

@@ -139,6 +139,8 @@ public class InsertarLugar extends AppCompatActivity implements DialogLista.OnTi
         String direccion = editTextDirecc.getText().toString();
         String telefono = editTextTfno.getText().toString();
         String url = editTextURL.getText().toString();
+        // Nueva columna para almacenar la calificación
+        //float calificacion = obtenerCalificacion();
 
         try {
             Log.d("INSERT_OPERATION", "Insertando datos:");
@@ -157,11 +159,7 @@ public class InsertarLugar extends AppCompatActivity implements DialogLista.OnTi
             values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_URL, url);
             values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_DATE, datoFecha);
             values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_RUTA_FOTO, rutaFoto);
-
-
-            // Nueva columna para almacenar la calificación
-            float calificacion = obtenerCalificacion();
-            values.put(FeedReaderContract.FeedEntry.COLUMN_VALORACION, calificacion);
+            //values.put(FeedReaderContract.FeedEntry.COLUMN_VALORACION, calificacion);
 
             long newRowId = db.insert(FeedReaderContract.FeedEntry.TABLE_NAME, null, values);
 
@@ -278,10 +276,10 @@ public class InsertarLugar extends AppCompatActivity implements DialogLista.OnTi
         return null;
     }
 
-    private float obtenerCalificacion() {
+    /*private float obtenerCalificacion() {
         RatingBar ratingBar = findViewById(R.id.ratingBar);
         return ratingBar.getRating();
-    }
+    }*/
 }
 
 

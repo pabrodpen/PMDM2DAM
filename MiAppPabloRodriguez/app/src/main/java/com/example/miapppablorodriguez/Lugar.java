@@ -7,7 +7,7 @@ public class Lugar implements Serializable {
     String direccion;
     String url;
     String comentario;
-    float valoracion;
+    //float valoracion;
     String tfno;
     String rutaFoto;
     GeoPunto longitud, latitud;
@@ -18,17 +18,18 @@ public class Lugar implements Serializable {
 
 
 
-    public Lugar(String nombre, String direccion, String tfno, String url, String fecha, String tipoString, String rutaFoto, float valoracion) {
+    public Lugar(String nombre, String direccion, String tfno, String url, String fecha, String tipoString, String rutaFoto /*float valoracion*/) {
         this.nombre = nombre;
         this.direccion = direccion;
         this.url = url;
         this.tfno = tfno;
         this.fecha = fecha;
-        // Asignamos un tipo de lugar por defecto para que no dé error
         this.tipo = tipoString;
-        this.rutaFoto = rutaFoto;  // Nuevo atributo para la imagen
-        this.valoracion = valoracion;
+        this.rutaFoto = rutaFoto;
+        //this.valoracion = valoracion;
     }
+
+
 
 
 
@@ -81,14 +82,14 @@ public class Lugar implements Serializable {
         this.comentario = comentario;
     }
 
-    public float getValoracion() {
+    /*public float getValoracion() {
         return valoracion;
     }
 
     public void setValoracion(float valoracion) {
         this.valoracion = valoracion;
     }
-
+*/
     public GeoPunto getLongitud() {
         return longitud;
     }

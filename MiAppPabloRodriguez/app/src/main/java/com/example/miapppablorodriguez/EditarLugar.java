@@ -23,7 +23,7 @@ import java.util.Calendar;
 public class EditarLugar extends AppCompatActivity implements DialogLista.OnTipoLugarSelectedListener {
 
     EditText editTextNombre, editTextTipo, editTextFecha, editTextUrl, editTextTfno, editTextUbicacion;
-    RatingBar ratingBar; // Agregado
+    //RatingBar ratingBar; // Agregado
 
     Lugar lugar;
 

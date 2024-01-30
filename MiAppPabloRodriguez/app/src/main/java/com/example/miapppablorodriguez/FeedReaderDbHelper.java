@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class FeedReaderDbHelper extends SQLiteOpenHelper {
-    public static final int DATABASE_VERSION = 8;
+    public static final int DATABASE_VERSION = 5;
     public static final String DATABASE_NAME = "FeedReader.db";
 
     public static final String SQL_CREATE_ENTRIES =
@@ -17,7 +17,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
                     FeedReaderContract.FeedEntry.COLUMN_NAME_URL + " TEXT," +
                     FeedReaderContract.FeedEntry.COLUMN_NAME_TFNO + " TEXT," +
                     FeedReaderContract.FeedEntry.COLUMN_NAME_DATE + " TEXT," +
-                    FeedReaderContract.FeedEntry.COLUMN_VALORACION + " REAL," +  // Modificado
+                    //FeedReaderContract.FeedEntry.COLUMN_VALORACION + " REAL," +  // Modificado
                     FeedReaderContract.FeedEntry.COLUMN_NAME_RUTA_FOTO + " TEXT" +
                     ")";
 

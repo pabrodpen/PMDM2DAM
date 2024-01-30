@@ -15,6 +15,6 @@ public final class FeedReaderContract {
         public static final String COLUMN_NAME_TFNO = "TELEFONO";
         public static final String COLUMN_NAME_URL = "URL";
         public static final String COLUMN_NAME_DATE = "FECHA";
-        public static final String COLUMN_VALORACION = "VALORACION";
+        //public static final String COLUMN_VALORACION = "VALORACION";
     }
 }

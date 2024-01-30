@@ -38,7 +38,7 @@ public class AdaptadorLugar extends ArrayAdapter<Lugar> {
         TextView textViewNombre = itemView.findViewById(R.id.textViewNombre);
         TextView textViewDireccion = itemView.findViewById(R.id.textViewDireccion);
         ImageView imageView = itemView.findViewById(R.id.image);
-        RatingBar ratingBar = itemView.findViewById(R.id.ratingBar); // Agregado
+        //RatingBar ratingBar = itemView.findViewById(R.id.ratingBar); // Agregado
 
         // Configurar los valores de los elementos
         textViewNombre.setText(lugar.getNombre());
@@ -54,7 +54,7 @@ public class AdaptadorLugar extends ArrayAdapter<Lugar> {
             imageView.setImageResource(R.drawable.baseline_photo_24);
         }
 
-        //Configurar la calificación y agregar el listener
+        /*Configurar la calificación y agregar el listener
         if (lugar != null) {
             ratingBar.setRating(lugar.getValoracion());
             ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
@@ -66,7 +66,7 @@ public class AdaptadorLugar extends ArrayAdapter<Lugar> {
                     }
                 }
             });
-        }
+        }*/
 
         return itemView;
     }
