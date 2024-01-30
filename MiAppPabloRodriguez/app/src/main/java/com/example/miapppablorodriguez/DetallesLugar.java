@@ -38,7 +38,6 @@ public class DetallesLugar extends AppCompatActivity {
     private static final int REQUEST_IMAGE_GALLERY = 3;
     private Uri imagenUri;
 
-    //RatingBar ratingBar;
 
 
     @Override
@@ -65,7 +64,6 @@ public class DetallesLugar extends AppCompatActivity {
         tUrl = findViewById(R.id.editTextUrl);
         tTfno = findViewById(R.id.ediTextTfno);
         tUbicacion = findViewById(R.id.editTextUbicacion);
-        //ratingBar = findViewById(R.id.ratingBar2);
 
         // Configurar la ActionBar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -83,7 +81,6 @@ public class DetallesLugar extends AppCompatActivity {
             String fecha = intent.getStringExtra("fecha");
             String url = intent.getStringExtra("url");
             String tfno = intent.getStringExtra("tfno");
-            //float valoracion = intent.getFloatExtra("valoracion",0);
 
             // Actualizar los EditText con los valores
             tNombre.setText(nombre);
@@ -92,7 +89,6 @@ public class DetallesLugar extends AppCompatActivity {
             tUrl.setText(url);
             tTfno.setText(tfno);
             tUbicacion.setText(direccion);
-            //ratingBar.setRating(valoracion);
 
             // Determinar la imagen según el tipo de lugar
             if ("Cafetería".equals(tipo)) {

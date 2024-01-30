@@ -5,25 +5,22 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class FeedReaderDbHelper extends SQLiteOpenHelper {
-    public static final int DATABASE_VERSION = 5;
+
+    public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "FeedReader.db";
 
-    public static final String SQL_CREATE_ENTRIES =
+    private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + FeedReaderContract.FeedEntry.TABLE_NAME + " (" +
                     FeedReaderContract.FeedEntry._ID + " INTEGER PRIMARY KEY," +
                     FeedReaderContract.FeedEntry.COLUMN_NAME_NOMBRE + " TEXT," +
-                    FeedReaderContract.FeedEntry.COLUMN_NAME_TIPO + " TEXT," +
                     FeedReaderContract.FeedEntry.COLUMN_NAME_DIRECCION + " TEXT," +
                     FeedReaderContract.FeedEntry.COLUMN_NAME_URL + " TEXT," +
-                    FeedReaderContract.FeedEntry.COLUMN_NAME_TFNO + " TEXT," +
                     FeedReaderContract.FeedEntry.COLUMN_NAME_DATE + " TEXT," +
-                    //FeedReaderContract.FeedEntry.COLUMN_VALORACION + " REAL," +  // Modificado
-                    FeedReaderContract.FeedEntry.COLUMN_NAME_RUTA_FOTO + " TEXT" +
-                    ")";
+                    FeedReaderContract.FeedEntry.COLUMN_NAME_TFNO + " TEXT," +
+                    FeedReaderContract.FeedEntry.COLUMN_NAME_TIPO + " TEXT," +
+                    FeedReaderContract.FeedEntry.COLUMN_NAME_RUTA_FOTO + " TEXT)";
 
-
-
-    public static final String SQL_DELETE_ENTRIES =
+    private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + FeedReaderContract.FeedEntry.TABLE_NAME;
 
     public FeedReaderDbHelper(Context context) {

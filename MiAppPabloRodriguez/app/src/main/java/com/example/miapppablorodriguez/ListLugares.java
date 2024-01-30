@@ -1,7 +1,5 @@
 package com.example.miapppablorodriguez;
 
-import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -14,7 +12,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -47,48 +44,32 @@ public class ListLugares extends AppCompatActivity {
         lugares = obtenerListaDeLugaresDesdeBD();
         adapter = new AdaptadorLugar(this, lugares);
         listView = findViewById(R.id.listView);
+        listView.setAdapter(adapter);
 
-        // Verificar si adapter y listView son nulos antes de usarlos
-        if (adapter != null && listView != null) {
-            listView.setAdapter(adapter);
+        Log.d("LIST_DEBUG", "Número de elementos en la lista: " + lugares.size());
 
-            // Notificar al adaptador que los datos han cambiado
-            adapter.notifyDataSetChanged();
+        // Notificar al adaptador que los datos han cambiado
+        adapter.notifyDataSetChanged();
 
-            // Resto del código...
-        } else {
-            Log.e("ERROR", "Adapter o ListView es nulo");
-        }
+        // Configurar el listener para el clic en un elemento de la lista
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Lugar lugarSeleccionado = lugares.get(position);
 
-       listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-           @Override
-           public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Crear una instancia de DetallesLugar y pasar los detalles del lugar como extras en el Intent
+                Intent detallesIntent = new Intent(ListLugares.this, DetallesLugar.class);
+                detallesIntent.putExtra("nombre", lugarSeleccionado.getNombre());
+                detallesIntent.putExtra("tipo", lugarSeleccionado.getTipo().toString());
+                detallesIntent.putExtra("fecha", lugarSeleccionado.getFecha());
+                detallesIntent.putExtra("url", lugarSeleccionado.getUrl());
+                detallesIntent.putExtra("tfno", lugarSeleccionado.getTfno());
+                detallesIntent.putExtra("direccion", lugarSeleccionado.getDireccion());
+                detallesIntent.putExtra("rutaFoto", lugarSeleccionado.getRutaFoto());
 
-               Toast.makeText(getBaseContext(),"Hago clic",Toast.LENGTH_SHORT).show();
-
-               Lugar lugarSeleccionado = lugares.get(position);
-
-               // Crear una instancia de DetallesLugar y pasar los detalles del lugar como extras en el Intent
-               Intent detallesIntent = new Intent(ListLugares.this, DetallesLugar.class);
-               detallesIntent.putExtra("nombre", lugarSeleccionado.getNombre());
-               detallesIntent.putExtra("tipo", lugarSeleccionado.getTipo().toString());
-               detallesIntent.putExtra("fecha", lugarSeleccionado.getFecha());
-               detallesIntent.putExtra("url", lugarSeleccionado.getUrl());
-               detallesIntent.putExtra("tfno", lugarSeleccionado.getTfno());
-               detallesIntent.putExtra("direccion", lugarSeleccionado.getDireccion());
-               detallesIntent.putExtra("rutaFoto", lugarSeleccionado.getRutaFoto());
-               //detallesIntent.putExtra("valoracion", lugarSeleccionado.getValoracion());
-
-               startActivity(detallesIntent);
-           }
-       });
-
-
-
-
-
-
-
+                startActivity(detallesIntent);
+            }
+        });
 
         // Habilitar opciones de menú
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -116,8 +97,7 @@ public class ListLugares extends AppCompatActivity {
                 FeedReaderContract.FeedEntry.COLUMN_NAME_DATE,
                 FeedReaderContract.FeedEntry.COLUMN_NAME_TFNO,
                 FeedReaderContract.FeedEntry.COLUMN_NAME_TIPO,
-                FeedReaderContract.FeedEntry.COLUMN_NAME_RUTA_FOTO
-                //FeedReaderContract.FeedEntry.COLUMN_VALORACION
+                FeedReaderContract.FeedEntry.COLUMN_NAME_RUTA_FOTO // Nuevo atributo para la ruta de la foto
         };
 
         String selection = "1";
@@ -142,10 +122,9 @@ public class ListLugares extends AppCompatActivity {
             String url = cursor.getString(cursor.getColumnIndexOrThrow(FeedReaderContract.FeedEntry.COLUMN_NAME_URL));
             String fecha = cursor.getString(cursor.getColumnIndexOrThrow(FeedReaderContract.FeedEntry.COLUMN_NAME_DATE));
             String tipoString = cursor.getString(cursor.getColumnIndexOrThrow(FeedReaderContract.FeedEntry.COLUMN_NAME_TIPO));
-            String rutaFoto = cursor.getString(cursor.getColumnIndexOrThrow(FeedReaderContract.FeedEntry.COLUMN_NAME_RUTA_FOTO));
-            //float valoracion = cursor.getFloat(cursor.getColumnIndexOrThrow(FeedReaderContract.FeedEntry.COLUMN_VALORACION));
 
-            //Log.d("TIPO_LUGAR", "Tipo de lugar seleccionado: " + valoracion);
+            // Nuevo atributo para la ruta de la foto
+            String rutaFoto = cursor.getString(cursor.getColumnIndexOrThrow(FeedReaderContract.FeedEntry.COLUMN_NAME_RUTA_FOTO));
 
             lugaresList.add(new Lugar(nombre, direccion, tfno, url, fecha, tipoString, rutaFoto));
         }
@@ -170,9 +149,6 @@ public class ListLugares extends AppCompatActivity {
             Intent insertarIntent = new Intent(this, InsertarLugar.class);
             startActivity(insertarIntent);
             return true;
-        }else if(id==R.id.auxiliar){
-            Intent intent=new Intent(ListLugares.this,DetallesLugar.class);
-            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
@@ -193,41 +169,17 @@ public class ListLugares extends AppCompatActivity {
         }
     }
 
-    private void cargarInformacionLugar(Lugar lugar, ImageView imageView) {
-        String rutaFoto = lugar.getRutaFoto();
-
-        if (rutaFoto != null && !rutaFoto.isEmpty()) {
-            // Utiliza Glide para cargar la imagen desde la ruta almacenada en la base de datos
-            Glide.with(this)
-                    .load(rutaFoto)
-                    .into(imageView);
-        }
-    }
-
-    /*public static void actualizarValoracionLugar(String nombre, float nuevaValoracion) {
-        // Obtener la instancia actual de ListLugares y actualizar la lista
-        if (instance != null) {
-            instance.actualizarValoracionEnBD(nombre, nuevaValoracion);
-        }
-    }*/
-
-    /*private void actualizarValoracionEnBD(String nombre, float nuevaValoracion) {
+    private void eliminarTodosLosLugares() {
         FeedReaderDbHelper dbHelper = new FeedReaderDbHelper(this);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        ContentValues values = new ContentValues();
-        values.put(FeedReaderContract.FeedEntry.COLUMN_VALORACION, nuevaValoracion);
-
-        String whereClause = FeedReaderContract.FeedEntry.COLUMN_NAME_NOMBRE + "=?";
-        String[] whereArgs = {nombre};
-
-        // Actualizar la valoración en la base de datos
-        db.update(FeedReaderContract.FeedEntry.TABLE_NAME, values, whereClause, whereArgs);
+        // Eliminar todos los registros de la tabla
+        db.delete(FeedReaderContract.FeedEntry.TABLE_NAME, null, null);
 
         // Cerrar la conexión con la base de datos
         db.close();
         dbHelper.close();
-    }*/
+    }
 
     public static void eliminarLugarPorNombre(String nombre) {
         if (instance != null && instance.adapter != null) {
@@ -241,6 +193,17 @@ public class ListLugares extends AppCompatActivity {
                     break;
                 }
             }
+        }
+    }
+
+    private void cargarInformacionLugar(Lugar lugar, ImageView imageView) {
+        String rutaFoto = lugar.getRutaFoto();
+
+        if (rutaFoto != null && !rutaFoto.isEmpty()) {
+            // Utiliza Glide para cargar la imagen desde la ruta almacenada en la base de datos
+            Glide.with(this)
+                    .load(rutaFoto)
+                    .into(imageView);
         }
     }
 }

@@ -7,7 +7,6 @@ public class Lugar implements Serializable {
     String direccion;
     String url;
     String comentario;
-    //float valoracion;
     String tfno;
     String rutaFoto;
     GeoPunto longitud, latitud;
@@ -26,7 +25,6 @@ public class Lugar implements Serializable {
         this.fecha = fecha;
         this.tipo = tipoString;
         this.rutaFoto = rutaFoto;
-        //this.valoracion = valoracion;
     }
 
 

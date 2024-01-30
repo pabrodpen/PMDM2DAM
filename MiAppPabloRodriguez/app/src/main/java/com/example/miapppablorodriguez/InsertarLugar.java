@@ -18,7 +18,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -31,7 +30,6 @@ import com.example.miapppablorodriguez.ListLugares;
 import com.example.miapppablorodriguez.Lugar;
 import com.example.miapppablorodriguez.R;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Calendar;
@@ -139,8 +137,6 @@ public class InsertarLugar extends AppCompatActivity implements DialogLista.OnTi
         String direccion = editTextDirecc.getText().toString();
         String telefono = editTextTfno.getText().toString();
         String url = editTextURL.getText().toString();
-        // Nueva columna para almacenar la calificación
-        //float calificacion = obtenerCalificacion();
 
         try {
             Log.d("INSERT_OPERATION", "Insertando datos:");
@@ -158,8 +154,9 @@ public class InsertarLugar extends AppCompatActivity implements DialogLista.OnTi
             values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_TFNO, telefono);
             values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_URL, url);
             values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_DATE, datoFecha);
+
+            // Nueva columna para almacenar la ruta de la foto
             values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_RUTA_FOTO, rutaFoto);
-            //values.put(FeedReaderContract.FeedEntry.COLUMN_VALORACION, calificacion);
 
             long newRowId = db.insert(FeedReaderContract.FeedEntry.TABLE_NAME, null, values);
 
@@ -224,6 +221,7 @@ public class InsertarLugar extends AppCompatActivity implements DialogLista.OnTi
             // Obtener la ruta de la foto desde la galería
             rutaFoto = obtenerRutaDesdeUri(imagenUri);
 
+
         }
     }
 
@@ -275,12 +273,4 @@ public class InsertarLugar extends AppCompatActivity implements DialogLista.OnTi
 
         return null;
     }
-
-    /*private float obtenerCalificacion() {
-        RatingBar ratingBar = findViewById(R.id.ratingBar);
-        return ratingBar.getRating();
-    }*/
 }
-
-
-

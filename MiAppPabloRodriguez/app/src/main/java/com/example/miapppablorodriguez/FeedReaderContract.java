@@ -3,18 +3,18 @@ package com.example.miapppablorodriguez;
 import android.provider.BaseColumns;
 
 public final class FeedReaderContract {
+
     private FeedReaderContract() {
     }
 
     public static class FeedEntry implements BaseColumns {
-        public static final String TABLE_NAME = "TABLA_PRUEBA";
-        public static final String COLUMN_NAME_NOMBRE = "NOMBRE";
-        public static final String COLUMN_NAME_RUTA_FOTO = "RUTA_FOTO";
-        public static final String COLUMN_NAME_TIPO = "TIPO";
-        public static final String COLUMN_NAME_DIRECCION = "DIRECCION";
-        public static final String COLUMN_NAME_TFNO = "TELEFONO";
-        public static final String COLUMN_NAME_URL = "URL";
-        public static final String COLUMN_NAME_DATE = "FECHA";
-        //public static final String COLUMN_VALORACION = "VALORACION";
+        public static final String TABLE_NAME = "lugares";
+        public static final String COLUMN_NAME_NOMBRE = "nombre";
+        public static final String COLUMN_NAME_DIRECCION = "direccion";
+        public static final String COLUMN_NAME_URL = "url";
+        public static final String COLUMN_NAME_DATE = "fecha";
+        public static final String COLUMN_NAME_TFNO = "telefono";
+        public static final String COLUMN_NAME_TIPO = "tipo";
+        public static final String COLUMN_NAME_RUTA_FOTO = "ruta_foto";
     }
 }
