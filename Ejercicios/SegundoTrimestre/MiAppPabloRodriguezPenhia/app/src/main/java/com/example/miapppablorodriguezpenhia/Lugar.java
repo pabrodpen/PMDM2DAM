@@ -1,19 +1,38 @@
 package com.example.miapppablorodriguezpenhia;
 
-import android.media.Image;
 
-import java.io.Serializable;
-import java.time.LocalDate;
+public class Lugar {
+    private String nombre;
+    private String direccion;
+    private String tfno;
+    private String url;
+    private String fecha;
+    private String tipo;
+    private String rutaFoto;
+    private float valoracion; // Nuevo atributo para la valoración
+    GeoPunto latitud,longitud;
 
-public class Lugar implements Serializable {
-    String nombre,direccion,url,comentario,valoracion,tfno,rutaFoto;
-    GeoPunto longitud,latitud;
-    TipoLugar tipo;
-    String fecha,hora;
-
-    public Lugar() {
-
+    public Lugar(String nombre, String direccion, String tfno, String url, String fecha, String tipo, String rutaFoto, float valoracion) {
+        this.nombre = nombre;
+        this.direccion = direccion;
+        this.tfno = tfno;
+        this.url = url;
+        this.fecha = fecha;
+        this.tipo = tipo;
+        this.rutaFoto = rutaFoto;
+        this.valoracion = valoracion;
     }
+
+    public float getValoracion() {
+        return valoracion;
+    }
+
+    public void setValoracion(float valoracion) {
+        this.valoracion = valoracion;
+    }
+
+
+
 
 
     public String getNombre() {
@@ -56,21 +75,7 @@ public class Lugar implements Serializable {
         this.tfno = tfno;
     }
 
-    public String getComentario() {
-        return comentario;
-    }
 
-    public void setComentario(String comentario) {
-        this.comentario = comentario;
-    }
-
-    public String getValoracion() {
-        return valoracion;
-    }
-
-    public void setValoracion(String valoracion) {
-        this.valoracion = valoracion;
-    }
 
     public GeoPunto getLongitud() {
         return longitud;
@@ -88,26 +93,13 @@ public class Lugar implements Serializable {
         this.latitud = latitud;
     }
 
-    public TipoLugar getTipo() {
+    public String getTipo() {
         return tipo;
     }
 
-    public void setTipo(TipoLugar tipo) {
+    public void setTipo(String tipo) {
         this.tipo = tipo;
     }
-
-    /*public Lugar(String nombre, String direccion, String url, String comentario, String valoracion,
-                 GeoPunto longitud, GeoPunto latitud, TipoLugar tipo, Image foto) {
-        this.nombre = nombre;
-        this.direccion = direccion;
-        this.url = url;
-        this.comentario = comentario;
-        this.valoracion = valoracion;
-        this.longitud = longitud;
-        this.latitud = latitud;
-        this.tipo = tipo;
-        this.foto = foto;
-    }*/
 
     public String getFecha() {
         return fecha;
@@ -117,36 +109,9 @@ public class Lugar implements Serializable {
         this.fecha = fecha;
     }
 
-    public String getHora() {
-        return hora;
-    }
 
-    public void setHora(String hora) {
-        this.hora = hora;
-    }
 
-    public Lugar(String nombre, String direccion, String tfno, String url,String f,String h,String rutaFoto) {
-        this.nombre = nombre;
-        this.direccion = direccion;
-        this.url = url;
-        this.tfno=tfno;
-        this.fecha=f;
-        this.hora=h;
-        //asignamos un tipo de lugar por defecto para que no de error
-        this.tipo=TipoLugar.CAFETERÍA;
-        this.rutaFoto=rutaFoto;
-    }
 
-    @Override
-    public String toString() {
-        return "nombre:" + nombre + '\'' +
-                ", direccion:" + direccion + '\'' +
-                ", url:" + url+ '\''+",telefono:"+tfno;
-    }
 
 
 }
-
-
-//    nombre: texto corto, dirección: texto largo, punto geográfico (clase GeoPunto): longitud y latitud,
-//    foto (imagen), url, comentario, fecha, valoración, un enumerado TipoLugar.
