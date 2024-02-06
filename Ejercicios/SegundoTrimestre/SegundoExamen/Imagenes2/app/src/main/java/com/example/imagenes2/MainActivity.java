@@ -1,5 +1,7 @@
 package com.example.imagenes2;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -25,19 +27,57 @@ public class MainActivity extends AppCompatActivity {
 
         infoTextView = findViewById(R.id.infoTextView);
 
-        // Configurando listeners para los botones
-        configureImageButton(imageButton1, "ILLOJUAN");
-        configureImageButton(imageButton2, "KNEKRO");
-        configureImageButton(imageButton3, "IBAI");
-        configureImageButton(imageButton4, "DJ MARIIO");
-    }
 
-    private void configureImageButton(final ImageButton imageButton, final String info) {
-        imageButton.setOnClickListener(new View.OnClickListener() {
+        // Cargar las imágenes desde recursos como Bitmap
+        Bitmap bitmap1 = BitmapFactory.decodeResource(getResources(), R.drawable.illojuan);
+        Bitmap bitmap2 = BitmapFactory.decodeResource(getResources(), R.drawable.knekro);
+        Bitmap bitmap3 = BitmapFactory.decodeResource(getResources(), R.drawable.ibai);
+        Bitmap bitmap4 = BitmapFactory.decodeResource(getResources(), R.drawable.djmario);
+
+
+
+        bitmap1 = Bitmap.createScaledBitmap(bitmap1, 400, 400, true);
+        bitmap2 = Bitmap.createScaledBitmap(bitmap2, 400, 400, true);
+        bitmap3 = Bitmap.createScaledBitmap(bitmap3, 400, 400, true);
+        bitmap4 = Bitmap.createScaledBitmap(bitmap4, 400, 400, true);
+
+
+        // Configurar los ImageButton con las imágenes Bitmap
+        imageButton1.setImageBitmap(bitmap1);
+        imageButton2.setImageBitmap(bitmap2);
+        imageButton3.setImageBitmap(bitmap3);
+        imageButton4.setImageBitmap(bitmap4);
+
+
+        imageButton1.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                infoTextView.setText(info);
+            public void onClick(View v) {
+                infoTextView.setText("ILLOJUAN");
             }
         });
+
+        imageButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                infoTextView.setText("KNEKRO");
+            }
+        });
+
+        imageButton3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                infoTextView.setText("IBAI");
+            }
+        });
+
+        imageButton4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                infoTextView.setText("DJMARIO");
+            }
+        });
+
+
     }
 }
+

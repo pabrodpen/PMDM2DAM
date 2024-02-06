@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace = "com.example.imagenes2"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.imagenes2"
