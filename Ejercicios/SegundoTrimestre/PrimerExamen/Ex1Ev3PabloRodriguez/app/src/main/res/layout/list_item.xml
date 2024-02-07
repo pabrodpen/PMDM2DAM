@@ -9,12 +9,6 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginEnd="10dp"
-        /> <!-- Puedes definir un ícono predeterminado aquí -->
+        />
 
-    <TextView
-        android:id="@android:id/text1"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textSize="18sp"/>
 </LinearLayout>
