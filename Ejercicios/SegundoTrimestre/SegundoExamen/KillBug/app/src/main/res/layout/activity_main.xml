@@ -7,42 +7,47 @@
 
     <ImageView
         android:id="@+id/bug1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/bug_normal"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/abeja"
         android:layout_marginTop="100dp"
-        android:layout_marginLeft="50dp"/>
+        android:layout_marginLeft="100dp"
+        />
 
     <ImageView
         android:id="@+id/bug2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/bug_normal"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/bicho"
         android:layout_marginTop="100dp"
-        android:layout_marginLeft="150dp"/>
+        android:layout_marginLeft="100dp"
+        />
 
     <ImageView
         android:id="@+id/bug3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/bug_normal"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/bicho3"
         android:layout_marginTop="100dp"
-        android:layout_marginLeft="250dp"/>
+        android:layout_marginLeft="100dp"
+        />
 
     <ImageView
         android:id="@+id/bug4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/bug_normal"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/hormiga"
         android:layout_marginTop="100dp"
-        android:layout_marginLeft="350dp"/>
+        android:layout_marginLeft="100dp"
+
+        />
 
     <ImageView
         android:id="@+id/bug5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/bug_normal"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/mariquita"
         android:layout_marginTop="100dp"
-        android:layout_marginLeft="450dp"/>
+        android:layout_marginLeft="100dp"/>
 
 </RelativeLayout>

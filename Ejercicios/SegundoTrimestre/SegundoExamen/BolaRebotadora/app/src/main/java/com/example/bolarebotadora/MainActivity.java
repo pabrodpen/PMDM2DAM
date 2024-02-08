@@ -5,6 +5,8 @@ import android.widget.RelativeLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.bolarebotadora.BolaRebote;
+
 public class MainActivity extends AppCompatActivity {
     private BolaRebote bolaRebote;
     private RelativeLayout contenedor;
@@ -18,10 +20,11 @@ public class MainActivity extends AppCompatActivity {
         contenedor = findViewById(R.id.contenedor);
 
         // Crear una nueva instancia de BolaRebote
-        bolaRebote = new BolaRebote(0.5f, 0.5f, 0.02f, 0.03f, 0.001f, 0.01f);
+        float tamañoBola = 80; // Tamaño deseado de la bola
+        bolaRebote = new BolaRebote(0.5f, 0.5f, 0.5f, 0.5f, 0.01f, 0.01f);
 
         // Crear una nueva instancia de BolaReboteView y agregarla al contenedor
-        BolaReboteView bolaReboteView = new BolaReboteView(this, bolaRebote);
+        BolaReboteView bolaReboteView = new BolaReboteView(this, bolaRebote, tamañoBola);
         contenedor.addView(bolaReboteView);
 
         // Iniciar un hilo para actualizar continuamente la posición de la bola

@@ -7,6 +7,7 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -27,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        squishSound = MediaPlayer.create(this, R.raw.squish);
+        squishSound = MediaPlayer.create(this, R.raw.golpe);
 
         handler = new Handler();
         runnable = new Runnable() {
@@ -69,25 +70,59 @@ public class MainActivity extends AppCompatActivity {
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
+                                // Después de 1 segundo, cambiar la imagen a la normal
                                 bugImages[finalI].setImageDrawable(normalDrawables[finalI]);
                                 isSquashed[finalI] = false;
                             }
-                        }, 2000); // Tiempo antes de que vuelva a aparecer el insecto
+                        }, 1000); // Mostrar la imagen aplastada durante 1 segundo
                     }
                 }
             });
+
         }
     }
 
     private void generateRandomBugs() {
         Random random = new Random();
-        int numBugs = random.nextInt(5) + 1; // Genera de 1 a 5 bichos
+
+        int screenWidth = getResources().getDisplayMetrics().widthPixels;
+        int screenHeight = getResources().getDisplayMetrics().heightPixels;
+
         for (int i = 0; i < 5; i++) {
-            if (i < numBugs) {
-                bugImages[i].setVisibility(View.VISIBLE);
-            } else {
-                bugImages[i].setVisibility(View.INVISIBLE);
+            int x = random.nextInt(screenWidth);
+            int y = random.nextInt(screenHeight);
+
+            // Ajustar la posición del insecto para que esté dentro de los límites de la pantalla
+            if (x > screenWidth - bugImages[i].getWidth()) {
+                x = screenWidth - bugImages[i].getWidth();
+            }
+            if (y > screenHeight - bugImages[i].getHeight()) {
+                y = screenHeight - bugImages[i].getHeight();
+            }
+
+            // Establecer la posición del insecto
+            bugImages[i].setX(x);
+            bugImages[i].setY(y);
+
+            // Hacer que los insectos sean visibles
+            bugImages[i].setVisibility(View.VISIBLE);
+        }
+
+        // Programar la eliminación de las imágenes aplastadas
+        for (int i = 0; i < 5; i++) {
+            if (isSquashed[i]) {
+                final int finalI = i;
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        ((ViewGroup) bugImages[finalI].getParent()).removeView(bugImages[finalI]);
+                        isSquashed[finalI] = false;
+                    }
+                }, 500); // Eliminar el elemento aplastado después de 1 segundo
             }
         }
     }
+
+
+
 }
