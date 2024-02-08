@@ -6,7 +6,7 @@ import android.widget.RelativeLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
-    public BolaRebote bolaRebote;
+    private BolaRebote bolaRebote;
     private RelativeLayout contenedor;
 
     @Override
@@ -20,8 +20,9 @@ public class MainActivity extends AppCompatActivity {
         // Crear una nueva instancia de BolaRebote
         bolaRebote = new BolaRebote(0.5f, 0.5f, 0.02f, 0.03f, 0.001f, 0.01f);
 
-        // Agregar la vista de la bola al contenedor
-        contenedor.addView(bolaRebote);
+        // Crear una nueva instancia de BolaReboteView y agregarla al contenedor
+        BolaReboteView bolaReboteView = new BolaReboteView(this, bolaRebote);
+        contenedor.addView(bolaReboteView);
 
         // Iniciar un hilo para actualizar continuamente la posición de la bola
         Thread hilo = new Thread(new Runnable() {
@@ -30,6 +31,14 @@ public class MainActivity extends AppCompatActivity {
                 while (true) {
                     // Actualizar la posición de la bola
                     bolaRebote.updatePosition();
+
+                    // Redibujar la vista de la bola
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            bolaReboteView.invalidate();
+                        }
+                    });
 
                     // Pausa breve para dar tiempo al hilo de dibujar
                     try {
