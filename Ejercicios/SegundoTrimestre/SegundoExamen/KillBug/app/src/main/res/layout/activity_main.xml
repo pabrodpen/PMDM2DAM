@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:background="@color/white"
+    >
 
     <ImageView
         android:id="@+id/bug1"
@@ -27,7 +29,7 @@
         android:id="@+id/bug3"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:src="@drawable/bicho3"
+        android:src="@drawable/bicho2"
         android:layout_marginTop="100dp"
         android:layout_marginLeft="100dp"
         />

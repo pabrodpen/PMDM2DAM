@@ -35,7 +35,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 generateRandomBugs();
-                handler.postDelayed(this, 3000); // Cambia la velocidad de generación de insectos
+                handler.postDelayed(this, 2147483647); // Máximo valor de tiempo
+                // Cambia la velocidad de generación de insectos
+
             }
         };
         handler.postDelayed(runnable, 0);
@@ -48,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
         normalDrawables[0] = getResources().getDrawable(R.drawable.abeja);
         normalDrawables[1] = getResources().getDrawable(R.drawable.bicho);
-        normalDrawables[2] = getResources().getDrawable(R.drawable.bicho3);
+        normalDrawables[2] = getResources().getDrawable(R.drawable.bicho2);
         normalDrawables[3] = getResources().getDrawable(R.drawable.hormiga);
         normalDrawables[4] = getResources().getDrawable(R.drawable.mariquita);
 
@@ -73,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
                                 // Después de 1 segundo, cambiar la imagen a la normal
                                 bugImages[finalI].setImageDrawable(normalDrawables[finalI]);
                                 isSquashed[finalI] = false;
+                                ((ViewGroup) bugImages[finalI].getParent()).removeView(bugImages[finalI]);
                             }
                         }, 1000); // Mostrar la imagen aplastada durante 1 segundo
                     }
@@ -89,40 +92,57 @@ public class MainActivity extends AppCompatActivity {
         int screenHeight = getResources().getDisplayMetrics().heightPixels;
 
         for (int i = 0; i < 5; i++) {
-            int x = random.nextInt(screenWidth);
-            int y = random.nextInt(screenHeight);
+            final ImageView bugImage = bugImages[i];
+
+            // Inicializar la posición del insecto
+            float startX = random.nextInt(screenWidth);
+            float startY = random.nextInt(screenHeight);
 
             // Ajustar la posición del insecto para que esté dentro de los límites de la pantalla
-            if (x > screenWidth - bugImages[i].getWidth()) {
-                x = screenWidth - bugImages[i].getWidth();
+            if (startX > screenWidth - bugImage.getWidth()) {
+                startX = screenWidth - bugImage.getWidth();
             }
-            if (y > screenHeight - bugImages[i].getHeight()) {
-                y = screenHeight - bugImages[i].getHeight();
+            if (startY > screenHeight - bugImage.getHeight()) {
+                startY = screenHeight - bugImage.getHeight();
             }
 
-            // Establecer la posición del insecto
-            bugImages[i].setX(x);
-            bugImages[i].setY(y);
+            bugImage.setX(startX);
+            bugImage.setY(startY);
 
             // Hacer que los insectos sean visibles
-            bugImages[i].setVisibility(View.VISIBLE);
-        }
+            bugImage.setVisibility(View.VISIBLE);
 
-        // Programar la eliminación de las imágenes aplastadas
-        for (int i = 0; i < 5; i++) {
-            if (isSquashed[i]) {
-                final int finalI = i;
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        ((ViewGroup) bugImages[finalI].getParent()).removeView(bugImages[finalI]);
-                        isSquashed[finalI] = false;
+            // Calcular la dirección inicial del movimiento
+            final float targetX = random.nextFloat() * screenWidth;
+            final float targetY = random.nextFloat() * screenHeight;
+            final float dx = targetX - startX;
+            final float dy = targetY - startY;
+            final float distance = (float) Math.sqrt(dx * dx + dy * dy);
+            final float speed = 1.5f; // Velocidad de movimiento del insecto
+
+            // Actualizar la posición del insecto de forma continua
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    // Mover el insecto hacia el objetivo con una fracción de la distancia en cada iteración
+                    float x = bugImage.getX();
+                    float y = bugImage.getY();
+                    if (distance > 0) {
+                        float factor = speed / distance;
+                        x += dx * factor;
+                        y += dy * factor;
                     }
-                }, 500); // Eliminar el elemento aplastado después de 1 segundo
-            }
+
+                    // Actualizar la posición del insecto
+                    bugImage.setX(x);
+                    bugImage.setY(y);
+
+                    // Programar la próxima actualización de posición
+                    handler.postDelayed(this, 10); // Actualizar cada 10 milisegundos
+                }
+            });
         }
     }
-
 
 
 }
