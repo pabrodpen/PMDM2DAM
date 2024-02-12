@@ -1,15 +1,13 @@
 package com.example.miquintografico;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Grafico grafico=new Grafico(this,null);
         setContentView(R.layout.activity_main);
     }
 }

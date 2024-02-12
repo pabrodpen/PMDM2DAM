@@ -1,4 +1,4 @@
-# Cambiar de idioma
+
 
 1º Si tenemos un formulario en español, tenemos que tener un string(en values) en español con todas las palabras para cada editText o TextView con su name=””
 

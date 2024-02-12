@@ -1,57 +1,120 @@
 package com.example.bolarebotadora;
 
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
-import android.widget.RelativeLayout;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.bolarebotadora.BolaRebote;
-
 public class MainActivity extends AppCompatActivity {
-    private BolaRebote bolaRebote;
-    private RelativeLayout contenedor;
+    boolean continuar = true;
+    float velocidad = 1.5f;
+    int dt = 10;
+    int tiempo = 0;
+    Thread hilo = null;
+    DinamicaView dinamica;
+    float s;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        dinamica = new DinamicaView(this);
+        setContentView(dinamica);
+        s = getResources().getDisplayMetrics().density;
+        hilo = new Thread(dinamica);
+        hilo.start();
+    }
 
-        // Obtener el contenedor de diseño
-        contenedor = findViewById(R.id.contenedor);
+    @Override
+    public void onPause() {
+        super.onPause();
+        continuar = false;
+    }
 
-        // Crear una nueva instancia de BolaRebote
-        float tamañoBola = 80; // Tamaño deseado de la bola
-        bolaRebote = new BolaRebote(0.5f, 0.5f, 0.5f, 0.5f, 0.01f, 0.01f);
+    @Override
+    public void onResume() {
+        super.onResume();
+        continuar = true;
+        if (!hilo.isAlive()) {
+            hilo = new Thread(dinamica);
+            hilo.start();
+        }
+    }
 
-        // Crear una nueva instancia de BolaReboteView y agregarla al contenedor
-        BolaReboteView bolaReboteView = new BolaReboteView(this, bolaRebote, tamañoBola);
-        contenedor.addView(bolaReboteView);
+    class DinamicaView extends View implements Runnable {
+        int x, y, xmax, ymax;
+        Paint paintFondo, paintParticula, paint;
+        boolean movXPositive = true;
+        boolean movYPositive = true;
 
-        // Iniciar un hilo para actualizar continuamente la posición de la bola
-        Thread hilo = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-                    // Actualizar la posición de la bola
-                    bolaRebote.updatePosition();
+        public DinamicaView(Context context) {
+            super(context);
+            paintFondo = new Paint();
+            paintParticula = new Paint();
+            paint = new Paint();
+            paintFondo.setColor(Color.WHITE);
+            paintParticula.setColor(Color.RED);
+            paint.setColor(Color.BLACK);
+        }
 
-                    // Redibujar la vista de la bola
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            bolaReboteView.invalidate();
-                        }
-                    });
+        @Override
+        public void run() {
+            while (continuar) {
+                tiempo = tiempo + dt;
 
-                    // Pausa breve para dar tiempo al hilo de dibujar
-                    try {
-                        Thread.sleep(10);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                // Movimiento en el eje X
+                if (movXPositive) {
+                    x = x + (int) (velocidad * dt);
+                } else {
+                    x = x - (int) (velocidad * dt);
+                }
+
+                // Si llega a los extremos horizontales, invertir la dirección
+                if (x > xmax || x < 0) {
+                    movXPositive = !movXPositive;
+                }
+
+                // Movimiento en el eje Y
+                if (movYPositive) {
+                    y = y + (int) (velocidad * dt);
+                } else {
+                    y = y - (int) (velocidad * dt);
+                }
+
+                // Si llega a los extremos verticales, invertir la dirección
+                if (y > ymax || y < 0) {
+                    movYPositive = !movYPositive;
+                }
+
+                postInvalidate();
+                try {
+                    Thread.sleep(dt);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
-        });
-        hilo.start();
+        }
+
+        @Override
+        protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+            super.onSizeChanged(w, h, oldw, oldh);
+            x = w / 2;
+            y = h / 2;
+            xmax = w;
+            ymax = h;
+        }
+
+        @Override
+        protected void onDraw(Canvas canvas) {
+            super.onDraw(canvas);
+            canvas.drawPaint(paintFondo);
+            paint.setTextSize(20 * s);
+            canvas.drawCircle(x, y, 30 * s, paintParticula);
+            canvas.drawText("y = " + y, 10 * s, 25 * s, paint);
+            canvas.drawText("tiempo = " + tiempo, 10 * s, 50 * s, paint);
+        }
     }
 }

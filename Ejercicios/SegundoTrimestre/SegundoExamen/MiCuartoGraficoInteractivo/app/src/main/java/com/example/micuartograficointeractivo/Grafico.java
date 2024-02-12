@@ -22,8 +22,8 @@ public class Grafico extends View {
     private void setupPaint() {
         paint = new Paint();
         paint.setColor(Color.BLUE);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(5);
+        paint.setStyle(Paint.Style.STROKE);//estilo de trazo como solido
+        paint.setStrokeWidth(5);//ancho del trazo
         paint.setAntiAlias(true);
 
         path = new Path();

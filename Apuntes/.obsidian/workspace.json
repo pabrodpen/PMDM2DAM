@@ -85,7 +85,19 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Cambiar de idioma ecbef07a8b2c470f84257e16f9636f90/Cambiar de idioma ecbef07a8b2c470f84257e16f9636f90.md",
+                "file": "Cambiar de idioma ecbef07a8b2c470f84257e16f9636f90/Cambiar de idioma.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "fd2a5e271f2d1fd6",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "GRÁFICOS.md",
                 "mode": "source",
                 "source": false
               }
@@ -116,7 +128,7 @@
             }
           }
         ],
-        "currentTab": 6
+        "currentTab": 7
       }
     ],
     "direction": "vertical"
@@ -182,7 +194,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Cambiar de idioma ecbef07a8b2c470f84257e16f9636f90/Cambiar de idioma ecbef07a8b2c470f84257e16f9636f90.md",
+                "file": "GRÁFICOS.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -199,7 +211,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Cambiar de idioma ecbef07a8b2c470f84257e16f9636f90/Cambiar de idioma ecbef07a8b2c470f84257e16f9636f90.md",
+                "file": "GRÁFICOS.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -222,7 +234,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Cambiar de idioma ecbef07a8b2c470f84257e16f9636f90/Cambiar de idioma ecbef07a8b2c470f84257e16f9636f90.md"
+                "file": "GRÁFICOS.md"
               }
             }
           }
@@ -245,8 +257,10 @@
       "audio-recorder:Empezar/Parar de grabar": false
     }
   },
-  "active": "1eae194573b3ae1b",
+  "active": "fd2a5e271f2d1fd6",
   "lastOpenFiles": [
+    "Cambiar de idioma ecbef07a8b2c470f84257e16f9636f90/Cambiar de idioma.md",
+    "GRÁFICOS.md",
     "PREFERENCEACTIVITY.md",
     "SHAREDPREFERENCES.md",
     "AUDIO Y VÍDEO.md",

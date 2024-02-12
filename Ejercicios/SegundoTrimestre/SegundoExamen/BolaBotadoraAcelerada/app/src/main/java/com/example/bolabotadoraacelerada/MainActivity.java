@@ -13,7 +13,7 @@ public class MainActivity extends AppCompatActivity {
     boolean continuar = true;
     float velocidadInicial = 1.0f;
     float aceleracion = 0.05f; // Aceleración para aumentar la velocidad con el tiempo
-    int dt = 10;
+    int dt=10;
     int tiempo = 0;
     Thread hilo = null;
     DinamicaView dinamica;
