@@ -83,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onSizeChanged(int w, int h, int oldw, int oldh) {
             super.onSizeChanged(w, h, oldw, oldh);
-            // Asignar valores máximos para las coordenadas de las bolas
             for (int i = 0; i < 2; i++) {
                 xmax[i] = w;
                 ymax[i] = h;
@@ -92,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void run() {
-            // Implementa la lógica del movimiento para cada bola
             while (continuar) {
                 for (int i = 0; i < 2; i++) {
                     // Movimiento en el eje X
@@ -134,7 +132,6 @@ public class MainActivity extends AppCompatActivity {
             canvas.drawPaint(paintFondo);
             paint.setTextSize(20 * s);
             canvas.drawText("puntuacion = " + score, 10 * s, 25 * s, paint);
-            // Dibujar las dos bolas en posiciones diferentes
             for (int i = 0; i < 2; i++) {
                 paintParticula.setColor(colores[i]); // Asignar el color correspondiente a la bola
                 canvas.drawCircle(x[i], y[i], 30 * s, paintParticula);
@@ -150,12 +147,11 @@ public class MainActivity extends AppCompatActivity {
             switch (action) {
                 case MotionEvent.ACTION_UP:
                     for (int i = 0; i < 2; i++) {
-                        // Generar nuevas coordenadas aleatorias para cada bola
                         x[i] = (int) (Math.random() * screenWidth);
                         y[i] = (int) (Math.random() * screenHeight);
                     }
                     score++;
-                    invalidate(); // Vuelve a dibujar la pantalla
+                    invalidate();
                     break;
             }
 
