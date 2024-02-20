@@ -43,17 +43,17 @@ public class MainActivity extends AppCompatActivity {
         imageViews[3] = findViewById(R.id.imageView4);
         imageViews[4] = findViewById(R.id.imageView5);
 
-        bichos[0] = getResources().getDrawable(R.drawable.abeja);
-        bichos[1] = getResources().getDrawable(R.drawable.bicho);
-        bichos[2] = getResources().getDrawable(R.drawable.bicho2);
-        bichos[3] = getResources().getDrawable(R.drawable.hormiga);
-        bichos[4] = getResources().getDrawable(R.drawable.mariquita);
+        bichos[0] = getResources().getDrawable(R.drawable.imgbicho);
+        bichos[1] = getResources().getDrawable(R.drawable.imgbicho);
+        bichos[2] = getResources().getDrawable(R.drawable.imgbicho);
+        bichos[3] = getResources().getDrawable(R.drawable.imgbicho);
+        bichos[4] = getResources().getDrawable(R.drawable.imgbicho);
 
         aplastados[0] = getResources().getDrawable(R.drawable.aplastado1);
-        aplastados[1] = getResources().getDrawable(R.drawable.aplastado2);
-        aplastados[2] = getResources().getDrawable(R.drawable.aplastado3);
-        aplastados[3] = getResources().getDrawable(R.drawable.aplastado4);
-        aplastados[4] = getResources().getDrawable(R.drawable.aplastado5);
+        aplastados[1] = getResources().getDrawable(R.drawable.aplastado1);
+        aplastados[2] = getResources().getDrawable(R.drawable.aplastado1);
+        aplastados[3] = getResources().getDrawable(R.drawable.aplastado1);
+        aplastados[4] = getResources().getDrawable(R.drawable.aplastado1);
 
         MediaPlayer[] sonidos = new MediaPlayer[]{
                 MediaPlayer.create(this, R.raw.sonido1),
@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         };
 
 
+        /*para que se termine el juego
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -72,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
                     finish();
                 }
             }
-        },10000);
+        },10000);*/
 
 
 
