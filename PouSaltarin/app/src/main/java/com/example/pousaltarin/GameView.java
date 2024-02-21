@@ -183,16 +183,36 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
 
     private void createPlatforms() {
         int numPlatforms = 10;
-        int platformWidth = 200;
+        int platformWidth = 150;
         int platformHeight = 20;
+        int minDistanceBetweenPlatforms = 200; // Distancia mínima horizontal entre plataformas
+        int minVerticalDistanceBetweenPlatforms = 120; // Distancia mínima vertical entre plataformas
+        int maxY = screenHeight - platformHeight; // Máxima posición Y para la generación de plataformas
+
+        int lastPlatformX = 0; // Posición X de la última plataforma generada
+        int lastPlatformY = 0; // Posición Y de la última plataforma generada
 
         for (int i = 0; i < numPlatforms; i++) {
+            // Generar una posición X aleatoria para la plataforma
             int platformX = random.nextInt(screenWidth - platformWidth);
-            int platformY = random.nextInt(screenHeight - platformHeight);
-            platforms.add(new Plataforma(platformX, platformY, platformX + platformWidth, platformY + platformHeight));
+
+            // Asegurarse de que la nueva plataforma esté lo suficientemente lejos de la anterior
+            if (i > 0) {
+                int platformY = lastPlatformY + minVerticalDistanceBetweenPlatforms + random.nextInt(minVerticalDistanceBetweenPlatforms);
+                // Limitar la posición Y dentro del rango válido
+                platformY = Math.min(platformY, maxY);
+                lastPlatformY = platformY;
+            } else {
+                // Si es la primera plataforma, simplemente generar una posición Y aleatoria
+                lastPlatformY = random.nextInt(maxY);
+            }
+
+            // Actualizar la posición X de la última plataforma generada
+            lastPlatformX = platformX;
+
+            platforms.add(new Plataforma(platformX, lastPlatformY, platformX + platformWidth, lastPlatformY + platformHeight));
         }
     }
-
 
 }
 
