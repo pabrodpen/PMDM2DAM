@@ -33,7 +33,7 @@ public class Pou {
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         // Inicializar la velocidad vertical del salto
-        speedY = 500;
+        speedY = 800;
         // Inicializar el estado de salto
         isJumping = false;
     }

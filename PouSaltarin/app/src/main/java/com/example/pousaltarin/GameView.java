@@ -182,37 +182,42 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
     }
 
     private void createPlatforms() {
-        int numPlatforms = 10;
-        int platformWidth = 150;
+        int numPlatformsToCreate = 15; // Número total de plataformas que deseamos crear
+        int platformWidth = 120;
         int platformHeight = 20;
-        int minDistanceBetweenPlatforms = 200; // Distancia mínima horizontal entre plataformas
-        int minVerticalDistanceBetweenPlatforms = 120; // Distancia mínima vertical entre plataformas
+        int minDistanceBetweenPlatforms = 100; // Distancia mínima horizontal entre plataformas
+        int minVerticalDistanceBetweenPlatforms = 100; // Distancia mínima vertical entre plataformas
         int maxY = screenHeight - platformHeight; // Máxima posición Y para la generación de plataformas
 
         int lastPlatformX = 0; // Posición X de la última plataforma generada
         int lastPlatformY = 0; // Posición Y de la última plataforma generada
 
-        for (int i = 0; i < numPlatforms; i++) {
+        int maxHeight = (int) (screenHeight * 1); // Limitar la altura máxima para la generación de plataformas (último cuarto excluido)
+
+        int numPlatformsCreated = 0; // Contador para llevar el registro de las plataformas creadas
+
+        while (numPlatformsCreated < numPlatformsToCreate) {
             // Generar una posición X aleatoria para la plataforma
             int platformX = random.nextInt(screenWidth - platformWidth);
 
+            // Generar una posición Y aleatoria para la plataforma
+            int platformY = random.nextInt(maxHeight);
+
             // Asegurarse de que la nueva plataforma esté lo suficientemente lejos de la anterior
-            if (i > 0) {
-                int platformY = lastPlatformY + minVerticalDistanceBetweenPlatforms + random.nextInt(minVerticalDistanceBetweenPlatforms);
-                // Limitar la posición Y dentro del rango válido
-                platformY = Math.min(platformY, maxY);
-                lastPlatformY = platformY;
-            } else {
-                // Si es la primera plataforma, simplemente generar una posición Y aleatoria
-                lastPlatformY = random.nextInt(maxY);
+            if (numPlatformsCreated > 0 && platformY < lastPlatformY + minVerticalDistanceBetweenPlatforms) {
+                platformY = lastPlatformY + minVerticalDistanceBetweenPlatforms;
             }
 
             // Actualizar la posición X de la última plataforma generada
             lastPlatformX = platformX;
 
-            platforms.add(new Plataforma(platformX, lastPlatformY, platformX + platformWidth, lastPlatformY + platformHeight));
+            platforms.add(new Plataforma(platformX, platformY, platformX + platformWidth, platformY + platformHeight));
+
+            numPlatformsCreated++; // Incrementar el contador de plataformas creadas
+            lastPlatformY = platformY; // Actualizar la última posición Y generada
         }
     }
+
 
 }
 
