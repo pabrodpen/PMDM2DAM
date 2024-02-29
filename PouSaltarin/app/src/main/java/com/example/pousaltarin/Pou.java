@@ -7,16 +7,15 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 
 public class Pou {
-
     private Bitmap bitmap;
     private int x, y; // Posición de Pou
     private int screenWidth, screenHeight; // Dimensiones de la pantalla
     private int width, height; // Dimensiones del bitmap de Pou
     private float speedX; // Velocidad horizontal del Pou
     private float speedY; // Velocidad vertical del Pou
-    private boolean isJumping; // Estado de salto del Pou
+    boolean isJumping;
 
-    public Pou(Context context, int screenWidth, int screenHeight,int width,int height) {
+    public Pou(Context context, int screenWidth, int screenHeight, int width, int height) {
         // Cargar el bitmap de Pou
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.pou_recortado);
 
@@ -26,43 +25,42 @@ public class Pou {
         // Establecer las dimensiones del bitmap de Pou
         this.width = width;
         this.height = height;
-        // Posición inicial de Pou (centrado en la parte inferior de la pantalla)
-        x = (screenWidth - width) / 2;
-        y = (screenHeight - height)/2;
+
         // Guardar las dimensiones de la pantalla
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
-        // Inicializar la velocidad vertical del salto
-        speedY = 800;
-        // Inicializar el estado de salto
-        isJumping = false;
+
+        // Iniciar movimiento desde el centro de la pantalla
+        moverDesdeElCentro();
     }
 
     public void update() {
-        // Si está saltando, actualizar la velocidad vertical para simular la gravedad
-        if (isJumping) {
-            speedY += 200; // Ajusta la velocidad de gravedad según sea necesario
-        }
-
-        // Actualizar la posición vertical basada en la velocidad vertical
+        // Mover el Pou
+        x += speedX;
         y += speedY;
 
-        // Asegurarse de que el Pou no se salga de la pantalla verticalmente
-        if (y > screenHeight - height) {
-            y = screenHeight - height;
-            isJumping = false; // Restablecer el estado de salto si alcanza el suelo
-            speedY = 0; // Restablecer la velocidad vertical
-        }
-
-        // Actualizar la posición horizontal basada en la velocidad horizontal
-        x += speedX;
-
-        // Asegurarse de que el Pou no se salga de la pantalla horizontalmente
+        // Restringir el Pou dentro de los límites de la pantalla
         if (x < 0) {
             x = 0;
-        } else if (x > screenWidth - width) {
+        } else if (x + width > screenWidth) {
             x = screenWidth - width;
         }
+
+        if (y < 0) {
+            y = 0;
+        } else if (y + height > screenHeight) {
+            y = screenHeight - height;
+        }
+    }
+
+    private void moverDesdeElCentro() {
+        // Mover desde el centro de la pantalla
+        x = screenWidth / 2 - width / 2;
+        y = screenHeight / 2 - height / 2;
+
+        // Establecer una velocidad inicial
+        speedX = 400; // Puedes ajustar esta velocidad según sea necesario
+        speedY = 400; // Puedes ajustar esta velocidad según sea necesario
     }
 
     public void draw(Canvas canvas) {
@@ -109,6 +107,10 @@ public class Pou {
     // Agrega los métodos setY, getSpeedX y getSpeedY
     public void setY(int y) {
         this.y = y;
+    }
+
+    public void setX(int x) {
+        this.x = x;
     }
 
     public float getSpeedX() {

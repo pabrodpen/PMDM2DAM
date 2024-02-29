@@ -1,19 +1,18 @@
 package com.example.pousaltarin;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +37,15 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
 
     public GameView(Context context) {
         super(context);
+        init(context);
+    }
+
+    public GameView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init(context);
+    }
+
+    private void init(Context context) {
         surfaceHolder = getHolder();
 
         // Obtener el servicio del sensor
@@ -57,6 +65,7 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
 
         // Crear una instancia de Pou con el ancho y la altura de la pantalla
         pou = new Pou(context, screenWidth, screenHeight, 150, 100); // o cualquier otro ancho y alto que desees
+
 
         // Crear plataformas
         createPlatforms();
@@ -87,7 +96,7 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
         // Comprobar colisiones entre el Pou y las plataformas
         boolean enContacto = false;
         for (Plataforma platform : platforms) {
-            if (Rect.intersects(pou.getRect(), platform.getRect())) {
+            if (pou.getRect().intersect(platform.getRect())) {
                 enContacto = true;
                 // Si el Pou está cayendo y en contacto con una plataforma, permitir el salto
                 if (isFalling) {
@@ -106,9 +115,6 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
             pou.setSpeedY(0);
         }
     }
-
-
-
 
     private void draw() {
         if (surfaceHolder.getSurface().isValid()) {
@@ -164,8 +170,6 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
         }
     }
 
-
-
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         // No se utiliza en este ejemplo
@@ -182,41 +186,63 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
     }
 
     private void createPlatforms() {
-        int numPlatformsToCreate = 15; // Número total de plataformas que deseamos crear
+        int numPlatformsToCreate = 10; // Número total de plataformas que deseamos crear
         int platformWidth = 120;
         int platformHeight = 20;
-        int minDistanceBetweenPlatforms = 100; // Distancia mínima horizontal entre plataformas
-        int minVerticalDistanceBetweenPlatforms = 100; // Distancia mínima vertical entre plataformas
-        int maxY = screenHeight - platformHeight; // Máxima posición Y para la generación de plataformas
+        int minDistanceBetweenPlatforms = 400; // Distancia mínima horizontal entre plataformas
+        int minVerticalDistanceBetweenPlatforms = 500; // Distancia mínima vertical entre plataformas
 
-        int lastPlatformX = 0; // Posición X de la última plataforma generada
-        int lastPlatformY = 0; // Posición Y de la última plataforma generada
+        // Definir los límites horizontales para que las plataformas estén dentro de la pantalla
+        int minX = 0;
+        int maxX = screenWidth - platformWidth;
 
-        int maxHeight = (int) (screenHeight * 1); // Limitar la altura máxima para la generación de plataformas (último cuarto excluido)
+        // Definir el límite inferior para que las plataformas estén dentro de la pantalla
+        int maxY = screenHeight - platformHeight;
 
-        int numPlatformsCreated = 0; // Contador para llevar el registro de las plataformas creadas
+        // Inicializar la posición de la primera plataforma
+        int lastPlatformX = 0; // Inicializa en 0
+
+        // Contador para llevar el registro de las plataformas creadas
+        int numPlatformsCreated = 0;
 
         while (numPlatformsCreated < numPlatformsToCreate) {
             // Generar una posición X aleatoria para la plataforma
-            int platformX = random.nextInt(screenWidth - platformWidth);
+            int platformX = random.nextInt(maxX - minX + 1) + minX;
 
-            // Generar una posición Y aleatoria para la plataforma
-            int platformY = random.nextInt(maxHeight);
-
-            // Asegurarse de que la nueva plataforma esté lo suficientemente lejos de la anterior
-            if (numPlatformsCreated > 0 && platformY < lastPlatformY + minVerticalDistanceBetweenPlatforms) {
-                platformY = lastPlatformY + minVerticalDistanceBetweenPlatforms;
+            // Asegurarse de que la nueva plataforma esté lo suficientemente lejos de la anterior horizontalmente
+            if (Math.abs(platformX - lastPlatformX) < minDistanceBetweenPlatforms) {
+                // Ajustar la posición X si la distancia entre plataformas es menor que la mínima
+                if (platformX > lastPlatformX) {
+                    platformX += minDistanceBetweenPlatforms; // Mueve la plataforma hacia la derecha
+                } else {
+                    platformX -= minDistanceBetweenPlatforms; // Mueve la plataforma hacia la izquierda
+                }
             }
 
-            // Actualizar la posición X de la última plataforma generada
-            lastPlatformX = platformX;
+            // Generar una posición Y aleatoria para la plataforma dentro de los límites verticales
+            int platformY = random.nextInt(maxY - minVerticalDistanceBetweenPlatforms - platformHeight) + minVerticalDistanceBetweenPlatforms;
 
-            platforms.add(new Plataforma(platformX, platformY, platformX + platformWidth, platformY + platformHeight));
+            // Crear la plataforma y agregarla a la lista
+            Plataforma newPlatform = new Plataforma(platformX, platformY, platformX + platformWidth, platformY + platformHeight);
 
-            numPlatformsCreated++; // Incrementar el contador de plataformas creadas
-            lastPlatformY = platformY; // Actualizar la última posición Y generada
+            // Verificar si la nueva plataforma se superpone con alguna de las existentes
+            boolean overlap = false;
+            for (Plataforma existingPlatform : platforms) {
+                if (Rect.intersects(newPlatform.getRect(), existingPlatform.getRect())) {
+                    overlap = true;
+                    break;
+                }
+            }
+
+            // Si no hay superposición, agregamos la nueva plataforma
+            if (!overlap) {
+                platforms.add(newPlatform);
+                numPlatformsCreated++;
+                lastPlatformX = platformX;
+            }
         }
     }
+
 
 
 }
