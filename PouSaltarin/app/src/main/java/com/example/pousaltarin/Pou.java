@@ -58,10 +58,11 @@ public class Pou {
         x = screenWidth / 2 - width / 2;
         y = screenHeight / 2 - height / 2;
 
-        // Establecer una velocidad inicial
-        speedX = 400; // Puedes ajustar esta velocidad según sea necesario
-        speedY = 400; // Puedes ajustar esta velocidad según sea necesario
+        // Establecer velocidades iniciales
+        speedX = 0; // No hay movimiento horizontal al inicio
+        speedY = 5; // Velocidad vertical inicial reducida
     }
+
 
     public void draw(Canvas canvas) {
         // Dibujar el bitmap de Pou en la posición actual

@@ -88,7 +88,7 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
         boolean isFalling = pou.getSpeedY() > 0;
 
         // Aplicar gravedad
-        pou.setSpeedY(pou.getSpeedY() + 1); // Siempre aplicamos gravedad
+        pou.setSpeedY(pou.getSpeedY() + 0.5f); // Incremento de velocidad de caída más suave
 
         // Actualizar el Pou
         pou.update();
@@ -96,25 +96,26 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
         // Comprobar colisiones entre el Pou y las plataformas
         boolean enContacto = false;
         for (Plataforma platform : platforms) {
-            if (pou.getRect().intersect(platform.getRect())) {
+            if (Rect.intersects(pou.getRect(), platform.getRect())) {
                 enContacto = true;
                 // Si el Pou está cayendo y en contacto con una plataforma, permitir el salto
-                if (isFalling) {
-                    pou.setSpeedY(-20); // Velocidad inicial de salto hacia arriba
+                if (isFalling && pou.getRect().top < platform.getRect().top) {
+                    pou.setSpeedY(-35); // Velocidad inicial de salto hacia arriba
                     break; // Solo permitimos un salto por colisión
-                } else {
-                    // Detener la caída si está en una plataforma
-                    pou.setSpeedY(0);
-                    break; // No necesitamos seguir comprobando colisiones
+                }
+                // Si el Pou está tocando la plataforma por debajo, simplemente continúa su movimiento sin detenerse
+                if (pou.getRect().bottom > platform.getRect().bottom) {
+                    // No hacemos nada, el Pou atraviesa la plataforma
                 }
             }
         }
 
-        // Si el Pou no está en contacto con ninguna plataforma y está cayendo, detener su caída
+        // Si el Pou no está en contacto con ninguna plataforma y está cayendo, aumentar su velocidad de caída
         if (!enContacto && isFalling) {
-            pou.setSpeedY(0);
+            pou.setSpeedY(pou.getSpeedY() + 0.5f); // Aumento suave de la velocidad de caída
         }
     }
+
 
     private void draw() {
         if (surfaceHolder.getSurface().isValid()) {
@@ -161,7 +162,7 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
             float yAcceleration = event.values[1];
 
             // Calcular la inclinación en grados
-            double inclinacion = Math.atan2(xAcceleration, yAcceleration) * 180 / Math.PI;
+            double inclinacion = Math.atan2(-xAcceleration, yAcceleration) * 180 / Math.PI; // Cambio aquí
 
             // Ajustar la velocidad horizontal del Pou según la inclinación
             // Aquí asumimos que un ángulo positivo implica inclinación hacia la derecha y viceversa
@@ -169,6 +170,7 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
             pou.setSpeedX(velocidadHorizontal * (float)Math.sin(Math.toRadians(inclinacion)));
         }
     }
+
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -186,11 +188,11 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
     }
 
     private void createPlatforms() {
-        int numPlatformsToCreate = 10; // Número total de plataformas que deseamos crear
+        int numPlatformsToCreate = 15; // Número total de plataformas que deseamos crear
         int platformWidth = 120;
         int platformHeight = 20;
-        int minDistanceBetweenPlatforms = 400; // Distancia mínima horizontal entre plataformas
-        int minVerticalDistanceBetweenPlatforms = 500; // Distancia mínima vertical entre plataformas
+        int minDistanceBetweenPlatforms = 350; // Distancia mínima horizontal entre plataformas
+        int minVerticalDistanceBetweenPlatforms = 400; // Distancia mínima vertical entre plataformas
 
         // Definir los límites horizontales para que las plataformas estén dentro de la pantalla
         int minX = 0;
@@ -223,7 +225,8 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
             int platformY = random.nextInt(maxY - minVerticalDistanceBetweenPlatforms - platformHeight) + minVerticalDistanceBetweenPlatforms;
 
             // Crear la plataforma y agregarla a la lista
-            Plataforma newPlatform = new Plataforma(platformX, platformY, platformX + platformWidth, platformY + platformHeight);
+            // Añadimos true como quinto argumento para indicar que la plataforma es pasable
+            Plataforma newPlatform = new Plataforma(platformX, platformY, platformX + platformWidth, platformY + platformHeight, true);
 
             // Verificar si la nueva plataforma se superpone con alguna de las existentes
             boolean overlap = false;
@@ -242,8 +245,4 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
             }
         }
     }
-
-
-
 }
-
