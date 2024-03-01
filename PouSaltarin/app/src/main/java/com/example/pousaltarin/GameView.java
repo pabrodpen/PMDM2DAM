@@ -35,6 +35,9 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
     private List<Plataforma> platforms;
     private Random random;
 
+    private int screenOffsetY = 0; // Variable para almacenar el desplazamiento vertical de la pantalla
+    private int jumpCount = 0; // Contador de saltos del Pou
+
     public GameView(Context context) {
         super(context);
         init(context);
@@ -93,6 +96,15 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
         // Actualizar el Pou
         pou.update();
 
+        // Comprobar si el Pou alcanza el borde superior de la pantalla
+        if (pou.getY() <= 0) {
+            // Reiniciar la posición del Pou
+            pou.setY(screenHeight - pou.getHeight());
+
+            // Generar nuevas plataformas
+            createPlatforms();
+        }
+
         // Comprobar colisiones entre el Pou y las plataformas
         boolean enContacto = false;
         for (Plataforma platform : platforms) {
@@ -115,6 +127,38 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
             pou.setSpeedY(pou.getSpeedY() + 0.5f); // Aumento suave de la velocidad de caída
         }
     }
+
+
+    private void movePlatformsDown(float distance) {
+        for (Plataforma platform : platforms) {
+            platform.moveDown(distance);
+        }
+    }
+
+
+    private void generateNewPlatforms() {
+        // Crear nuevas plataformas en la parte superior de la pantalla
+        int numPlatformsToCreate = 5; // Número de nuevas plataformas a crear
+        int platformWidth = 120;
+        int platformHeight = 20;
+        int minDistanceBetweenPlatforms = 350; // Distancia mínima horizontal entre plataformas
+
+        // Definir los límites horizontales para que las plataformas estén dentro de la pantalla
+        int minX = 0;
+        int maxX = screenWidth - platformWidth;
+
+        // Ajustar el límite superior para que las plataformas estén dentro de la pantalla
+        int minY = screenHeight - platformHeight;
+
+        // Crear nuevas plataformas y agregarlas a la lista
+        for (int i = 0; i < numPlatformsToCreate; i++) {
+            int platformX = random.nextInt(maxX - minX + 1) + minX;
+            int platformY = minY - (i + 1) * minDistanceBetweenPlatforms; // Colocar la nueva plataforma por encima de las anteriores
+            Plataforma newPlatform = new Plataforma(platformX, platformY, platformX + platformWidth, platformY + platformHeight, true);
+            platforms.add(newPlatform);
+        }
+    }
+
 
 
     private void draw() {

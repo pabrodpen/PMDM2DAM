@@ -32,4 +32,10 @@ public class Plataforma {
     public boolean isPassable() {
         return isPassable;
     }
+
+    public void moveDown(float distance) {
+        rect.top += distance;
+        rect.bottom += distance;
+    }
+
 }
