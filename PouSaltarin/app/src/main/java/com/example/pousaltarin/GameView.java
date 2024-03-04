@@ -1,19 +1,26 @@
 package com.example.pousaltarin;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
-
+import androidx.core.content.ContextCompat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -24,19 +31,20 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
     private Thread gameThread;
     private SurfaceHolder surfaceHolder;
     private Pou pou;
-
     private SensorManager sensorManager;
     private Sensor accelerometer;
     private Sensor gyroscope;
-
     private int screenWidth;
     private int screenHeight;
-
     private List<Plataforma> platforms;
     private Random random;
-
-    private int screenOffsetY = 0; // Variable para almacenar el desplazamiento vertical de la pantalla
-    private int jumpCount = 0; // Contador de saltos del Pou
+    private MediaPlayer jumpSound;
+    private MediaPlayer backgroundMusic;
+    private Bitmap backgroundImage1;
+    private Bitmap backgroundImage2, backgroundImage3, backgroundImage4;
+    private int backgroundCounter = 0;
+    private int score=0;
+    private TextView scoreTextView;
 
     public GameView(Context context) {
         super(context);
@@ -50,31 +58,38 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
 
     private void init(Context context) {
         surfaceHolder = getHolder();
-
-        // Obtener el servicio del sensor
         sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-        // Registra el acelerómetro y el giroscopio
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-
-        // Obtener el ancho y la altura de la pantalla
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         screenWidth = windowManager.getDefaultDisplay().getWidth();
         screenHeight = windowManager.getDefaultDisplay().getHeight();
-
-        // Iniciar la lista de plataformas
         platforms = new ArrayList<>();
         random = new Random();
-
-        // Crear una instancia de Pou con el ancho y la altura de la pantalla
-        pou = new Pou(context, screenWidth, screenHeight, 150, 100); // o cualquier otro ancho y alto que desees
-
-
-        // Crear plataformas
+        pou = new Pou(context, screenWidth, screenHeight, 150, 100);
         createPlatforms();
-
-        // Iniciar los sensores
         startSensor();
+        jumpSound = MediaPlayer.create(context, R.raw.salto);
+        backgroundMusic = MediaPlayer.create(context, R.raw.cancion);
+        backgroundMusic.setLooping(true);
+        backgroundMusic.start();
+        backgroundImage1 = BitmapFactory.decodeResource(getResources(), R.drawable.rgrgrry);
+        backgroundImage1 = Bitmap.createScaledBitmap(backgroundImage1, screenWidth, screenHeight, true);
+        backgroundImage2 = BitmapFactory.decodeResource(getResources(), R.drawable.fomdo);
+        backgroundImage2 = Bitmap.createScaledBitmap(backgroundImage2, screenWidth, screenHeight, true);
+        backgroundImage3 = BitmapFactory.decodeResource(getResources(), R.drawable.cielo);
+        backgroundImage3 = Bitmap.createScaledBitmap(backgroundImage3, screenWidth, screenHeight, true);
+        backgroundImage4 = BitmapFactory.decodeResource(getResources(), R.drawable.espacio);
+        backgroundImage4 = Bitmap.createScaledBitmap(backgroundImage4, screenWidth, screenHeight, true);
+        scoreTextView = new TextView(context);
+        scoreTextView.setX(50);
+        scoreTextView.setY(50);
+        scoreTextView.setTextSize(20);
+        updateScoreTextView();
+    }
+
+    private void updateScoreTextView() {
+        scoreTextView.setText("Score: " + score);
     }
 
     @Override
@@ -83,100 +98,114 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
             update();
             draw();
             control();
+            playBackgroundMusic();
         }
     }
 
     private void update() {
-        // Comprobar si el Pou está cayendo (velocidad vertical positiva)
         boolean isFalling = pou.getSpeedY() > 0;
-
-        // Aplicar gravedad
-        pou.setSpeedY(pou.getSpeedY() + 0.5f); // Incremento de velocidad de caída más suave
-
-        // Actualizar el Pou
+        pou.setSpeedY(pou.getSpeedY() + 0.5f);
         pou.update();
-
-        // Comprobar si el Pou alcanza el borde superior de la pantalla
         if (pou.getY() <= 0) {
-            // Reiniciar la posición del Pou
+            incrementBackgroundCounter();
             pou.setY(screenHeight - pou.getHeight());
-
-            // Generar nuevas plataformas
-            createPlatforms();
+            generateNewPlatforms();
+            post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getContext(), "Contador: " + backgroundCounter, Toast.LENGTH_SHORT).show();
+                }
+            });
         }
-
-        // Comprobar colisiones entre el Pou y las plataformas
         boolean enContacto = false;
         for (Plataforma platform : platforms) {
             if (Rect.intersects(pou.getRect(), platform.getRect())) {
                 enContacto = true;
-                // Si el Pou está cayendo y en contacto con una plataforma, permitir el salto
                 if (isFalling && pou.getRect().top < platform.getRect().top) {
-                    pou.setSpeedY(-35); // Velocidad inicial de salto hacia arriba
-                    break; // Solo permitimos un salto por colisión
+                    pou.setSpeedY(-28);
+                    playJumpSound();
+                    score+=10;
+                    break;
                 }
-                // Si el Pou está tocando la plataforma por debajo, simplemente continúa su movimiento sin detenerse
                 if (pou.getRect().bottom > platform.getRect().bottom) {
-                    // No hacemos nada, el Pou atraviesa la plataforma
                 }
             }
         }
-
-        // Si el Pou no está en contacto con ninguna plataforma y está cayendo, aumentar su velocidad de caída
         if (!enContacto && isFalling) {
-            pou.setSpeedY(pou.getSpeedY() + 0.5f); // Aumento suave de la velocidad de caída
+            pou.setSpeedY(pou.getSpeedY() + 0.5f);
         }
     }
 
-
-    private void movePlatformsDown(float distance) {
-        for (Plataforma platform : platforms) {
-            platform.moveDown(distance);
-        }
+    private Bitmap vectorToBitmap(Drawable vectorDrawable) {
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(),
+                vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        vectorDrawable.draw(canvas);
+        return bitmap;
     }
 
-
-    private void generateNewPlatforms() {
-        // Crear nuevas plataformas en la parte superior de la pantalla
-        int numPlatformsToCreate = 5; // Número de nuevas plataformas a crear
-        int platformWidth = 120;
-        int platformHeight = 20;
-        int minDistanceBetweenPlatforms = 350; // Distancia mínima horizontal entre plataformas
-
-        // Definir los límites horizontales para que las plataformas estén dentro de la pantalla
-        int minX = 0;
-        int maxX = screenWidth - platformWidth;
-
-        // Ajustar el límite superior para que las plataformas estén dentro de la pantalla
-        int minY = screenHeight - platformHeight;
-
-        // Crear nuevas plataformas y agregarlas a la lista
-        for (int i = 0; i < numPlatformsToCreate; i++) {
-            int platformX = random.nextInt(maxX - minX + 1) + minX;
-            int platformY = minY - (i + 1) * minDistanceBetweenPlatforms; // Colocar la nueva plataforma por encima de las anteriores
-            Plataforma newPlatform = new Plataforma(platformX, platformY, platformX + platformWidth, platformY + platformHeight, true);
-            platforms.add(newPlatform);
-        }
+    private Bitmap rotateVectorDrawable(Drawable vectorDrawable, float degrees) {
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(),
+                vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degrees, vectorDrawable.getIntrinsicWidth() / 2f, vectorDrawable.getIntrinsicHeight() / 2f);
+        canvas.concat(matrix);
+        vectorDrawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        vectorDrawable.draw(canvas);
+        return bitmap;
     }
 
+    private Bitmap getRotatedAirplaneBitmap() {
+        Drawable airplaneDrawable = ContextCompat.getDrawable(getContext(), R.drawable.baseline_airplanemode_active_24);
+        return rotateVectorDrawable(airplaneDrawable, 90);
+    }
 
+    private void drawPlatforms(Canvas canvas) {
+        if (backgroundCounter >= 7) {
+            Bitmap rotatedAirplaneBitmap = getRotatedAirplaneBitmap();
+            for (Plataforma platform : platforms) {
+                if (platform.isMoving()) {
+                    platform.updateHorizontalPosition();
+                }
+                canvas.drawBitmap(rotatedAirplaneBitmap, platform.getRect().left, platform.getRect().top, null);
+            }
+        } else {
+            Drawable cloudDrawable = ContextCompat.getDrawable(getContext(), R.drawable.baseline_cloud_24);
+            Bitmap cloudBitmap = vectorToBitmap(cloudDrawable);
+            for (Plataforma platform : platforms) {
+                canvas.drawBitmap(cloudBitmap, platform.getRect().left, platform.getRect().top, null);
+            }
+        }
+    }
 
     private void draw() {
         if (surfaceHolder.getSurface().isValid()) {
             Canvas canvas = surfaceHolder.lockCanvas();
-            // Dibujar el fondo, el Pou, las plataformas, etc.
-            canvas.drawColor(Color.WHITE); // Fondo blanco como ejemplo
+            drawBackground(canvas);
             pou.draw(canvas);
-            for (Plataforma platform : platforms) {
-                platform.draw(canvas);
+            if (backgroundCounter > 5) {
+                drawPlatforms(canvas);
+            } else {
+                for (Plataforma platform : platforms) {
+                    platform.draw(canvas);
+                }
             }
+            drawScoreTextView(canvas);
             surfaceHolder.unlockCanvasAndPost(canvas);
         }
     }
 
+    private void drawScoreTextView(Canvas canvas) {
+        Paint paint = new Paint();
+        paint.setColor(Color.WHITE);
+        paint.setTextSize(60);
+        canvas.drawText("Score: " + score, 50, 100, paint);
+    }
+
     private void control() {
         try {
-            // Control de velocidad de fotogramas
             Thread.sleep(17);
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -201,78 +230,48 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            // Obtener los valores de la aceleración en los ejes X e Y
             float xAcceleration = event.values[0];
             float yAcceleration = event.values[1];
-
-            // Calcular la inclinación en grados
-            double inclinacion = Math.atan2(-xAcceleration, yAcceleration) * 180 / Math.PI; // Cambio aquí
-
-            // Ajustar la velocidad horizontal del Pou según la inclinación
-            // Aquí asumimos que un ángulo positivo implica inclinación hacia la derecha y viceversa
-            float velocidadHorizontal = 10; // Velocidad horizontal base
+            double inclinacion = Math.atan2(-xAcceleration, yAcceleration) * 180 / Math.PI;
+            float velocidadHorizontal = 10;
             pou.setSpeedX(velocidadHorizontal * (float)Math.sin(Math.toRadians(inclinacion)));
         }
     }
 
-
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        // No se utiliza en este ejemplo
     }
 
     public void startSensor() {
-        // Registra el SensorEventListener
         sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     public void stopSensor() {
-        // Pausa la detección de sensores cuando el juego está pausado
         sensorManager.unregisterListener(this);
     }
 
     private void createPlatforms() {
-        int numPlatformsToCreate = 15; // Número total de plataformas que deseamos crear
+        int numPlatformsToCreate = 10;
         int platformWidth = 120;
         int platformHeight = 20;
-        int minDistanceBetweenPlatforms = 350; // Distancia mínima horizontal entre plataformas
-        int minVerticalDistanceBetweenPlatforms = 400; // Distancia mínima vertical entre plataformas
-
-        // Definir los límites horizontales para que las plataformas estén dentro de la pantalla
+        int minDistanceBetweenPlatforms = 350;
         int minX = 0;
         int maxX = screenWidth - platformWidth;
-
-        // Definir el límite inferior para que las plataformas estén dentro de la pantalla
         int maxY = screenHeight - platformHeight;
-
-        // Inicializar la posición de la primera plataforma
-        int lastPlatformX = 0; // Inicializa en 0
-
-        // Contador para llevar el registro de las plataformas creadas
+        int lastPlatformX = 0;
         int numPlatformsCreated = 0;
-
         while (numPlatformsCreated < numPlatformsToCreate) {
-            // Generar una posición X aleatoria para la plataforma
             int platformX = random.nextInt(maxX - minX + 1) + minX;
-
-            // Asegurarse de que la nueva plataforma esté lo suficientemente lejos de la anterior horizontalmente
             if (Math.abs(platformX - lastPlatformX) < minDistanceBetweenPlatforms) {
-                // Ajustar la posición X si la distancia entre plataformas es menor que la mínima
                 if (platformX > lastPlatformX) {
-                    platformX += minDistanceBetweenPlatforms; // Mueve la plataforma hacia la derecha
+                    platformX += minDistanceBetweenPlatforms;
                 } else {
-                    platformX -= minDistanceBetweenPlatforms; // Mueve la plataforma hacia la izquierda
+                    platformX -= minDistanceBetweenPlatforms;
                 }
             }
-
-            // Generar una posición Y aleatoria para la plataforma dentro de los límites verticales
-            int platformY = random.nextInt(maxY - minVerticalDistanceBetweenPlatforms - platformHeight) + minVerticalDistanceBetweenPlatforms;
-
-            // Crear la plataforma y agregarla a la lista
-            // Añadimos true como quinto argumento para indicar que la plataforma es pasable
-            Plataforma newPlatform = new Plataforma(platformX, platformY, platformX + platformWidth, platformY + platformHeight, true);
-
-            // Verificar si la nueva plataforma se superpone con alguna de las existentes
+            int platformY = random.nextInt(maxY);
+            boolean willMove = random.nextBoolean(); // Decide si la plataforma se moverá
+            Plataforma newPlatform = new Plataforma(platformX, platformY, platformX + platformWidth, platformY + platformHeight, willMove);
             boolean overlap = false;
             for (Plataforma existingPlatform : platforms) {
                 if (Rect.intersects(newPlatform.getRect(), existingPlatform.getRect())) {
@@ -280,13 +279,58 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
                     break;
                 }
             }
-
-            // Si no hay superposición, agregamos la nueva plataforma
             if (!overlap) {
                 platforms.add(newPlatform);
                 numPlatformsCreated++;
                 lastPlatformX = platformX;
             }
+        }
+    }
+
+    private void generateNewPlatforms() {
+        platforms.clear();
+        int numPlatformsToCreate = 10;
+        int platformWidth = 120;
+        int platformHeight = 20;
+        int minDistanceBetweenPlatforms = 350;
+        int minX = 0;
+        int maxX = screenWidth - platformWidth;
+        int minY = screenHeight - platformHeight;
+        int verticalDistanceBetweenPlatforms = (minY - minDistanceBetweenPlatforms) / (numPlatformsToCreate - 1);
+        for (int i = 0; i < numPlatformsToCreate; i++) {
+            int platformX = random.nextInt(maxX - minX + 1) + minX;
+            int platformY = minY - i * verticalDistanceBetweenPlatforms;
+            boolean willMove = random.nextBoolean(); // Decide si la plataforma se moverá
+            Plataforma newPlatform = new Plataforma(platformX, platformY, platformX + platformWidth, platformY + platformHeight, willMove);
+            platforms.add(newPlatform);
+        }
+    }
+
+    private void incrementBackgroundCounter() {
+        backgroundCounter++;
+    }
+
+    private void playJumpSound() {
+        if (jumpSound != null) {
+            jumpSound.start();
+        }
+    }
+
+    private void playBackgroundMusic() {
+        if (backgroundMusic != null && !backgroundMusic.isPlaying()) {
+            backgroundMusic.start();
+        }
+    }
+
+    private void drawBackground(Canvas canvas) {
+        if (backgroundCounter == 3) {
+            canvas.drawBitmap(backgroundImage2, 0, 0, null);
+        } else if (backgroundCounter == 4 || backgroundCounter == 5) {
+            canvas.drawBitmap(backgroundImage3, 0, 0, null);
+        } else if (backgroundCounter >= 6) {
+            canvas.drawBitmap(backgroundImage4, 0, 0, null);
+        } else if(backgroundCounter<3){
+            canvas.drawBitmap(backgroundImage1, 0, 0, null);
         }
     }
 }

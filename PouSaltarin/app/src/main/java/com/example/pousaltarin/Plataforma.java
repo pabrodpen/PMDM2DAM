@@ -8,21 +8,44 @@ import android.graphics.Rect;
 public class Plataforma {
 
     private Rect rect;
-    private Paint paint;
-    private boolean isPassable; // Indica si el Pou puede pasar por debajo de esta plataforma
+    private boolean passable;
+    private boolean moving; // Indica si la plataforma se mueve horizontalmente
+    private int speedX; // Velocidad horizontal de la plataforma
+    private int screenWidth;
 
+    public Plataforma(int left, int top, int right, int bottom, boolean passable) {
+        this.rect = new Rect(left, top, right, bottom);
+        this.passable = passable;
+        this.moving = moving;
+        this.speedX = speedX;
+        this.screenWidth = screenWidth;
+    }
 
-
-    // Agrega este constructor que acepta solo cuatro argumentos
-    public Plataforma(int left, int top, int right, int bottom,boolean isPassable) {
-        rect = new Rect(left, top, right, bottom);
-        paint = new Paint();
-        paint.setColor(Color.BLACK); // Color de la plataforma (puedes cambiarlo según tus preferencias)
-        this.isPassable = isPassable;
+    public Plataforma(int left, int top, int right, int bottom, boolean passable, boolean moving, int speedX) {
+        this(left, top, right, bottom, passable); // Invocar al otro constructor con un valor por defecto para screenWidth
     }
 
     public void draw(Canvas canvas) {
+        Paint paint = new Paint();
+        paint.setColor(Color.GREEN);
         canvas.drawRect(rect, paint);
+    }
+
+    public void updateHorizontalPosition() {
+        if (moving) {
+            rect.left += speedX;
+            rect.right += speedX;
+            // Si la plataforma sale de la pantalla por la izquierda, la movemos a la derecha
+            if (rect.right < 0) {
+                rect.left = screenWidth;
+                rect.right = rect.left + (rect.right - rect.left);
+            }
+            // Si la plataforma sale de la pantalla por la derecha, la movemos a la izquierda
+            if (rect.left > screenWidth) {
+                rect.right = 0;
+                rect.left = rect.right - (rect.right - rect.left);
+            }
+        }
     }
 
     public Rect getRect() {
@@ -30,12 +53,18 @@ public class Plataforma {
     }
 
     public boolean isPassable() {
-        return isPassable;
+        return passable;
     }
 
-    public void moveDown(float distance) {
-        rect.top += distance;
-        rect.bottom += distance;
+    public boolean isMoving() {
+        return moving;
     }
 
+    public int getSpeedX() {
+        return speedX;
+    }
+
+    public void setSpeedX(int speedX) {
+        this.speedX = speedX;
+    }
 }
