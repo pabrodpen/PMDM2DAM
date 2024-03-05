@@ -124,17 +124,22 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
                 if (isFalling && pou.getRect().top < platform.getRect().top) {
                     pou.setSpeedY(-28);
                     playJumpSound();
-                    score+=10;
+                    score += 10;
                     break;
                 }
                 if (pou.getRect().bottom > platform.getRect().bottom) {
                 }
+            }
+            // Actualizar la posición horizontal de las plataformas en movimiento
+            if (backgroundCounter >= 7 && platform.isMoving()) {
+                platform.updateHorizontalPosition();
             }
         }
         if (!enContacto && isFalling) {
             pou.setSpeedY(pou.getSpeedY() + 0.5f);
         }
     }
+
 
     private Bitmap vectorToBitmap(Drawable vectorDrawable) {
         Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(),
@@ -271,7 +276,8 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
             }
             int platformY = random.nextInt(maxY);
             boolean willMove = random.nextBoolean(); // Decide si la plataforma se moverá
-            Plataforma newPlatform = new Plataforma(platformX, platformY, platformX + platformWidth, platformY + platformHeight, willMove);
+            // Modificar la creación de la plataforma para pasar 'true' como valor de 'moving'
+            Plataforma newPlatform = new Plataforma(platformX, platformY, platformX + platformWidth, platformY + platformHeight, willMove, true, 5); // Aquí '5' es una velocidad de ejemplo
             boolean overlap = false;
             for (Plataforma existingPlatform : platforms) {
                 if (Rect.intersects(newPlatform.getRect(), existingPlatform.getRect())) {
@@ -286,6 +292,7 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
             }
         }
     }
+
 
     private void generateNewPlatforms() {
         platforms.clear();
