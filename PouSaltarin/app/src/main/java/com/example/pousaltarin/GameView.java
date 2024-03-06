@@ -1,6 +1,7 @@
 package com.example.pousaltarin;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -27,6 +28,8 @@ import java.util.Random;
 
 public class GameView extends SurfaceView implements Runnable, SensorEventListener {
 
+    private boolean gameOver = false; // Bandera para controlar si el juego ha terminado
+
     private boolean isPlaying;
     private Thread gameThread;
     private SurfaceHolder surfaceHolder;
@@ -38,13 +41,19 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
     private int screenHeight;
     private List<Plataforma> platforms;
     private Random random;
-    private MediaPlayer jumpSound;
+    private MediaPlayer jumpSound,gameOverSound,levelSound;
     private MediaPlayer backgroundMusic;
     private Bitmap backgroundImage1;
     private Bitmap backgroundImage2, backgroundImage3, backgroundImage4;
     private int backgroundCounter = 0;
     private int score=0;
     private TextView scoreTextView;
+
+    private long startTime = System.currentTimeMillis(); // Variable para almacenar el tiempo de inicio del juego
+
+    private long changeScreenTime = System.currentTimeMillis(); // Variable para almacenar el tiempo en que se cambió de pantalla
+
+
 
     public GameView(Context context) {
         super(context);
@@ -71,11 +80,13 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
         startSensor();
         jumpSound = MediaPlayer.create(context, R.raw.salto);
         backgroundMusic = MediaPlayer.create(context, R.raw.cancion);
+        gameOverSound = MediaPlayer.create(context, R.raw.perder);
+        levelSound=MediaPlayer.create(context,R.raw.subenivel);
         backgroundMusic.setLooping(true);
         backgroundMusic.start();
-        backgroundImage1 = BitmapFactory.decodeResource(getResources(), R.drawable.rgrgrry);
+        backgroundImage1 = BitmapFactory.decodeResource(getResources(), R.drawable.bajo_tierra);
         backgroundImage1 = Bitmap.createScaledBitmap(backgroundImage1, screenWidth, screenHeight, true);
-        backgroundImage2 = BitmapFactory.decodeResource(getResources(), R.drawable.fomdo);
+        backgroundImage2 = BitmapFactory.decodeResource(getResources(), R.drawable.superficie);
         backgroundImage2 = Bitmap.createScaledBitmap(backgroundImage2, screenWidth, screenHeight, true);
         backgroundImage3 = BitmapFactory.decodeResource(getResources(), R.drawable.cielo);
         backgroundImage3 = Bitmap.createScaledBitmap(backgroundImage3, screenWidth, screenHeight, true);
@@ -94,7 +105,7 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
 
     @Override
     public void run() {
-        while (isPlaying) {
+        while (isPlaying && !gameOver) {
             update();
             draw();
             control();
@@ -102,10 +113,22 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
         }
     }
 
+
+
     private void update() {
         boolean isFalling = pou.getSpeedY() > 0;
         pou.setSpeedY(pou.getSpeedY() + 0.5f);
         pou.update();
+
+        // Si han pasado menos de 2 segundos desde el inicio del juego y el Pou cae al borde inferior de la pantalla
+        if (System.currentTimeMillis() - startTime < 5000 && pou.getY() >= screenHeight - pou.getHeight() && backgroundCounter == 0) {
+            // Hacer que el Pou salte como si estuviera en una plataforma
+            pou.setSpeedY(-28);
+            playJumpSound();
+            score += 10;
+        }
+
+        // Si el Pou está en el borde superior de la pantalla, incrementar el contador de pantallas
         if (pou.getY() <= 0) {
             incrementBackgroundCounter();
             pou.setY(screenHeight - pou.getHeight());
@@ -116,7 +139,11 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
                     Toast.makeText(getContext(), "Contador: " + backgroundCounter, Toast.LENGTH_SHORT).show();
                 }
             });
+
+            // Actualizar el tiempo de cambio de pantalla
+            changeScreenTime = System.currentTimeMillis();
         }
+
         boolean enContacto = false;
         for (Plataforma platform : platforms) {
             if (Rect.intersects(pou.getRect(), platform.getRect())) {
@@ -130,15 +157,59 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
                 if (pou.getRect().bottom > platform.getRect().bottom) {
                 }
             }
-            // Actualizar la posición horizontal de las plataformas en movimiento
-            if (backgroundCounter >= 7 && platform.isMoving()) {
-                platform.updateHorizontalPosition();
-            }
         }
         if (!enContacto && isFalling) {
             pou.setSpeedY(pou.getSpeedY() + 0.5f);
         }
+
+        // Actualizar la posición horizontal de las plataformas solo si el contador de pantallas es 7 o más
+        if (backgroundCounter >= 7) {
+            for (Plataforma platform : platforms) {
+                if (platform.isMoving()) {
+                    platform.updateHorizontalPosition();
+                }
+            }
+        }
+
+
+
+        // Verificar si el juego ha terminado
+        checkGameOver();
     }
+
+    private void checkGameOver() {
+        // Obtener el tiempo transcurrido desde el inicio del juego
+        long elapsedTime = System.currentTimeMillis() - startTime;
+
+        // Verificar si ha pasado el tiempo suficiente desde el inicio del juego y desde el último cambio de pantalla
+        if (elapsedTime > 2000 && System.currentTimeMillis() - changeScreenTime > 2000) {
+            // Si el Pou está cerca del borde inferior de la pantalla y ha pasado el tiempo necesario
+            if (pou.getY() >= screenHeight - pou.getHeight() && backgroundCounter > 0) {
+                playGameOverSound(); // Reproducir sonido de game over
+                gameOver = true; // Establecer la bandera gameOver a true
+                stopBackgroundMusic(); // Detener la música de fondo
+
+                // Mostrar la pantalla de juego perdido
+                Intent intent = new Intent(getContext(), GameOver.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                getContext().startActivity(intent);
+            }
+
+            // Si está en la primera pantalla y ha pasado el tiempo necesario
+            if (backgroundCounter == 0 && elapsedTime > 3000 && pou.getY() >= screenHeight - pou.getHeight()) {
+                playGameOverSound(); // Reproducir sonido de game over
+                gameOver = true; // Establecer la bandera gameOver a true
+                stopBackgroundMusic(); // Detener la música de fondo
+
+                // Mostrar la pantalla de juego perdido
+                Intent intent = new Intent(getContext(), GameOver.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                getContext().startActivity(intent);
+            }
+        }
+    }
+
+
 
 
     private Bitmap vectorToBitmap(Drawable vectorDrawable) {
@@ -168,7 +239,13 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
     }
 
     private void drawPlatforms(Canvas canvas) {
-        if (backgroundCounter >= 7) {
+        if (backgroundCounter >= 3 && backgroundCounter <= 6) {
+            Drawable cloudDrawable = ContextCompat.getDrawable(getContext(), R.drawable.baseline_cloud_24);
+            Bitmap cloudBitmap = vectorToBitmap(cloudDrawable);
+            for (Plataforma platform : platforms) {
+                canvas.drawBitmap(cloudBitmap, platform.getRect().left, platform.getRect().top, null);
+            }
+        } else if (backgroundCounter >= 7 && backgroundCounter <= 8) {
             Bitmap rotatedAirplaneBitmap = getRotatedAirplaneBitmap();
             for (Plataforma platform : platforms) {
                 if (platform.isMoving()) {
@@ -177,20 +254,18 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
                 canvas.drawBitmap(rotatedAirplaneBitmap, platform.getRect().left, platform.getRect().top, null);
             }
         } else {
-            Drawable cloudDrawable = ContextCompat.getDrawable(getContext(), R.drawable.baseline_cloud_24);
-            Bitmap cloudBitmap = vectorToBitmap(cloudDrawable);
-            for (Plataforma platform : platforms) {
-                canvas.drawBitmap(cloudBitmap, platform.getRect().left, platform.getRect().top, null);
-            }
+            // Si el contador de pantalla no coincide con ninguna de las condiciones anteriores, no dibujamos nada
         }
     }
+
+
 
     private void draw() {
         if (surfaceHolder.getSurface().isValid()) {
             Canvas canvas = surfaceHolder.lockCanvas();
             drawBackground(canvas);
             pou.draw(canvas);
-            if (backgroundCounter > 5) {
+            if (backgroundCounter > 3) {
                 drawPlatforms(canvas);
             } else {
                 for (Plataforma platform : platforms) {
@@ -276,8 +351,7 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
             }
             int platformY = random.nextInt(maxY);
             boolean willMove = random.nextBoolean(); // Decide si la plataforma se moverá
-            // Modificar la creación de la plataforma para pasar 'true' como valor de 'moving'
-            Plataforma newPlatform = new Plataforma(platformX, platformY, platformX + platformWidth, platformY + platformHeight, willMove, true, 5); // Aquí '5' es una velocidad de ejemplo
+            Plataforma newPlatform = new Plataforma(platformX, platformY, platformX + platformWidth, platformY + platformHeight, willMove, screenWidth);
             boolean overlap = false;
             for (Plataforma existingPlatform : platforms) {
                 if (Rect.intersects(newPlatform.getRect(), existingPlatform.getRect())) {
@@ -293,7 +367,6 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
         }
     }
 
-
     private void generateNewPlatforms() {
         platforms.clear();
         int numPlatformsToCreate = 10;
@@ -308,7 +381,7 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
             int platformX = random.nextInt(maxX - minX + 1) + minX;
             int platformY = minY - i * verticalDistanceBetweenPlatforms;
             boolean willMove = random.nextBoolean(); // Decide si la plataforma se moverá
-            Plataforma newPlatform = new Plataforma(platformX, platformY, platformX + platformWidth, platformY + platformHeight, willMove);
+            Plataforma newPlatform = new Plataforma(platformX, platformY, platformX + platformWidth, platformY + platformHeight, willMove, screenWidth);
             platforms.add(newPlatform);
         }
     }
@@ -329,15 +402,34 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
         }
     }
 
+    private void stopBackgroundMusic() {
+        if (backgroundMusic != null && backgroundMusic.isPlaying()) {
+            backgroundMusic.stop();
+            backgroundMusic.release(); // Libera los recursos del reproductor de música
+            backgroundMusic = null; // Establece el objeto MediaPlayer a null para indicar que ya no está en uso
+        }
+    }
+
+
+    private void playGameOverSound() {
+        if (gameOverSound != null) {
+            gameOverSound.start();
+        }
+    }
+
     private void drawBackground(Canvas canvas) {
         if (backgroundCounter == 3) {
             canvas.drawBitmap(backgroundImage2, 0, 0, null);
-        } else if (backgroundCounter == 4 || backgroundCounter == 5) {
-            canvas.drawBitmap(backgroundImage3, 0, 0, null);
-        } else if (backgroundCounter >= 6) {
+        } else if (backgroundCounter == 4 || backgroundCounter == 5 || backgroundCounter == 6 || backgroundCounter == 7) {
+            // Dibujar un fondo de color azul cielo
+            canvas.drawColor(Color.parseColor("#87CEEB")); // Este código de color representa el azul cielo
+        } else if (backgroundCounter >= 8) {
             canvas.drawBitmap(backgroundImage4, 0, 0, null);
-        } else if(backgroundCounter<3){
+        } else if (backgroundCounter < 3) {
             canvas.drawBitmap(backgroundImage1, 0, 0, null);
         }
     }
+
+
+
 }

@@ -54,14 +54,15 @@ public class Pou {
     }
 
     private void moverDesdeElCentro() {
-        // Mover desde el centro de la pantalla
+        // Mover desde la parte inferior central de la pantalla
         x = screenWidth / 2 - width / 2;
-        y = screenHeight / 2 - height / 2;
+        y = screenHeight - height;
 
         // Establecer velocidades iniciales
         speedX = 0; // No hay movimiento horizontal al inicio
-        speedY = 5; // Velocidad vertical inicial reducida
+        speedY = 0; // Velocidad vertical inicial será cero
     }
+
 
 
     public void draw(Canvas canvas) {

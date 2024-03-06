@@ -4,34 +4,34 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    tools:context=".MainActivity">
+    tools:context=".RulesActivity">
 
     <TextView
-        android:id="@+id/titleTextView"
+        android:id="@+id/rulesTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="SKY JUMP"
-        android:textSize="24sp"
+        android:text="Reglas del Juego"
+        android:textSize="20sp"
         android:textStyle="bold"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="32dp"
         android:layout_marginTop="32dp"/>
 
-    <Button
-        android:id="@+id/startButton"
+    <TextView
+        android:id="@+id/rulesContentTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Comenzar Juego"
-        android:layout_below="@id/titleTextView"
+        android:text="Aquí van las reglas del juego..."
+        android:layout_below="@id/rulesTextView"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"/>
 
     <Button
-        android:id="@+id/rulesButton"
+        android:id="@+id/backButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Ver Reglas"
-        android:layout_below="@id/startButton"
+        android:text="Volver"
+        android:layout_below="@id/rulesContentTextView"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"/>
 

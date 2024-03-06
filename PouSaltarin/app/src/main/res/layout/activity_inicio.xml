@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".InicioActivity">
+
+    <TextView
+        android:id="@+id/tv_titulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pou Saltarín"
+        android:textSize="24sp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="24dp"
+        android:textStyle="bold"/>
+
+    <Button
+        android:id="@+id/btn_iniciar_juego"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Iniciar Juego"
+        android:layout_below="@id/tv_titulo"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/btn_ver_reglas"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ver Reglas del Juego"
+        android:layout_below="@id/btn_iniciar_juego"
+        android:layout_marginBottom="16dp"/>
+
+</RelativeLayout>

@@ -17,10 +17,16 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Inicio">
+            <!-- No se necesita la etiqueta intent-filter para Inicio si no es la actividad principal -->
+        </activity>
+        <activity android:name=".Reglas"/>
+        <activity android:name=".GameActivity"/>
+        <activity android:name=".GameOver"/>
+
     </application>
 
 </manifest>

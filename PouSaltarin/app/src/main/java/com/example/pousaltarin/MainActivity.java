@@ -1,29 +1,49 @@
 package com.example.pousaltarin;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
-    private GameView gameView;
+    private Button startButton;
+    private Button rulesButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        gameView = new GameView(this);
-        setContentView(gameView);
+        setContentView(R.layout.activity_main);
+
+        startButton = findViewById(R.id.startButton);
+        rulesButton = findViewById(R.id.rulesButton);
+
+        startButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Iniciar el juego
+                startGame();
+            }
+        });
+
+        rulesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Ver las reglas del juego
+                showRules();
+            }
+        });
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        gameView.pause();
+    private void startGame() {
+        Intent intent = new Intent(this, GameActivity.class); // Cambiado de GameView a GameActivity
+        startActivity(intent);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        gameView.resume();
+    private void showRules() {
+        Intent intent = new Intent(this, Reglas.class);
+        startActivity(intent);
     }
 }

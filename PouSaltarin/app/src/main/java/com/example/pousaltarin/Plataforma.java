@@ -12,17 +12,15 @@ public class Plataforma {
     private boolean moving; // Indica si la plataforma se mueve horizontalmente
     private int speedX; // Velocidad horizontal de la plataforma
     private int screenWidth;
+    private int screenCounter; // Contador de pantallas
 
-    public Plataforma(int left, int top, int right, int bottom, boolean passable) {
+    public Plataforma(int left, int top, int right, int bottom, boolean passable, int screenWidth) {
         this.rect = new Rect(left, top, right, bottom);
         this.passable = passable;
-        this.moving = moving;
-        this.speedX = speedX;
+        this.moving = false; // Por defecto, la plataforma no se mueve
+        this.speedX = 0; // Por defecto, la velocidad horizontal es 0
         this.screenWidth = screenWidth;
-    }
-
-    public Plataforma(int left, int top, int right, int bottom, boolean passable, boolean moving, int speedX) {
-        this(left, top, right, bottom, passable); // Invocar al otro constructor con un valor por defecto para screenWidth
+        this.screenCounter = 0; // Inicializar el contador de pantallas
     }
 
     public void draw(Canvas canvas) {
@@ -45,6 +43,13 @@ public class Plataforma {
                 rect.right = 0;
                 rect.left = rect.right - (rect.right - rect.left);
             }
+        }
+
+        // Incrementar el contador de pantallas y verificar si es 7 o más
+        screenCounter++;
+        if (screenCounter >= 7) {
+            moving = true; // Activar el movimiento de la plataforma
+            speedX = 5; // Establecer la velocidad de movimiento
         }
     }
 
