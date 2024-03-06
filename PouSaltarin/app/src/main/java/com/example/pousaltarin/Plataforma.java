@@ -25,9 +25,14 @@ public class Plataforma {
 
     public void draw(Canvas canvas) {
         Paint paint = new Paint();
-        paint.setColor(Color.GREEN);
+        if (screenCounter < 3) {
+            paint.setColor(Color.parseColor("#654321"));
+        } else if (screenCounter >= 7) {
+            paint.setColor(Color.GRAY);
+        }
         canvas.drawRect(rect, paint);
     }
+
 
     public void updateHorizontalPosition() {
         if (moving) {

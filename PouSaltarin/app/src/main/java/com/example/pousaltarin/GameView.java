@@ -140,6 +140,11 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
                 }
             });
 
+            // Reproducir el sonido de nivel si el Pou pasa a las pantallas 3, 4 o 8
+            if (backgroundCounter == 3 || backgroundCounter == 4 || backgroundCounter == 8) {
+                playLevelSound();
+            }
+
             // Actualizar el tiempo de cambio de pantalla
             changeScreenTime = System.currentTimeMillis();
         }
@@ -152,6 +157,10 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
                     pou.setSpeedY(-28);
                     playJumpSound();
                     score += 10;
+                    // Verificar si estamos en la pantalla 4 o 5 y eliminar la plataforma
+                    if (backgroundCounter == 4 || backgroundCounter == 5) {
+                        platforms.remove(platform);
+                    }
                     break;
                 }
                 if (pou.getRect().bottom > platform.getRect().bottom) {
@@ -171,11 +180,18 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
             }
         }
 
-
-
         // Verificar si el juego ha terminado
         checkGameOver();
     }
+
+
+    private void playLevelSound() {
+        if (levelSound != null) {
+            levelSound.start();
+        }
+    }
+
+
 
     private void checkGameOver() {
         // Obtener el tiempo transcurrido desde el inicio del juego
@@ -191,6 +207,7 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
 
                 // Mostrar la pantalla de juego perdido
                 Intent intent = new Intent(getContext(), GameOver.class);
+                intent.putExtra("score", score); // Pasa el puntaje a GameOver
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 getContext().startActivity(intent);
             }
@@ -203,12 +220,12 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
 
                 // Mostrar la pantalla de juego perdido
                 Intent intent = new Intent(getContext(), GameOver.class);
+                intent.putExtra("score", score); // Pasa el puntaje a GameOver
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 getContext().startActivity(intent);
             }
         }
     }
-
 
 
 
