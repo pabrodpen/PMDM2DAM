@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,6 +17,14 @@ public class GameOver extends AppCompatActivity {
 
         Button restartButton = findViewById(R.id.restartButton);
         Button mainMenuButton = findViewById(R.id.mainMenuButton);
+
+        TextView scoreTextView = findViewById(R.id.scoreTextView);
+
+        // Obtener el puntaje del intent
+        int score = getIntent().getIntExtra("score", 0);
+
+        // Mostrar el puntaje en el TextView
+        scoreTextView.setText("Score: " + score);
 
         restartButton.setOnClickListener(new View.OnClickListener() {
             @Override

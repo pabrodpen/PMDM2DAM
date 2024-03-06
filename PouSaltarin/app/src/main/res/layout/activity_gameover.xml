@@ -17,12 +17,21 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="20dp"/>
 
+    <TextView
+        android:id="@+id/scoreTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Puntuación: "
+        android:layout_below="@id/gameOverText"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"/>
+
     <Button
         android:id="@+id/restartButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Reiniciar Juego"
-        android:layout_below="@id/gameOverText"
+        android:layout_below="@id/scoreTextView"
         android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"/>
 
