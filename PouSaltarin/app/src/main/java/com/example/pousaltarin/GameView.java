@@ -31,6 +31,8 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
     private boolean gameOver = false; // Bandera para controlar si el juego ha terminado
 
     private boolean isPlaying;
+    private float platformSpeedX = 5; // Velocidad horizontal de las plataformas móviles
+
     private Thread gameThread;
     private SurfaceHolder surfaceHolder;
     private Pou pou;
@@ -261,7 +263,7 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
             Bitmap rotatedAirplaneBitmap = getRotatedAirplaneBitmap();
             for (Plataforma platform : platforms) {
                 if (platform.isMoving()) {
-                    platform.updateHorizontalPosition();
+                    platform.updateHorizontalPosition(); // Actualizar la posición horizontal de la plataforma
                 }
                 canvas.drawBitmap(rotatedAirplaneBitmap, platform.getRect().left, platform.getRect().top, null);
             }
