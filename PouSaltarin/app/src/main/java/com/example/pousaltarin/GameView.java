@@ -90,7 +90,7 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
         backgroundImage2 = Bitmap.createScaledBitmap(backgroundImage2, screenWidth, screenHeight, true);
         backgroundImage3 = BitmapFactory.decodeResource(getResources(), R.drawable.cielo);
         backgroundImage3 = Bitmap.createScaledBitmap(backgroundImage3, screenWidth, screenHeight, true);
-        backgroundImage4 = BitmapFactory.decodeResource(getResources(), R.drawable.espacio);
+        backgroundImage4 = BitmapFactory.decodeResource(getResources(), R.drawable.espacio_recortado);
         backgroundImage4 = Bitmap.createScaledBitmap(backgroundImage4, screenWidth, screenHeight, true);
         scoreTextView = new TextView(context);
         scoreTextView.setX(50);
@@ -133,12 +133,7 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
             incrementBackgroundCounter();
             pou.setY(screenHeight - pou.getHeight());
             generateNewPlatforms();
-            post(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(getContext(), "Contador: " + backgroundCounter, Toast.LENGTH_SHORT).show();
-                }
-            });
+
 
             // Reproducir el sonido de nivel si el Pou pasa a las pantallas 3, 4 o 8
             if (backgroundCounter == 3 || backgroundCounter == 4 || backgroundCounter == 8) {
@@ -198,7 +193,7 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
         long elapsedTime = System.currentTimeMillis() - startTime;
 
         // Verificar si ha pasado el tiempo suficiente desde el inicio del juego y desde el último cambio de pantalla
-        if (elapsedTime > 2000 && System.currentTimeMillis() - changeScreenTime > 2000) {
+        if (elapsedTime > 500 && System.currentTimeMillis() - changeScreenTime > 500) {
             // Si el Pou está cerca del borde inferior de la pantalla y ha pasado el tiempo necesario
             if (pou.getY() >= screenHeight - pou.getHeight() && backgroundCounter > 0) {
                 playGameOverSound(); // Reproducir sonido de game over
@@ -262,7 +257,7 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
             for (Plataforma platform : platforms) {
                 canvas.drawBitmap(cloudBitmap, platform.getRect().left, platform.getRect().top, null);
             }
-        } else if (backgroundCounter >= 7 && backgroundCounter <= 8) {
+        } else if (backgroundCounter >= 7) {
             Bitmap rotatedAirplaneBitmap = getRotatedAirplaneBitmap();
             for (Plataforma platform : platforms) {
                 if (platform.isMoving()) {

@@ -4,13 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    tools:context=".RulesActivity">
+    tools:context=".Reglas">
 
     <TextView
         android:id="@+id/rulesTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Reglas del Juego"
+        android:text="REGLAS SKY JUMP"
         android:textSize="20sp"
         android:textStyle="bold"
         android:layout_centerHorizontal="true"

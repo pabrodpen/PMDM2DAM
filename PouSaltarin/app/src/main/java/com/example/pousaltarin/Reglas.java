@@ -17,7 +17,13 @@ public class Reglas extends AppCompatActivity {
 
         // Aquí puedes configurar el texto de las reglas del juego
         TextView tvReglas = findViewById(R.id.rulesContentTextView);
-        tvReglas.setText("Reglas del juego:\n\n1. Salta sobre las plataformas para subir.\n2. Evita caer al vacío.\n3. ¡Diviértete!");
+        tvReglas.setText("Reglas del juego:\n\n" +
+                "1. Salta sobre las plataformas para subir.\n" +
+                "2. Para saltar a un lado o a otro, gira el móvil.\n" +
+                "3. Evita caer al vacío.\n" +
+                "4. Suma todos los puntos posibles.\n" +
+                "5. Cuidado con las nubes, al tocarlas desaparecen.\n" +
+                "6. ¡Diviértete!");
 
         Button bVolver=findViewById(R.id.backButton);
 
