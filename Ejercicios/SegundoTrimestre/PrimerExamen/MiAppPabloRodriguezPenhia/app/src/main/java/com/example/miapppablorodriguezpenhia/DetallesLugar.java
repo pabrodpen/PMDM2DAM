@@ -1,6 +1,7 @@
 package com.example.miapppablorodriguezpenhia;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -41,11 +43,18 @@ public class DetallesLugar extends AppCompatActivity {
 
     RatingBar ratingBar;
 
+    FeedReaderDbHelper dbHelper;
+    private ListLugares listLugares;
+
+    private int lugarId;  // Variable de instancia para almacenar el ID del lugar
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Inicializar FeedReaderDbHelper
+        dbHelper = new FeedReaderDbHelper(this);
+        listLugares = new ListLugares();
 
         if (esTablet()) {
             setContentView(R.layout.activity_detalles_tablet);
@@ -57,9 +66,7 @@ public class DetallesLugar extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar2);
         setSupportActionBar(toolbar);
 
-
-
-        RatingBar ratingBar = findViewById(R.id.ratingBar2);
+        ratingBar = findViewById(R.id.ratingBar2);
 
         tNombre = findViewById(R.id.editTextNombre);
         tTipo = findViewById(R.id.editTextTipoEditar);
@@ -67,7 +74,6 @@ public class DetallesLugar extends AppCompatActivity {
         tUrl = findViewById(R.id.editTextUrl);
         tTfno = findViewById(R.id.ediTextTfno);
         tUbicacion = findViewById(R.id.editTextUbicacion);
-        //ratingBar = findViewById(R.id.ratingBar2);
 
         // Configurar la ActionBar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -75,17 +81,19 @@ public class DetallesLugar extends AppCompatActivity {
         // Leer los extras del Intent
         Intent intent = getIntent();
 
-
-
-
         if (intent != null) {
+            // Obtener instancia de ListLugares
+            listLugares = (ListLugares) intent.getSerializableExtra("listLugares");
+
+            lugarId = intent.getIntExtra("id", -1);  // Obtener el ID del lugar desde el Intent
+
             String nombre = intent.getStringExtra("nombre");
-            String direccion = getIntent().getStringExtra("direccion");
+            direccion = intent.getStringExtra("direccion");
             String tipo = intent.getStringExtra("tipo");
             String fecha = intent.getStringExtra("fecha");
             String url = intent.getStringExtra("url");
             String tfno = intent.getStringExtra("tfno");
-            float valoracion = intent.getFloatExtra("valoracion",0);
+            float valoracion = intent.getFloatExtra("valoracion", 0);
 
             // Actualizar los EditText con los valores
             tNombre.setText(nombre);
@@ -97,54 +105,42 @@ public class DetallesLugar extends AppCompatActivity {
             ratingBar.setRating(valoracion);
 
             // Determinar la imagen según el tipo de lugar
-            if ("Cafetería".equals(tipo)) {
-                // Es un restaurante, establecer la imagen correspondiente
-                ImageView imageView4 = findViewById(R.id.imageView4);
-                imageView4.setImageResource(R.drawable.baseline_coffee_24);
-            } else if ("Gourmet".equals(tipo)) {
-                // Es un parque, establecer la imagen correspondiente
-                ImageView imageView4 = findViewById(R.id.imageView4);
-                imageView4.setImageResource(R.drawable.baseline_workspace_premium_24);
-            } else if ("Pescados Y Mariscos".equals(tipo)) {
-                // Es un parque, establecer la imagen correspondiente
-                ImageView imageView4 = findViewById(R.id.imageView4);
-                imageView4.setImageResource(R.drawable.baseline_set_meal_24);
-            } else if ("Asador".equals(tipo)) {
-                // Es un parque, establecer la imagen correspondiente
-                ImageView imageView4 = findViewById(R.id.imageView4);
-                imageView4.setImageResource(R.drawable.baseline_outdoor_grill_24);
-            } else if ("Tapas".equals(tipo)) {
-                // Es un parque, establecer la imagen correspondiente
-                ImageView imageView4 = findViewById(R.id.imageView4);
-                imageView4.setImageResource(R.drawable.baseline_tapas_24);
-            } else if ("Fast Food".equals(tipo)) {
-                // Es un parque, establecer la imagen correspondiente
-                ImageView imageView4 = findViewById(R.id.imageView4);
-                imageView4.setImageResource(R.drawable.baseline_fastfood_24);
-            } else if ("Copas".equals(tipo)) {
-                // Es un parque, establecer la imagen correspondiente
-                ImageView imageView4 = findViewById(R.id.imageView4);
-                imageView4.setImageResource(R.drawable.baseline_local_bar_24);
+            ImageView imageView4 = findViewById(R.id.imageView4);
+            switch (tipo) {
+                case "Cafetería":
+                    imageView4.setImageResource(R.drawable.baseline_coffee_24);
+                    break;
+                case "Gourmet":
+                    imageView4.setImageResource(R.drawable.baseline_workspace_premium_24);
+                    break;
+                case "Pescados Y Mariscos":
+                    imageView4.setImageResource(R.drawable.baseline_set_meal_24);
+                    break;
+                case "Asador":
+                    imageView4.setImageResource(R.drawable.baseline_outdoor_grill_24);
+                    break;
+                case "Tapas":
+                    imageView4.setImageResource(R.drawable.baseline_tapas_24);
+                    break;
+                case "Fast Food":
+                    imageView4.setImageResource(R.drawable.baseline_fastfood_24);
+                    break;
+                case "Copas":
+                    imageView4.setImageResource(R.drawable.baseline_local_bar_24);
+                    break;
             }
         }
 
-
-
-        // En el método onCreate o donde configuras tus vistas
+        // Configurar los listeners para URL, teléfono y ubicación
         tUrl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Obtén la URL del EditText
                 String url = tUrl.getText().toString();
-
-                // Verifica que la URL no esté vacía
                 if (!TextUtils.isEmpty(url)) {
                     try {
-                        // Crea un Intent para abrir la URL en un navegador web
                         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                         startActivity(browserIntent);
                     } catch (Exception e) {
-                        // Maneja cualquier excepción que pueda surgir al abrir la URL
                         Toast.makeText(DetallesLugar.this, "Error al abrir la URL", Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
@@ -155,17 +151,12 @@ public class DetallesLugar extends AppCompatActivity {
         tTfno.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Obtén el número de teléfono del EditText
                 String tfno = tTfno.getText().toString();
-
-                // Verifica que el número de teléfono no esté vacío
                 if (!TextUtils.isEmpty(tfno)) {
                     try {
-                        // Crea un Intent para ver el contacto con el número de teléfono
                         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("tel:" + tfno));
                         startActivity(intent);
                     } catch (Exception e) {
-                        // Maneja cualquier excepción que pueda surgir al abrir la aplicación de contactos
                         Toast.makeText(DetallesLugar.this, "Error al abrir la aplicación de contactos", Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
@@ -177,18 +168,12 @@ public class DetallesLugar extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String direccion = tUbicacion.getText().toString();
-
-                // Verifica que la dirección no esté vacía o sea nula
                 if (!TextUtils.isEmpty(direccion)) {
-                    // La dirección tiene un valor, llamar a mostrarGeolocalizacion
                     boolean geolocalizacionExitosa = mostrarGeolocalizacion(direccion);
-
                     if (!geolocalizacionExitosa) {
-                        // Muestra un mensaje indicando que no se encontraron resultados
                         Toast.makeText(DetallesLugar.this, "No se encontraron resultados para la dirección", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    // La dirección está vacía, muestra un mensaje o realiza alguna acción adecuada
                     Toast.makeText(DetallesLugar.this, "La dirección está vacía", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -216,17 +201,33 @@ public class DetallesLugar extends AppCompatActivity {
             seleccionarFotoDeGaleria();
             return true;
         } else if (id == R.id.eliminar) {
-            // Dentro de tu clase donde estás tratando de llamar a eliminarLugarPorNombre
-            String nombreLugar = tNombre.getText().toString();
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Confirmar eliminación")
+                    .setMessage("¿Estás seguro de que deseas eliminar este elemento?")
+                    .setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            String nombreLugar = tNombre.getText().toString();
+                            ListLugares.eliminarLugarPorNombre(nombreLugar);
+                            Toast.makeText(DetallesLugar.this, "Lugar eliminado", Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+                    })
+                    .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
 
-// Asumiendo que instance es una instancia de ListLugares, si no, debes obtener una instancia válida de alguna manera.
-
-            ListLugares.eliminarLugarPorNombre(nombreLugar);
-            finish();
+            AlertDialog dialog = builder.create();
+            dialog.show();
 
             return true;
-        }else if (id == R.id.editar) {
+        } else if (id == R.id.editar) {
+            int lugarId = getLugarId(); // Obtener el ID del lugar actual
             Intent intent = new Intent(DetallesLugar.this, EditarLugar.class);
+            intent.putExtra("id", lugarId);
             startActivity(intent);
             return true;
         }
@@ -236,9 +237,8 @@ public class DetallesLugar extends AppCompatActivity {
 
     private boolean mostrarGeolocalizacion(String direccion) {
         if (direccion == null || direccion.isEmpty()) {
-            // La dirección está vacía, muestra un mensaje o realiza alguna acción adecuada
             Toast.makeText(DetallesLugar.this, "La dirección está vacía", Toast.LENGTH_SHORT).show();
-            return false;  // Retorna false indicando que la geolocalización no fue exitosa
+            return false;
         }
 
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
@@ -251,45 +251,52 @@ public class DetallesLugar extends AppCompatActivity {
                 double latitud = address.getLatitude();
                 double longitud = address.getLongitude();
 
-                // Crear un objeto GeoPunto con latitud y longitud
-                GeoPunto geoPunto = new GeoPunto(latitud, longitud);
-
-                // Ahora puedes utilizar geoPunto.getLongitud() y geoPunto.getLatitud() como desees
-                // Por ejemplo, puedes abrir un mapa con estas coordenadas
                 Uri gmmIntentUri = Uri.parse("geo:" + latitud + "," + longitud + "?z=15");
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                mapIntent.setPackage("com.google.android.apps.maps"); // Asegura que se abra en Google Maps
+                mapIntent.setPackage("com.google.android.apps.maps");
                 startActivity(mapIntent);
-                return true;  // Retorna true indicando que la geolocalización fue exitosa
+                return true;
             } else {
-                // No se encontraron resultados para la dirección
-                // Maneja esta situación según tus necesidades
                 Toast.makeText(DetallesLugar.this, "No se encontraron resultados para la dirección", Toast.LENGTH_SHORT).show();
-                return false;  // Retorna false indicando que la geolocalización no fue exitosa
+                return false;
             }
         } catch (IOException e) {
             e.printStackTrace();
-            // Maneja el error de geocodificación según tus necesidades
-            Toast.makeText(DetallesLugar.this, "Error de geocodificación", Toast.LENGTH_SHORT).show();
-            return false;  // Retorna false indicando que la geolocalización no fue exitosa
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-            // Maneja el error de argumento no válido según tus necesidades
-            Toast.makeText(DetallesLugar.this, "Argumento no válido", Toast.LENGTH_SHORT).show();
-            return false;  // Retorna false indicando que la geolocalización no fue exitosa
+            Toast.makeText(DetallesLugar.this, "Error al obtener la geolocalización", Toast.LENGTH_SHORT).show();
+            return false;
         }
     }
 
-    public void tomarFoto() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+    private int getLugarId() {
+        return lugarId;
+    }
+
+    private boolean esTablet() {
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        float widthInches = metrics.widthPixels / metrics.xdpi;
+        float heightInches = metrics.heightPixels / metrics.ydpi;
+        double diagonalInches = Math.sqrt((widthInches * widthInches) + (heightInches * heightInches));
+        return diagonalInches >= 7.0;
+    }
+
+    private void tomarFoto() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+        } else {
+            abrirCamara();
+        }
+    }
+
+    private void abrirCamara() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
         }
     }
 
     private void seleccionarFotoDeGaleria() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, REQUEST_IMAGE_GALLERY);
     }
 
@@ -298,45 +305,32 @@ public class DetallesLugar extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            // Foto tomada con éxito
-
-            // Obtén la imagen de la cámara desde el objeto Intent
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
 
-            // Actualiza la imagen en el ImageView
-            ImageView imageView4 = findViewById(R.id.imageView4);
-            imageView4.setImageBitmap(imageBitmap);
-        } else if (requestCode == REQUEST_IMAGE_GALLERY && resultCode == RESULT_OK && data != null) {
-            // Foto seleccionada de la galería
+            ImageView imageView = findViewById(R.id.imageView4);
+            imageView.setImageBitmap(imageBitmap);
+        } else if (requestCode == REQUEST_IMAGE_GALLERY && resultCode == RESULT_OK) {
             imagenUri = data.getData();
-
-            // Actualiza la imagen en el ImageView
-            ImageView imageView4 = findViewById(R.id.imageView4);
-            imageView4.setImageURI(imagenUri);
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imagenUri);
+                ImageView imageView = findViewById(R.id.imageView4);
+                imageView.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-
     @Override
-    protected void onResume() {
-        super.onResume();
-
-
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                abrirCamara();
+            } else {
+                Toast.makeText(this, "Permiso denegado para escribir en el almacenamiento externo", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
-
-
-    private boolean esTablet() {
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-
-        int anchoPantalla = displayMetrics.widthPixels / displayMetrics.densityDpi;
-        int altoPantalla = displayMetrics.heightPixels / displayMetrics.densityDpi;
-
-        double tamanioPantalla = Math.sqrt(Math.pow(anchoPantalla, 2) + Math.pow(altoPantalla, 2));
-
-        // Si el tamaño de la pantalla es mayor o igual a 7 pulgadas, se considera una tablet
-        return tamanioPantalla >= 7.0;
-    }
-
 }

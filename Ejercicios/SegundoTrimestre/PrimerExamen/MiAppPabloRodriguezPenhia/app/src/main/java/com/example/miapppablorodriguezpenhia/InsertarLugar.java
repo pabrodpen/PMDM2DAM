@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.Toast;
 
@@ -38,14 +39,13 @@ public class InsertarLugar extends AppCompatActivity implements DialogLista.OnTi
     private String datoTipoLugar, datoFecha, rutaFoto;
     private FeedReaderDbHelper dbHelper;
     private Lugar lugar;  // Utilizar la instancia global
-    RatingBar  ratingBarInsertar;
+    RatingBar ratingBarInsertar;
 
+    private ImageView imageView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
 
         if (esTablet()) {
             setContentView(R.layout.activity_insertar_tablet);
@@ -53,6 +53,7 @@ public class InsertarLugar extends AppCompatActivity implements DialogLista.OnTi
             setContentView(R.layout.fragment_insertar);
         }
 
+        imageView = findViewById(R.id.image);
         editTextNombre = findViewById(R.id.editTextNombre);
         editTextDirecc = findViewById(R.id.editTextTextPostalAddress);
         editTextTfno = findViewById(R.id.editTextPhone);
@@ -132,8 +133,6 @@ public class InsertarLugar extends AppCompatActivity implements DialogLista.OnTi
                 seleccionarFotoDeGaleria();
             }
         });
-
-
     }
 
     private void insertarInformacion() {
@@ -153,6 +152,7 @@ public class InsertarLugar extends AppCompatActivity implements DialogLista.OnTi
             Log.d("INSERT_OPERATION", "URL: " + url);
             Log.d("INSERT_OPERATION", "Fecha: " + datoFecha);
             Log.d("INSERT_OPERATION", "Tipo: " + datoTipoLugar);
+            Log.d("INSERT_OPERATION", "Ruta de la foto: " + rutaFoto);
 
             ContentValues values = new ContentValues();
             values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_NOMBRE, nombre);
@@ -162,7 +162,6 @@ public class InsertarLugar extends AppCompatActivity implements DialogLista.OnTi
             values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_URL, url);
             values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_DATE, datoFecha);
             values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_VALORACION, valoracion);
-
 
             // Nueva columna para almacenar la ruta de la foto
             values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_RUTA_FOTO, rutaFoto);
@@ -221,8 +220,6 @@ public class InsertarLugar extends AppCompatActivity implements DialogLista.OnTi
 
                 // Guardar la imagen en la galería y obtener la ruta
                 rutaFoto = guardarImagenEnGaleria(imageBitmap);
-
-
             }
         } else if (requestCode == REQUEST_IMAGE_GALLERY && resultCode == Activity.RESULT_OK && data != null) {
             Uri imagenUri = data.getData();
@@ -230,9 +227,22 @@ public class InsertarLugar extends AppCompatActivity implements DialogLista.OnTi
             // Obtener la ruta de la foto desde la galería
             rutaFoto = obtenerRutaDesdeUri(imagenUri);
 
+            // Guardar la imagen en la galería y obtener la ruta
+            Bitmap imageBitmap = null;
+            try {
+                imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imagenUri);
+                rutaFoto = guardarImagenEnGaleria(imageBitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
+        // Verificar si la ruta de la foto está vacía y establecer la imagen predeterminada si es el caso
+        if (rutaFoto == null || rutaFoto.isEmpty()) {
+            imageView.setImageResource(R.drawable.baseline_photo_24); // Establecer imagen por defecto
         }
     }
+
 
     private String guardarImagenEnGaleria(Bitmap imageBitmap) {
         String rutaImagen = null;
@@ -282,18 +292,14 @@ public class InsertarLugar extends AppCompatActivity implements DialogLista.OnTi
 
         return null;
     }
-
-
     private boolean esTablet() {
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
-        int anchoPantalla = displayMetrics.widthPixels / displayMetrics.densityDpi;
-        int altoPantalla = displayMetrics.heightPixels / displayMetrics.densityDpi;
+        float widthInches = metrics.widthPixels / metrics.xdpi;
+        float heightInches = metrics.heightPixels / metrics.ydpi;
+        double diagonalInches = Math.sqrt((widthInches * widthInches) + (heightInches * heightInches));
 
-        double tamanioPantalla = Math.sqrt(Math.pow(anchoPantalla, 2) + Math.pow(altoPantalla, 2));
-
-        // Si el tamaño de la pantalla es mayor o igual a 7 pulgadas, se considera una tablet
-        return tamanioPantalla >= 7.0;
+        return diagonalInches >= 7.0;
     }
 }

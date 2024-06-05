@@ -16,6 +16,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -26,21 +28,19 @@ public class ListLugares extends AppCompatActivity {
 
     private ListView listView;
     private ArrayAdapter<Lugar> adapter;
-    private ArrayList<Lugar> lugares;
+    private static ArrayList<Lugar> lugares=new ArrayList<>();
     private static ListLugares instance;
+
+    private static FeedReaderDbHelper dbHelper;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_list); // Cambiado a lugar.xml
 
-        if (esTablet()) {
-            setContentView(R.layout.activity_list_tablet);
-        } else {
-            setContentView(R.layout.fragment_list);
-        }
-
-        // Asignar la instancia actual a la variable estática
         instance = this;
+        dbHelper = new FeedReaderDbHelper(this); // Initialize dbHelper here
 
         // Configurar Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -48,28 +48,21 @@ public class ListLugares extends AppCompatActivity {
 
         // Inicializar la lista de lugares y el adaptador
         lugares = new ArrayList<>();
-        adapter = new AdaptadorLugar(this, lugares);
         listView = findViewById(R.id.listView);
+        adapter = new AdaptadorLugar(this, lugares);
 
-        // Verificar si adapter y listView son nulos antes de usarlos
         if (adapter != null && listView != null) {
             listView.setAdapter(adapter);
-            // Cargar la lista de lugares desde la base de datos
             consultarBaseDeDatosAsync();
-
         } else {
             Log.e("ERROR", "Adapter o ListView es nulo");
         }
 
         listView.setOnItemClickListener((parent, view, position, id) -> {
-            Log.d("CLICK", "CLICK EN EL ELEMENTO");
-
             Lugar lugarSeleccionado = lugares.get(position);
-
-            // Crear una instancia de DetallesLugar y pasar los detalles del lugar como extras en el Intent
             Intent detallesIntent = new Intent(ListLugares.this, DetallesLugar.class);
             detallesIntent.putExtra("nombre", lugarSeleccionado.getNombre());
-            detallesIntent.putExtra("tipo", lugarSeleccionado.getTipo().toString());
+            detallesIntent.putExtra("tipo", lugarSeleccionado.getTipo() != null ? lugarSeleccionado.getTipo().toString() : "");
             detallesIntent.putExtra("fecha", lugarSeleccionado.getFecha());
             detallesIntent.putExtra("url", lugarSeleccionado.getUrl());
             detallesIntent.putExtra("tfno", lugarSeleccionado.getTfno());
@@ -77,12 +70,10 @@ public class ListLugares extends AppCompatActivity {
             detallesIntent.putExtra("rutaFoto", lugarSeleccionado.getRutaFoto());
             detallesIntent.putExtra("valoracion", lugarSeleccionado.getValoracion());
 
+            Toast.makeText(getApplicationContext(), "Seleccionado: " + lugarSeleccionado.getNombre(), Toast.LENGTH_SHORT).show();
             startActivity(detallesIntent);
         });
 
-
-
-        // Habilitar opciones de menú
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
@@ -236,17 +227,20 @@ public class ListLugares extends AppCompatActivity {
         dbHelper.close();
     }
 
-    public static void eliminarLugarPorNombre(String nombre) {
-        if (instance != null && instance.adapter != null) {
-            // Buscar el lugar en la lista por su nombre y eliminarlo
-            for (Lugar lugar : instance.lugares) {
-                if (lugar.getNombre().equals(nombre)) {
-                    instance.lugares.remove(lugar);
-                    // Notificar al adaptador que los datos han cambiado
-                    instance.adapter.notifyDataSetChanged();
-                    break;
-                }
+    public static void eliminarLugarPorNombre(String nombreLugar) {
+        for (int i = 0; i < lugares.size(); i++) {
+            if (lugares.get(i).getNombre().equals(nombreLugar)) {
+                lugares.remove(i);
+                break;
             }
+        }
+        dbHelper.eliminarLugarPorNombre(nombreLugar);
+
+        // Actualizar la interfaz de usuario
+        if (instance != null) {
+            instance.runOnUiThread(() -> {
+                instance.adapter.notifyDataSetChanged();
+            });
         }
     }
 
@@ -281,5 +275,8 @@ public class ListLugares extends AppCompatActivity {
 
         startActivity(detallesIntent);
     }
+
+    // Método para cargar la lista de lugares desde la base de datos de manera asíncrona
+
 
 }

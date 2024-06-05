@@ -1,81 +1,117 @@
 package com.example.miapppablorodriguezpenhia;
 
 import android.content.Context;
-import android.net.Uri;
-import android.util.Log;
-import android.view.LayoutInflater;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.RatingBar;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import android.widget.RatingBar;
 
 import com.bumptech.glide.Glide;
-import com.example.miapppablorodriguezpenhia.ListLugares;
-import com.example.miapppablorodriguezpenhia.Lugar;
-import com.example.miapppablorodriguezpenhia.R;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class AdaptadorLugar extends ArrayAdapter<Lugar> {
-    private final LayoutInflater inflater;
 
-    public AdaptadorLugar(@NonNull Context context, List<Lugar> lugares) {
+    private Context context;
+    private ArrayList<Lugar> lugares;
+
+    public AdaptadorLugar(Context context, ArrayList<Lugar> lugares) {
         super(context, 0, lugares);
-        inflater = LayoutInflater.from(context);
+        this.context = context;
+        this.lugares = lugares;
     }
 
-    @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        Log.d("Adaptador", "getView llamado para la posición: " + position);
+    public View getView(int position, View convertView, ViewGroup parent) {
+        Lugar lugarActual = lugares.get(position);
 
-        View itemView = convertView;
-        if (itemView == null) {
-            itemView = inflater.inflate(R.layout.lugar, parent, false);
-        }
+        // Creamos un contenedor horizontal para la imagen y el texto
+        LinearLayout horizontalLayout = new LinearLayout(context);
+        horizontalLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        ));
+        horizontalLayout.setOrientation(LinearLayout.HORIZONTAL);
 
-        Lugar lugar = getItem(position);
+        // Creamos un contenedor vertical para el texto
+        LinearLayout textLayout = new LinearLayout(context);
+        textLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1.0f
+        ));
+        textLayout.setOrientation(LinearLayout.VERTICAL);
+        textLayout.setGravity(Gravity.CENTER_VERTICAL);
 
-        TextView textViewNombre = itemView.findViewById(R.id.textViewNombre);
-        TextView textViewDireccion = itemView.findViewById(R.id.textViewDireccion);
-        ImageView imageView = itemView.findViewById(R.id.image);
-        RatingBar ratingBar = itemView.findViewById(R.id.ratingBar); // Agregado
+        // Configuramos la imagen
+        ImageView imageView = new ImageView(context);
+        LinearLayout.LayoutParams paramsImage = new LinearLayout.LayoutParams(
+                350, // Ancho
+                300  // Alto
+        );
+        imageView.setLayoutParams(paramsImage);
+        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP); // Asegura que la imagen se recorta y escala
 
-        // Configurar los valores de los elementos
-        textViewNombre.setText(lugar.getNombre());
-        textViewDireccion.setText(lugar.getDireccion());
-
-        // Configurar la imagen desde la ruta
-        if (lugar.getRutaFoto() != null && !lugar.getRutaFoto().isEmpty()) {
-            // Utiliza Glide para cargar la imagen desde la ruta almacenada en la base de datos
-            Glide.with(getContext())
-                    .load(lugar.getRutaFoto())
+        if (lugarActual.getRutaFoto() != null && !lugarActual.getRutaFoto().isEmpty()) {
+            Glide.with(context)
+                    .load(lugarActual.getRutaFoto())
+                    .centerCrop()
                     .into(imageView);
         } else {
-            // Si no hay imagen, mostrar una imagen de marcador de posición
-            imageView.setImageResource(R.drawable.baseline_photo_24);
+            imageView.setImageResource(R.drawable.baseline_photo_24); // Imagen por defecto
         }
 
+        // Configuramos el nombre del lugar
+        TextView textViewNombre = new TextView(context);
+        textViewNombre.setText(lugarActual.getNombre());
+        textViewNombre.setTextSize(24); // Tamaño de texto más grande
+        textViewNombre.setGravity(Gravity.CENTER); // Centrar el texto
 
-        //Configurar la calificación y agregar el listener
-        if (lugar != null) {
-            ratingBar.setRating(lugar.getValoracion());
-            ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-                @Override
-                public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                    if (fromUser) {
-                        // Actualizar la valoración en la base de datos cuando cambia
-                        ListLugares.actualizarValoracionLugar(lugar.getNombre(), rating);
-                    }
-                }
-            });
-        }
+        // Configuramos la dirección del lugar
+        TextView textViewDireccion = new TextView(context);
+        textViewDireccion.setText(lugarActual.getDireccion());
+        textViewDireccion.setTextSize(16); // Tamaño de texto más grande
+        textViewDireccion.setGravity(Gravity.CENTER); // Centrar el texto
 
-        return itemView;
+        // Configuramos la valoración del lugar dentro de un contenedor horizontal
+        LinearLayout ratingBarLayout = new LinearLayout(context);
+        ratingBarLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        ));
+        ratingBarLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+        RatingBar ratingBar = new RatingBar(context);
+        LinearLayout.LayoutParams paramsRatingBar = new LinearLayout.LayoutParams(
+              700,200
+        );
+        ratingBar.setLayoutParams(paramsRatingBar);
+        ratingBar.setNumStars(5);
+        ratingBar.setStepSize(1.0f);
+        ratingBar.setRating(lugarActual.getValoracion());
+        ratingBar.setFocusable(false);
+        ratingBar.setClickable(false);
+
+        // Ajustamos el tamaño de las estrellas
+        ratingBar.setScaleX(0.7f); // Ajusta el tamaño en el eje X (ancho)
+        ratingBar.setScaleY(0.7f); // Ajusta el tamaño en el eje Y (alto)
+
+        // Añadimos la RatingBar al contenedor horizontal
+        ratingBarLayout.addView(ratingBar);
+
+        // Añadimos los textos al contenedor de texto
+        textLayout.addView(textViewNombre);
+        textLayout.addView(textViewDireccion);
+        textLayout.addView(ratingBarLayout);
+
+        // Añadimos la imagen y el contenedor de texto al contenedor horizontal
+        horizontalLayout.addView(imageView);
+        horizontalLayout.addView(textLayout);
+
+        return horizontalLayout;
     }
 }

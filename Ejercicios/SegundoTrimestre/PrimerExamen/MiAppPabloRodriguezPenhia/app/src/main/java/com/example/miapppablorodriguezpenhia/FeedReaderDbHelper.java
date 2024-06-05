@@ -40,4 +40,11 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         onUpgrade(db, oldVersion, newVersion);
     }
+
+    // Añadir método para eliminar lugar por nombre
+    public void eliminarLugarPorNombre(String nombreLugar) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(FeedReaderContract.FeedEntry.TABLE_NAME, FeedReaderContract.FeedEntry.COLUMN_NAME_NOMBRE + " = ?", new String[]{nombreLugar});
+        db.close();
+    }
 }
