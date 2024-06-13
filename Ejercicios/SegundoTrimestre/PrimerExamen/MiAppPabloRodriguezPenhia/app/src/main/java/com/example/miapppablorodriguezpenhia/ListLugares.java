@@ -22,6 +22,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import com.bumptech.glide.Glide;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
 
 public class ListLugares extends AppCompatActivity {
@@ -37,10 +39,10 @@ public class ListLugares extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_list); // Cambiado a lugar.xml
+        setContentView(R.layout.fragment_list);
 
         instance = this;
-        dbHelper = new FeedReaderDbHelper(this); // Initialize dbHelper here
+        dbHelper = new FeedReaderDbHelper(this);
 
         // Configurar Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -75,7 +77,16 @@ public class ListLugares extends AppCompatActivity {
         });
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        // Configurar FloatingActionButton
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(view -> {
+            // Iniciar la actividad de inserción cuando se presione el botón flotante
+            Intent insertarIntent = new Intent(ListLugares.this, InsertarLugar.class);
+            startActivity(insertarIntent);
+        });
     }
+
 
     // Método para cargar la lista de lugares desde la base de datos de manera asíncrona
     private void consultarBaseDeDatosAsync() {
@@ -91,31 +102,8 @@ public class ListLugares extends AppCompatActivity {
         }).start();
     }
 
-    // Método para cargar imágenes de manera asíncrona
-    private void cargarImagenesAsync() {
-        new Thread(() -> {
-            for (int i = 0; i < listView.getCount(); i++) {
-                View itemView = listView.getChildAt(i);
-                if (itemView != null) {
-                    ImageView imageView = itemView.findViewById(R.id.image);
-                    Lugar lugar = lugares.get(i);
-                    cargarInformacionLugar(lugar, imageView);
-                }
-            }
-        }).start();
-    }
 
-    // Método para cargar información de lugar en un ImageView
-    private void cargarInformacionLugar(Lugar lugar, ImageView imageView) {
-        String rutaFoto = lugar.getRutaFoto();
 
-        if (rutaFoto != null && !rutaFoto.isEmpty()) {
-            // Utiliza Glide para cargar la imagen desde la ruta almacenada en la base de datos
-            runOnUiThread(() -> Glide.with(this)
-                    .load(rutaFoto)
-                    .into(imageView));
-        }
-    }
 
     // Método para obtener la lista de lugares desde la base de datos
     private ArrayList<Lugar> obtenerListaDeLugaresDesdeBD() {
@@ -169,23 +157,8 @@ public class ListLugares extends AppCompatActivity {
         return lugaresList;
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.list_menu, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.cambiarAInsertar) {
-            // Iniciar la actividad de inserción
-            Intent insertarIntent = new Intent(this, InsertarLugar.class);
-            startActivity(insertarIntent);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+
 
     public static void actualizarLista() {
         // Obtener la instancia actual de ListLugares y actualizar la lista
@@ -202,30 +175,7 @@ public class ListLugares extends AppCompatActivity {
         }
     }
 
-    public static void actualizarValoracionLugar(String nombre, float nuevaValoracion) {
-        // Obtener la instancia actual de ListLugares y actualizar la valoración en la lista
-        if (instance != null) {
-            instance.actualizarValoracionEnBD(nombre, nuevaValoracion);
-        }
-    }
 
-    private void actualizarValoracionEnBD(String nombre, float nuevaValoracion) {
-        FeedReaderDbHelper dbHelper = new FeedReaderDbHelper(this);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-        values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_VALORACION, nuevaValoracion);
-
-        String whereClause = FeedReaderContract.FeedEntry.COLUMN_NAME_NOMBRE + "=?";
-        String[] whereArgs = {nombre};
-
-        // Actualizar la valoración en la base de datos
-        db.update(FeedReaderContract.FeedEntry.TABLE_NAME, values, whereClause, whereArgs);
-
-        // Cerrar la conexión con la base de datos
-        db.close();
-        dbHelper.close();
-    }
 
     public static void eliminarLugarPorNombre(String nombreLugar) {
         for (int i = 0; i < lugares.size(); i++) {
@@ -244,39 +194,6 @@ public class ListLugares extends AppCompatActivity {
         }
     }
 
-    private boolean esTablet() {
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-
-        int anchoPantalla = displayMetrics.widthPixels / displayMetrics.densityDpi;
-        int altoPantalla = displayMetrics.heightPixels / displayMetrics.densityDpi;
-
-        double tamanioPantalla = Math.sqrt(Math.pow(anchoPantalla, 2) + Math.pow(altoPantalla, 2));
-
-        // Si el tamaño de la pantalla es mayor o igual a 7 pulgadas, se considera una tablet
-        return tamanioPantalla >= 7.0;
-    }
-
-    private void abrirDetallesLugar(int position) {
-        Log.d("CLICK", "Abrir DetallesLugar para la posición: " + position);
-
-        Lugar lugarSeleccionado = lugares.get(position);
-
-        // Crear una instancia de DetallesLugar y pasar los detalles del lugar como extras en el Intent
-        Intent detallesIntent = new Intent(ListLugares.this, DetallesLugar.class);
-        detallesIntent.putExtra("nombre", lugarSeleccionado.getNombre());
-        detallesIntent.putExtra("tipo", lugarSeleccionado.getTipo().toString());
-        detallesIntent.putExtra("fecha", lugarSeleccionado.getFecha());
-        detallesIntent.putExtra("url", lugarSeleccionado.getUrl());
-        detallesIntent.putExtra("tfno", lugarSeleccionado.getTfno());
-        detallesIntent.putExtra("direccion", lugarSeleccionado.getDireccion());
-        detallesIntent.putExtra("rutaFoto", lugarSeleccionado.getRutaFoto());
-        detallesIntent.putExtra("valoracion", lugarSeleccionado.getValoracion());
-
-        startActivity(detallesIntent);
-    }
-
-    // Método para cargar la lista de lugares desde la base de datos de manera asíncrona
 
 
 }

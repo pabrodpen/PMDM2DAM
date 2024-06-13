@@ -11,19 +11,18 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -41,19 +40,11 @@ public class InsertarLugar extends AppCompatActivity implements DialogLista.OnTi
     private Lugar lugar;  // Utilizar la instancia global
     RatingBar ratingBarInsertar;
 
-    private ImageView imageView;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_insertar);
 
-        if (esTablet()) {
-            setContentView(R.layout.activity_insertar_tablet);
-        } else {
-            setContentView(R.layout.fragment_insertar);
-        }
-
-        imageView = findViewById(R.id.image);
         editTextNombre = findViewById(R.id.editTextNombre);
         editTextDirecc = findViewById(R.id.editTextTextPostalAddress);
         editTextTfno = findViewById(R.id.editTextPhone);
@@ -61,6 +52,10 @@ public class InsertarLugar extends AppCompatActivity implements DialogLista.OnTi
         ratingBarInsertar = findViewById(R.id.ratingBarInsertar);
 
         dbHelper = new FeedReaderDbHelper(this);
+
+        Toolbar toolbar = findViewById(R.id.toolbar2);
+        setSupportActionBar(toolbar);
+        toolbar.setTitle("AÑADIR ESTABLECIMIENTO");
 
         // Intenta obtener el objeto Lugar del Intent
         Intent intent = getIntent();
@@ -236,13 +231,7 @@ public class InsertarLugar extends AppCompatActivity implements DialogLista.OnTi
                 e.printStackTrace();
             }
         }
-
-        // Verificar si la ruta de la foto está vacía y establecer la imagen predeterminada si es el caso
-        if (rutaFoto == null || rutaFoto.isEmpty()) {
-            imageView.setImageResource(R.drawable.baseline_photo_24); // Establecer imagen por defecto
-        }
     }
-
 
     private String guardarImagenEnGaleria(Bitmap imageBitmap) {
         String rutaImagen = null;
@@ -291,15 +280,5 @@ public class InsertarLugar extends AppCompatActivity implements DialogLista.OnTi
         }
 
         return null;
-    }
-    private boolean esTablet() {
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
-        float widthInches = metrics.widthPixels / metrics.xdpi;
-        float heightInches = metrics.heightPixels / metrics.ydpi;
-        double diagonalInches = Math.sqrt((widthInches * widthInches) + (heightInches * heightInches));
-
-        return diagonalInches >= 7.0;
     }
 }

@@ -1,6 +1,4 @@
 package com.example.miapppablorodriguezpenhia;
-
-
 public class Lugar {
     private String nombre;
     private String direccion;
@@ -10,7 +8,6 @@ public class Lugar {
     private String tipo;
     private String rutaFoto;
     private float valoracion; // Nuevo atributo para la valoración
-    GeoPunto latitud,longitud;
 
     public Lugar(String nombre, String direccion, String tfno, String url, String fecha, String tipo, String rutaFoto, float valoracion) {
         this.nombre = nombre;
@@ -30,9 +27,6 @@ public class Lugar {
     public void setValoracion(float valoracion) {
         this.valoracion = valoracion;
     }
-
-
-
 
 
     public String getNombre() {
@@ -75,24 +69,6 @@ public class Lugar {
         this.tfno = tfno;
     }
 
-
-
-    public GeoPunto getLongitud() {
-        return longitud;
-    }
-
-    public void setLongitud(GeoPunto longitud) {
-        this.longitud = longitud;
-    }
-
-    public GeoPunto getLatitud() {
-        return latitud;
-    }
-
-    public void setLatitud(GeoPunto latitud) {
-        this.latitud = latitud;
-    }
-
     public String getTipo() {
         return tipo;
     }
@@ -108,11 +84,5 @@ public class Lugar {
     public void setFecha(String fecha) {
         this.fecha = fecha;
     }
-
-
-
-
-
-
 
 }

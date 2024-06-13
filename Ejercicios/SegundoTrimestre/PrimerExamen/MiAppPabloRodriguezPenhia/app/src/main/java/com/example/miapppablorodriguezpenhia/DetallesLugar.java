@@ -56,15 +56,12 @@ public class DetallesLugar extends AppCompatActivity {
         dbHelper = new FeedReaderDbHelper(this);
         listLugares = new ListLugares();
 
-        if (esTablet()) {
-            setContentView(R.layout.activity_detalles_tablet);
-        } else {
-            setContentView(R.layout.fragment_detalles_lugar);
-        }
+        setContentView(R.layout.fragment_detalles_lugar);
 
-        // Configurar Toolbar
-        Toolbar toolbar = findViewById(R.id.toolbar2);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        getSupportActionBar().setTitle("DETALLES");
 
         ratingBar = findViewById(R.id.ratingBar2);
 
@@ -76,7 +73,9 @@ public class DetallesLugar extends AppCompatActivity {
         tUbicacion = findViewById(R.id.editTextUbicacion);
 
         // Configurar la ActionBar
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         // Leer los extras del Intent
         Intent intent = getIntent();
@@ -186,6 +185,7 @@ public class DetallesLugar extends AppCompatActivity {
         return true;
     }
 
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -194,12 +194,7 @@ public class DetallesLugar extends AppCompatActivity {
             Intent intent = new Intent(DetallesLugar.this, ListLugares.class);
             startActivity(intent);
             return true;
-        } else if (id == R.id.hacerFoto) {
-            tomarFoto();
-            return true;
-        } else if (id == R.id.fotoGaleria) {
-            seleccionarFotoDeGaleria();
-            return true;
+
         } else if (id == R.id.eliminar) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Confirmar eliminación")
@@ -223,12 +218,6 @@ public class DetallesLugar extends AppCompatActivity {
             AlertDialog dialog = builder.create();
             dialog.show();
 
-            return true;
-        } else if (id == R.id.editar) {
-            int lugarId = getLugarId(); // Obtener el ID del lugar actual
-            Intent intent = new Intent(DetallesLugar.this, EditarLugar.class);
-            intent.putExtra("id", lugarId);
-            startActivity(intent);
             return true;
         }
 
@@ -267,26 +256,12 @@ public class DetallesLugar extends AppCompatActivity {
         }
     }
 
+    // Este es el método para obtener el ID del lugar actual
     private int getLugarId() {
-        return lugarId;
+        Intent intent = getIntent();
+        return intent.getIntExtra("id", -1); // -1 es el valor por defecto si no se encuentra el extra
     }
 
-    private boolean esTablet() {
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        float widthInches = metrics.widthPixels / metrics.xdpi;
-        float heightInches = metrics.heightPixels / metrics.ydpi;
-        double diagonalInches = Math.sqrt((widthInches * widthInches) + (heightInches * heightInches));
-        return diagonalInches >= 7.0;
-    }
-
-    private void tomarFoto() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
-        } else {
-            abrirCamara();
-        }
-    }
 
     private void abrirCamara() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -295,10 +270,6 @@ public class DetallesLugar extends AppCompatActivity {
         }
     }
 
-    private void seleccionarFotoDeGaleria() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, REQUEST_IMAGE_GALLERY);
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

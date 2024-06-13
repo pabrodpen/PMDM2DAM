@@ -5,19 +5,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
- >
+    android:background="@color/white">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar2"
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
+        android:background="@color/azul_claro"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:textAlignment="center"
+        />
 
     <TextView
         android:id="@+id/editTextUrl"
@@ -30,7 +31,7 @@
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageView8"
-        app:layout_constraintTop_toBottomOf="@+id/ediTextTfno" />
+        app:layout_constraintTop_toBottomOf="@+id/ediTextTfno"/>
 
     <TextView
         android:id="@+id/editTextFechaEditar"
@@ -46,7 +47,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/imageView6"
         app:layout_constraintTop_toBottomOf="@+id/editTextUrl"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0"/>
 
     <ImageView
         android:id="@+id/imageView8"
@@ -57,7 +58,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView7"
         app:srcCompat="@drawable/baseline_map_24"
-        tools:srcCompat="@drawable/baseline_map_24" />
+        tools:srcCompat="@drawable/baseline_map_24"/>
 
     <ImageView
         android:id="@+id/imageView7"
@@ -67,7 +68,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView5"
         app:srcCompat="@drawable/baseline_local_phone_24"
-        tools:srcCompat="@drawable/baseline_local_phone_24" />
+        tools:srcCompat="@drawable/baseline_local_phone_24"/>
 
     <TextView
         android:id="@+id/ediTextTfno"
@@ -80,7 +81,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/imageView7"
-        app:layout_constraintTop_toBottomOf="@+id/editTextUbicacion" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextUbicacion"/>
 
     <TextView
         android:id="@+id/editTextUbicacion"
@@ -94,7 +95,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/imageView5"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTipoEditar" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextTipoEditar"/>
 
     <ImageView
         android:id="@+id/imageView6"
@@ -106,7 +107,7 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView8"
         app:layout_constraintVertical_bias="0.123"
         app:srcCompat="@drawable/baseline_calendar_month_24"
-        tools:srcCompat="@drawable/baseline_calendar_month_24" />
+        tools:srcCompat="@drawable/baseline_calendar_month_24"/>
 
     <ImageView
         android:id="@+id/imageView5"
@@ -116,7 +117,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView4"
         app:srcCompat="@drawable/baseline_location_on_24"
-        tools:srcCompat="@drawable/baseline_location_on_24" />
+        tools:srcCompat="@drawable/baseline_location_on_24"/>
 
     <TextView
         android:id="@+id/editTextNombre"
@@ -126,10 +127,9 @@
         android:gravity="center"
         android:text="NOMBRE DEL LUGAR"
         android:textSize="30sp"
-
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar2" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"/>
 
     <ImageView
         android:id="@+id/imageView4"
@@ -139,7 +139,7 @@
         android:layout_marginTop="32dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextNombre"
-        tools:srcCompat="@tools:sample/avatars" />
+        tools:srcCompat="@tools:sample/avatars"/>
 
     <TextView
         android:id="@+id/editTextTipoEditar"
@@ -154,7 +154,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/imageView4"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNombre" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextNombre"/>
 
     <RatingBar
         android:id="@+id/ratingBar2"
@@ -166,6 +166,6 @@
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextFechaEditar"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

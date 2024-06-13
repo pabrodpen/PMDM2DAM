@@ -17,6 +17,10 @@ public final class FeedReaderContract {
         public static final String COLUMN_NAME_TIPO = "tipo";
         public static final String COLUMN_NAME_RUTA_FOTO = "ruta_foto";
         public static final String COLUMN_NAME_VALORACION = "valoracion";
+        public static final String COLUMN_NAME_HORARIO_SEMANA_ENTRADA = "horario_semana_entrada";
+        public static final String COLUMN_NAME_HORARIO_SEMANA_SALIDA = "horario_semana_salida";
+        public static final String COLUMN_NAME_HORARIO_FIN_ENTRADA = "horario_fin_entrada";
+        public static final String COLUMN_NAME_HORARIO_FIN_SALIDA = "horario_fin_salida";
 
     }
 }

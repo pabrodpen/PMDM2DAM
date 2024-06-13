@@ -6,9 +6,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class FeedReaderDbHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 5;
+    public static final int DATABASE_VERSION = 6; // Actualización de la versión de la base de datos
     public static final String DATABASE_NAME = "FeedReader.db";
 
+    // SQL statement para crear la tabla
     private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + FeedReaderContract.FeedEntry.TABLE_NAME + " (" +
                     FeedReaderContract.FeedEntry._ID + " INTEGER PRIMARY KEY," +
@@ -17,10 +18,16 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
                     FeedReaderContract.FeedEntry.COLUMN_NAME_URL + " TEXT," +
                     FeedReaderContract.FeedEntry.COLUMN_NAME_DATE + " TEXT," +
                     FeedReaderContract.FeedEntry.COLUMN_NAME_TFNO + " TEXT," +
-                    FeedReaderContract.FeedEntry.COLUMN_NAME_TIPO + " TEXT,"+
-                    FeedReaderContract.FeedEntry.COLUMN_NAME_VALORACION + " REAL,"+
-                    FeedReaderContract.FeedEntry.COLUMN_NAME_RUTA_FOTO + " TEXT)";
+                    FeedReaderContract.FeedEntry.COLUMN_NAME_TIPO + " TEXT," +
+                    FeedReaderContract.FeedEntry.COLUMN_NAME_VALORACION + " REAL," +
+                    FeedReaderContract.FeedEntry.COLUMN_NAME_RUTA_FOTO + " TEXT," +
+                    FeedReaderContract.FeedEntry.COLUMN_NAME_HORARIO_SEMANA_ENTRADA + " TEXT," +
+                    FeedReaderContract.FeedEntry.COLUMN_NAME_HORARIO_SEMANA_SALIDA + " TEXT," +
+                    FeedReaderContract.FeedEntry.COLUMN_NAME_HORARIO_FIN_ENTRADA + " TEXT," +
+                    FeedReaderContract.FeedEntry.COLUMN_NAME_HORARIO_FIN_SALIDA + " TEXT)";
 
+
+    // SQL statement para eliminar la tabla
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + FeedReaderContract.FeedEntry.TABLE_NAME;
 
@@ -28,20 +35,25 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_ENTRIES);
     }
 
+    @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(SQL_DELETE_ENTRIES);
-        onCreate(db);
+        if (oldVersion < newVersion) {
+            db.execSQL(SQL_DELETE_ENTRIES);
+            onCreate(db);
+        }
     }
 
+    @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         onUpgrade(db, oldVersion, newVersion);
     }
 
-    // Añadir método para eliminar lugar por nombre
+    // Método para eliminar lugar por nombre
     public void eliminarLugarPorNombre(String nombreLugar) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(FeedReaderContract.FeedEntry.TABLE_NAME, FeedReaderContract.FeedEntry.COLUMN_NAME_NOMBRE + " = ?", new String[]{nombreLugar});
