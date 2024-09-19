@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">MiAppPabloRodriguezPenhia</string>
+    <string name="google_maps_api_key">AIzaSyAGh4IJskAsRZyKInFqNdPOWB8YTPM_4qo</string>
+    <string name="nombre">Nombre</string>
+    <string name="tipo">Tipo de lugar</string>
+    <string name="fecha">Fecha</string>
+    <string name="url">URL</string>
+    <string name="direccion">Direccion pagina web</string>
+    <string name="seleccionar">SELECCIONA UNA IMAGEN</string>
+    <string name="insertar">Insertar informacion</string>
+
+
+</resources>

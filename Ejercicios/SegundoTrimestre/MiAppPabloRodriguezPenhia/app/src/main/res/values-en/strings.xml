@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MyAppPabloRodriguezPenhia</string>
+    <string name="google_maps_api_key">AIzaSyAGh4IJskAsRZyKInFqNdPOWB8YTPM_4qo</string>
+    <string name="nombre">Name</string>
+    <string name="tipo">Place Type</string>
+    <string name="fecha">Date</string>
+    <string name="url">URL</string>
+    <string name="direccion">Webpage Address</string>
+    <string name="seleccionar">SELECT AN IMAGE</string>
+    <string name="insertar">Insert Information</string>
+</resources>
