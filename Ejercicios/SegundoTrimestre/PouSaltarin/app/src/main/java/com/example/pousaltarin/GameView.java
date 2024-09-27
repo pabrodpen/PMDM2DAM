@@ -30,6 +30,7 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
 
     private boolean gameOver = false; // Bandera para controlar si el juego ha terminado
 
+    Plataforma platform;
     private boolean isPlaying;
     private float platformSpeedX = 5; // Velocidad horizontal de las plataformas móviles
 
@@ -155,7 +156,7 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
                     playJumpSound();
                     score += 10;
                     // Verificar si estamos en la pantalla 4 o 5 y eliminar la plataforma
-                    if (backgroundCounter == 4 || backgroundCounter == 5) {
+                    if (backgroundCounter == 4 || backgroundCounter == 5 ) {
                         platforms.remove(platform);
                     }
                     break;
@@ -252,14 +253,19 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
         return rotateVectorDrawable(airplaneDrawable, 90);
     }
 
+    private Bitmap getRotatedRocketBitmap() {
+        Drawable airplaneDrawable = ContextCompat.getDrawable(getContext(), R.drawable.baseline_rocket_24);
+        return rotateVectorDrawable(airplaneDrawable, 90);
+    }
+
     private void drawPlatforms(Canvas canvas) {
-        if (backgroundCounter >= 3 && backgroundCounter <= 6) {
+        if (backgroundCounter >= 3 && backgroundCounter <= 5) {
             Drawable cloudDrawable = ContextCompat.getDrawable(getContext(), R.drawable.baseline_cloud_24);
             Bitmap cloudBitmap = vectorToBitmap(cloudDrawable);
             for (Plataforma platform : platforms) {
                 canvas.drawBitmap(cloudBitmap, platform.getRect().left, platform.getRect().top, null);
             }
-        } else if (backgroundCounter >= 7) {
+        } else if (backgroundCounter == 6 || backgroundCounter==7) {
             Bitmap rotatedAirplaneBitmap = getRotatedAirplaneBitmap();
             for (Plataforma platform : platforms) {
                 if (platform.isMoving()) {
@@ -267,7 +273,15 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
                 }
                 canvas.drawBitmap(rotatedAirplaneBitmap, platform.getRect().left, platform.getRect().top, null);
             }
-        } else {
+        }  else if (backgroundCounter >= 8) {
+            Bitmap rotatedRocketBitmap = getRotatedRocketBitmap();
+            for (Plataforma platform : platforms) {
+                if (platform.isMoving()) {
+                    platform.updateHorizontalPosition(); // Actualizar la posición horizontal de la plataforma
+                }
+                canvas.drawBitmap(rotatedRocketBitmap, platform.getRect().left, platform.getRect().top, null);
+            }
+        }else {
             // Si el contador de pantalla no coincide con ninguna de las condiciones anteriores, no dibujamos nada
         }
     }
@@ -383,7 +397,12 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
 
     private void generateNewPlatforms() {
         platforms.clear();
-        int numPlatformsToCreate = 10;
+        int numPlatformsToCreate = 10; // Número de plataformas por defecto
+        // Si estamos en la primera pantalla, incrementamos el número de plataformas
+        if (backgroundCounter == 0) {
+            numPlatformsToCreate += 5; // Aumentamos el número de plataformas a 15
+        }
+
         int platformWidth = 120;
         int platformHeight = 20;
         int minDistanceBetweenPlatforms = 350;
@@ -391,6 +410,7 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
         int maxX = screenWidth - platformWidth;
         int minY = screenHeight - platformHeight;
         int verticalDistanceBetweenPlatforms = (minY - minDistanceBetweenPlatforms) / (numPlatformsToCreate - 1);
+
         for (int i = 0; i < numPlatformsToCreate; i++) {
             int platformX = random.nextInt(maxX - minX + 1) + minX;
             int platformY = minY - i * verticalDistanceBetweenPlatforms;
@@ -399,6 +419,7 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
             platforms.add(newPlatform);
         }
     }
+
 
     private void incrementBackgroundCounter() {
         backgroundCounter++;
@@ -434,15 +455,17 @@ public class GameView extends SurfaceView implements Runnable, SensorEventListen
     private void drawBackground(Canvas canvas) {
         if (backgroundCounter == 3) {
             canvas.drawBitmap(backgroundImage2, 0, 0, null);
-        } else if (backgroundCounter == 4 || backgroundCounter == 5 || backgroundCounter == 6 || backgroundCounter == 7) {
+        } else if (backgroundCounter >= 4 && backgroundCounter <= 7) {
             // Dibujar un fondo de color azul cielo
             canvas.drawColor(Color.parseColor("#87CEEB")); // Este código de color representa el azul cielo
         } else if (backgroundCounter >= 8) {
+            // Dibujar el fondo de la imagen 4
             canvas.drawBitmap(backgroundImage4, 0, 0, null);
         } else if (backgroundCounter < 3) {
             canvas.drawBitmap(backgroundImage1, 0, 0, null);
         }
     }
+
 
 
 
