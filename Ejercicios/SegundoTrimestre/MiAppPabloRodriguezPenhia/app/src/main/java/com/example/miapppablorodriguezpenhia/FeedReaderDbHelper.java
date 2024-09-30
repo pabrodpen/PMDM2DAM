@@ -11,7 +11,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
 
     private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + FeedReaderContract.FeedEntry.TABLE_NAME + " (" +
-                    FeedReaderContract.FeedEntry._ID + " INTEGER PRIMARY KEY," +
+                    FeedReaderContract.FeedEntry._ID + " INTEGER PRIMARY KEY," +  // ID aquí
                     FeedReaderContract.FeedEntry.COLUMN_NAME_NOMBRE + " TEXT," +
                     FeedReaderContract.FeedEntry.COLUMN_NAME_DIRECCION + " TEXT," +
                     FeedReaderContract.FeedEntry.COLUMN_NAME_URL + " TEXT," +

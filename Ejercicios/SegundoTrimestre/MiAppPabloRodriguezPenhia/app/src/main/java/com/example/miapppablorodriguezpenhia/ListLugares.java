@@ -80,6 +80,18 @@ public class ListLugares extends AppCompatActivity {
             startActivity(detallesIntent);
         });
 
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            Lugar lugarSeleccionado = lugares.get(position);
+
+            // Crear un Intent para ir a EditarLugar
+            Intent editarIntent = new Intent(ListLugares.this, EditarLugar.class);
+
+            // Asegúrate de que la clase Lugar implemente Serializable
+            editarIntent.putExtra("lugar", lugarSeleccionado); // Enviar el objeto Lugar
+            startActivity(editarIntent);
+        });
+
+
 
 
         // Habilitar opciones de menú
@@ -100,19 +112,7 @@ public class ListLugares extends AppCompatActivity {
         }).start();
     }
 
-    // Método para cargar imágenes de manera asíncrona
-    private void cargarImagenesAsync() {
-        new Thread(() -> {
-            for (int i = 0; i < listView.getCount(); i++) {
-                View itemView = listView.getChildAt(i);
-                if (itemView != null) {
-                    ImageView imageView = itemView.findViewById(R.id.image);
-                    Lugar lugar = lugares.get(i);
-                    cargarInformacionLugar(lugar, imageView);
-                }
-            }
-        }).start();
-    }
+
 
     // Método para cargar información de lugar en un ImageView
     private void cargarInformacionLugar(Lugar lugar, ImageView imageView) {

@@ -1,192 +1,119 @@
 package com.example.miapppablorodriguezpenhia;
 
-
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
-
+import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
+import com.bumptech.glide.Glide;
 
+public class EditarLugar extends AppCompatActivity {
 
-public class EditarLugar extends AppCompatActivity implements DialogLista.OnTipoLugarSelectedListener {
-
-    EditText editTextNombre, editTextTipo, editTextFecha, editTextUrl, editTextTfno, editTextUbicacion;
-    //RatingBar ratingBar; // Agregado
-
-    Lugar lugar;
-
-    private String datoTipoLugar, datoFecha, fechaSeleccionada;
+    private Lugar lugar;
+    private EditText nombreEditText;
+    private EditText direccionEditText;
+    private EditText tfnoEditText;
+    private EditText urlEditText;
+    private ImageView fotoImageView;
+    private Button guardarButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_editar);
 
+        // Recibir el objeto Lugar del Intent
+        lugar = (Lugar) getIntent().getSerializableExtra("lugar");
 
-        if (esTablet()) {
-            setContentView(R.layout.activity_actualizar_tablet);
+        if (lugar != null) {
+            inicializarVistas();
+            cargarDatosEnVistas();
+            configurarBotonGuardar();
         } else {
-            setContentView(R.layout.fragment_actualizar);
+            Log.e("ERROR", "No se recibieron datos en EditarLugar");
         }
+    }
 
+    private void inicializarVistas() {
+        nombreEditText = findViewById(R.id.nombreEditText);
+        direccionEditText = findViewById(R.id.direccionEditText);
+        tfnoEditText = findViewById(R.id.tfnoEditText);
+        urlEditText = findViewById(R.id.urlEditText);
+        //fotoImageView = findViewById(R.id.fotoImageView);
+        guardarButton = findViewById(R.id.guardarButton);
+    }
 
+    private void cargarDatosEnVistas() {
+        nombreEditText.setText(lugar.getNombre());
+        direccionEditText.setText(lugar.getDireccion());
+        tfnoEditText.setText(lugar.getTfno());
+        urlEditText.setText(lugar.getUrl());
 
-
-        // Inicializar EditTexts
-        editTextNombre = findViewById(R.id.editTextNombreEditar);
-        editTextTipo = findViewById(R.id.editTextTipoEditar);
-        editTextFecha = findViewById(R.id.editTextFechaEditar);
-        editTextUrl = findViewById(R.id.editTextUrlEditar);
-        editTextTfno = findViewById(R.id.editTextTfnoEditar);
-        editTextUbicacion = findViewById(R.id.editTextDireccionEditar);
-
-
-        // Obtener datos del Intent
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            String nombre = extras.getString("nombre");
-            String tipo = extras.getString("tipo");
-            String fecha = extras.getString("fecha");
-            String url = extras.getString("url");
-            String hora = extras.getString("hora");
-            String tfno = extras.getString("tfno");
-            String ubicacion = extras.getString("ubicacion");
-
-            // Establecer los hints en los EditTexts
-            editTextNombre.setHint(nombre);
-            editTextTipo.setHint(tipo);
-            editTextFecha.setHint(fecha);
-            editTextUrl.setHint(url);
-            editTextTfno.setHint(tfno);
-            editTextUbicacion.setHint(ubicacion);
-
-
+        // Cargar la imagen en el ImageView
+        if (lugar.getRutaFoto() != null && !lugar.getRutaFoto().isEmpty()) {
+            Glide.with(this)
+                    .load(lugar.getRutaFoto())
+                    .into(fotoImageView);
         }
+    }
 
-        Button buttonActualizar = findViewById(R.id.buttonActualizar);
-        buttonActualizar.setOnClickListener(new View.OnClickListener() {
+    private void configurarBotonGuardar() {
+        guardarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Llamar al método para actualizar el lugar
-                actualizarLugar();
-            }
-        });
-
-        Button dialogLista = findViewById(R.id.buttonTipoEditar);
-        dialogLista.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DialogLista dialogLista = new DialogLista();
-                dialogLista.show(getSupportFragmentManager(), "DialogLista");
-            }
-        });
-
-        Button buttonFecha = findViewById(R.id.buttonFechaEditar);
-        buttonFecha.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // ... (código para mostrar el DatePickerDialog)
+                guardarCambios();
             }
         });
     }
 
-    @Override
-    public void onTipoLugarSelected(String tipoLugar) {
-        // Actualizar el EditText de tipo con el tipo seleccionado
-        editTextTipo.setText(tipoLugar);
-    }
+    private void guardarCambios() {
+        // Obtener los nuevos datos de los EditText
+        String nuevoNombre = nombreEditText.getText().toString();
+        String nuevaDireccion = direccionEditText.getText().toString();
+        String nuevoTfno = tfnoEditText.getText().toString();
+        String nuevaUrl = urlEditText.getText().toString();
 
-    // Método para actualizar un lugar
-    private void actualizarLugar() {
-        // Obtener los nuevos datos de los EditTexts
-        String nombre = editTextNombre.getText().toString();
-        String tipo = editTextTipo.getText().toString();
-        String url = editTextUrl.getText().toString();
-        String tfno = editTextTfno.getText().toString();
-        String ubicacion = editTextUbicacion.getText().toString();
-
-        // Validar que se haya ingresado el nombre (puedes agregar más validaciones según tus necesidades)
-        if (TextUtils.isEmpty(nombre)) {
-            Toast.makeText(this, "Por favor, ingresa el nombre del lugar", Toast.LENGTH_SHORT).show();
-            return;
+        // Actualizar en la base de datos solo los campos permitidos
+        if (!nuevoNombre.isEmpty() || !nuevaDireccion.isEmpty() || !nuevoTfno.isEmpty() || !nuevaUrl.isEmpty()) {
+            actualizarLugarEnBD(nuevoNombre, nuevaDireccion, nuevoTfno, nuevaUrl);
         }
-
-
-
-        // Crear un objeto Lugar con los nuevos datos
-        Lugar nuevoLugar = new Lugar(nombre, ubicacion, tfno, url, fechaSeleccionada, tipo,null,0);
-
-        // Actualizar el lugar en la base de datos
-        if (actualizarLugarEnBD(nuevoLugar)) {
-            // Actualizar la lista en la actividad principal (ListLugares)
-            ListLugares.actualizarLista();
-
-            // Cerrar la actividad actual después de actualizar
-            finish();
-        } else {
-            // Mostrar un mensaje de error si la actualización falla
-            Toast.makeText(this, "Error al actualizar el lugar", Toast.LENGTH_SHORT).show();
-        }
+        // Finalizar la actividad después de guardar
+        finish();
     }
 
-
-
-    // Método para actualizar un lugar en la base de datos
-    private boolean actualizarLugarEnBD(Lugar lugarActualizado) {
+    private void actualizarLugarEnBD(String nombre, String direccion, String tfno, String url) {
         FeedReaderDbHelper dbHelper = new FeedReaderDbHelper(this);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-
         ContentValues values = new ContentValues();
-        values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_NOMBRE, lugarActualizado.getNombre());
-        values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_TIPO, lugarActualizado.getTipo());
-        values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_DIRECCION, lugarActualizado.getDireccion());
-        values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_TFNO, lugarActualizado.getTfno());
-        values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_URL, lugarActualizado.getUrl());
-        values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_DATE, lugarActualizado.getFecha());
 
+        // Solo se actualizan los campos que no están vacíos
+        if (!nombre.isEmpty()) {
+            values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_NOMBRE, nombre);
+        }
+        if (!direccion.isEmpty()) {
+            values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_DIRECCION, direccion);
+        }
+        if (!tfno.isEmpty()) {
+            values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_TFNO, tfno);
+        }
+        if (!url.isEmpty()) {
+            values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_URL, url);
+        }
 
-        // Puedes agregar la actualización de la imagen si es necesario
+        String whereClause = FeedReaderContract.FeedEntry.COLUMN_NAME_NOMBRE + "=?";
+        String[] whereArgs = {lugar.getNombre()}; // Se usa el nombre original para identificar el lugar a actualizar.
 
+        // Actualizar la fila en la base de datos
+        int rowsAffected = db.update(FeedReaderContract.FeedEntry.TABLE_NAME, values, whereClause, whereArgs);
+        Log.d("ACTUALIZACION", "Filas afectadas: " + rowsAffected);
 
-        String selection = FeedReaderContract.FeedEntry.COLUMN_NAME_NOMBRE + " LIKE ?";
-        String[] selectionArgs = { lugarActualizado.getNombre() };
-
-
-        int updatedRows = db.update(
-                FeedReaderContract.FeedEntry.TABLE_NAME,
-                values,
-                selection,
-                selectionArgs);
-
-
+        // Cerrar la base de datos
         db.close();
         dbHelper.close();
-
-
-        // Si se actualizó al menos una fila, se considera exitoso
-        return updatedRows > 0;
     }
-
-
-    private boolean esTablet() {
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-
-        int anchoPantalla = displayMetrics.widthPixels / displayMetrics.densityDpi;
-        int altoPantalla = displayMetrics.heightPixels / displayMetrics.densityDpi;
-
-        double tamanioPantalla = Math.sqrt(Math.pow(anchoPantalla, 2) + Math.pow(altoPantalla, 2));
-
-        // Si el tamaño de la pantalla es mayor o igual a 7 pulgadas, se considera una tablet
-        return tamanioPantalla >= 7.0;
-    }
-
-
-
 }

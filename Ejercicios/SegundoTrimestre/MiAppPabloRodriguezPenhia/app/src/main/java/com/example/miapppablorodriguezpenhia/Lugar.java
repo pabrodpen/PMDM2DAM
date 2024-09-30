@@ -1,7 +1,9 @@
 package com.example.miapppablorodriguezpenhia;
 
 
-public class Lugar {
+import java.io.Serializable;
+
+public class Lugar implements Serializable {
     private String nombre;
     private String direccion;
     private String tfno;

@@ -1,6 +1,7 @@
 package com.example.miapppablorodriguezpenhia;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -52,30 +53,43 @@ public class AdaptadorLugar extends ArrayAdapter<Lugar> {
 
         // Configurar la imagen desde la ruta
         if (lugar.getRutaFoto() != null && !lugar.getRutaFoto().isEmpty()) {
-            // Utiliza Glide para cargar la imagen desde la ruta almacenada en la base de datos
             Glide.with(getContext())
                     .load(lugar.getRutaFoto())
                     .into(imageView);
         } else {
-            // Si no hay imagen, mostrar una imagen de marcador de posición
             imageView.setImageResource(R.drawable.baseline_photo_24);
         }
 
-
-        //Configurar la calificación y agregar el listener
+        // Configurar la calificación y agregar el listener
         if (lugar != null) {
             ratingBar.setRating(lugar.getValoracion());
             ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
                 @Override
                 public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
                     if (fromUser) {
-                        // Actualizar la valoración en la base de datos cuando cambia
                         ListLugares.actualizarValoracionLugar(lugar.getNombre(), rating);
                     }
                 }
             });
         }
 
+        // Agregar un OnClickListener para abrir la actividad DetallesLugar
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), DetallesLugar.class);
+                intent.putExtra("nombre", lugar.getNombre());
+                intent.putExtra("direccion", lugar.getDireccion());
+                intent.putExtra("tipo", lugar.getTipo()); // Asegúrate de que el objeto Lugar tiene este método
+                intent.putExtra("fecha", lugar.getFecha()); // Asegúrate de que el objeto Lugar tiene este método
+                intent.putExtra("url", lugar.getUrl()); // Asegúrate de que el objeto Lugar tiene este método
+                intent.putExtra("tfno", lugar.getTfno()); // Asegúrate de que el objeto Lugar tiene este método
+                intent.putExtra("valoracion", lugar.getValoracion());
+                getContext().startActivity(intent);
+            }
+        });
+
         return itemView;
     }
+
 }
