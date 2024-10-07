@@ -18,8 +18,6 @@ public final class FeedReaderContract {
         public static final String COLUMN_NAME_RUTA_FOTO = "ruta_foto";
         public static final String COLUMN_NAME_VALORACION = "valoracion";
 
-        // Agrega esta línea
-        public static final String COLUMN_NAME_ID = _ID;  // Esto utilizará el valor de BaseColumns._ID
     }
 
 }

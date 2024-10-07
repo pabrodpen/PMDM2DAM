@@ -211,6 +211,7 @@ public class ListLugares extends AppCompatActivity {
         }
     }
 
+
     public static void actualizarValoracionLugar(String nombre, float nuevaValoracion) {
         // Obtener la instancia actual de ListLugares y actualizar la valoración en la lista
         if (instance != null) {
@@ -281,5 +282,20 @@ public class ListLugares extends AppCompatActivity {
 
         startActivity(detallesIntent);
     }
+
+    public static boolean actualizarLugar(String nombreOriginal, Lugar lugarActualizado) {
+        if (instance != null && instance.lugares != null) {
+            for (int i = 0; i < instance.lugares.size(); i++) {
+                if (instance.lugares.get(i).getNombre().equalsIgnoreCase(nombreOriginal)) {
+                    instance.lugares.set(i, lugarActualizado); // Reemplazar el lugar antiguo por el actualizado
+                    instance.adapter.notifyDataSetChanged(); // Notificar al adaptador que la lista ha cambiado
+                    return true; // Retorna true si se actualizó correctamente
+                }
+            }
+        }
+        return false; // Retorna false si no se encontró el lugar original
+    }
+
+
 
 }

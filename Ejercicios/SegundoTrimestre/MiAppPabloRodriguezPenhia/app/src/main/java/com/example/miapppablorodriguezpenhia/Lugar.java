@@ -12,7 +12,6 @@ public class Lugar implements Serializable {
     private String tipo;
     private String rutaFoto;
     private float valoracion; // Nuevo atributo para la valoración
-    GeoPunto latitud,longitud;
 
     public Lugar(String nombre, String direccion, String tfno, String url, String fecha, String tipo, String rutaFoto, float valoracion) {
         this.nombre = nombre;
@@ -77,23 +76,6 @@ public class Lugar implements Serializable {
         this.tfno = tfno;
     }
 
-
-
-    public GeoPunto getLongitud() {
-        return longitud;
-    }
-
-    public void setLongitud(GeoPunto longitud) {
-        this.longitud = longitud;
-    }
-
-    public GeoPunto getLatitud() {
-        return latitud;
-    }
-
-    public void setLatitud(GeoPunto latitud) {
-        this.latitud = latitud;
-    }
 
     public String getTipo() {
         return tipo;

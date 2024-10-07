@@ -28,25 +28,33 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="URL" />
-    <!--
-        <EditText
-            android:id="@+id/fechaEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Fecha" />
 
-        <EditText
-            android:id="@+id/tipoEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Tipo" />
+    <EditText
+        android:id="@+id/fechaEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Fecha" />
 
-        <ImageView
-            android:id="@+id/fotoImageView"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:scaleType="centerCrop" />
-    -->
+    <EditText
+        android:id="@+id/tipoEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Tipo" />
+
+    <RatingBar
+        android:id="@+id/valoracionRatingBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:numStars="5"
+        android:stepSize="0.5"
+        android:rating="0" />
+
+    <ImageView
+        android:id="@+id/fotoImageView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop" />
+
     <Button
         android:id="@+id/guardarButton"
         android:layout_width="wrap_content"

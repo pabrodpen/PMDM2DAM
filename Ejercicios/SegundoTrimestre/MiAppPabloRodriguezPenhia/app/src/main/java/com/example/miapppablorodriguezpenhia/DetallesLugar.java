@@ -67,7 +67,7 @@ public class DetallesLugar extends AppCompatActivity {
         tUrl = findViewById(R.id.editTextUrl);
         tTfno = findViewById(R.id.ediTextTfno);
         tUbicacion = findViewById(R.id.editTextUbicacion);
-        //ratingBar = findViewById(R.id.ratingBar2);
+        ratingBar = findViewById(R.id.ratingBar2);
 
         // Configurar la ActionBar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -216,17 +216,17 @@ public class DetallesLugar extends AppCompatActivity {
             seleccionarFotoDeGaleria();
             return true;
         } else if (id == R.id.eliminar) {
-            // Dentro de tu clase donde estás tratando de llamar a eliminarLugarPorNombre
             String nombreLugar = tNombre.getText().toString();
-
-// Asumiendo que instance es una instancia de ListLugares, si no, debes obtener una instancia válida de alguna manera.
-
             ListLugares.eliminarLugarPorNombre(nombreLugar);
             finish();
-
             return true;
-        }else if (id == R.id.editar) {
+        } else if (id == R.id.editar) {
+            // Obtener el nombre del lugar desde el TextView
+            String nombreLugar = String.valueOf(tNombre.getText()); // Obtener el nombre del lugar
+
+            // Aquí está la clave para pasar el nombre del lugar
             Intent intent = new Intent(DetallesLugar.this, EditarLugar.class);
+            intent.putExtra("nombre", nombreLugar);  // Asegúrate de que esta clave sea la misma en EditarLugar
             startActivity(intent);
             return true;
         }
@@ -251,8 +251,7 @@ public class DetallesLugar extends AppCompatActivity {
                 double latitud = address.getLatitude();
                 double longitud = address.getLongitude();
 
-                // Crear un objeto GeoPunto con latitud y longitud
-                GeoPunto geoPunto = new GeoPunto(latitud, longitud);
+
 
                 // Ahora puedes utilizar geoPunto.getLongitud() y geoPunto.getLatitud() como desees
                 // Por ejemplo, puedes abrir un mapa con estas coordenadas
