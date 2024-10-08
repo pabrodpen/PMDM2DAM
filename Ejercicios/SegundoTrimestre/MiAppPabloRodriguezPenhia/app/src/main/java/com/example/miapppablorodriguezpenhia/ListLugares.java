@@ -32,12 +32,7 @@ public class ListLugares extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (esTablet()) {
-            setContentView(R.layout.activity_list_tablet);
-        } else {
-            setContentView(R.layout.fragment_list);
-        }
+        setContentView(R.layout.fragment_list);
 
         // Asignar la instancia actual a la variable estática
         instance = this;

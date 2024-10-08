@@ -7,14 +7,14 @@
     android:layout_height="match_parent"
     tools:layout_editor_absoluteX="3dp"
     tools:layout_editor_absoluteY="-82dp"
-    android:background="@color/white"
+    android:background="@color/fondo"
     >
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
+        android:background="@color/fondo2"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"

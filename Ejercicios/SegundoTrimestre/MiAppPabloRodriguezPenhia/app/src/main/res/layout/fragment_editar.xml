@@ -1,64 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@color/fondo">
 
     <EditText
         android:id="@+id/nombreEditText"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Nombre" />
+        android:hint="Nombre"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/direccionEditText"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Dirección" />
+        android:hint="Dirección"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nombreEditText" />
 
     <EditText
         android:id="@+id/tfnoEditText"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Teléfono" />
+        android:hint="Teléfono"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/direccionEditText"
+        app:layout_constraintVertical_bias="0.1"/>
 
     <EditText
         android:id="@+id/urlEditText"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="URL" />
+        android:hint="URL"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tfnoEditText"
+        app:layout_constraintVertical_bias="0.1"/>
 
     <EditText
         android:id="@+id/fechaEditText"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Fecha" />
+        android:hint="Fecha"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/urlEditText"
+        app:layout_constraintVertical_bias="0.1"/>
 
     <EditText
         android:id="@+id/tipoEditText"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Tipo" />
+        android:hint="Tipo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fechaEditText"
+        app:layout_constraintVertical_bias="0.1"/>
 
     <RatingBar
         android:id="@+id/valoracionRatingBar"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:numStars="5"
+        android:rating="0"
         android:stepSize="0.5"
-        android:rating="0" />
+        app:layout_constraintTop_toBottomOf="@+id/tipoEditText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5" />
 
     <ImageView
         android:id="@+id/fotoImageView"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="200dp"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        app:layout_constraintTop_toBottomOf="@+id/valoracionRatingBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="0.1"/>
 
     <Button
         android:id="@+id/guardarButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Guardar" />
+        android:text="Guardar"
+        app:layout_constraintTop_toBottomOf="@+id/fotoImageView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.1"/>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

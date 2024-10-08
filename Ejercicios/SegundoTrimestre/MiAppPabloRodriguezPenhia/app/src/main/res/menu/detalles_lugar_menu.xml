@@ -2,31 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/volverAList"
-        android:title="VOLVER"
-        android:icon="@drawable/baseline_reply_24"
-        app:showAsAction="always"
-
-        />
-
-    <item
-        android:id="@+id/hacerFoto"
-        android:title="HACER UNA FOTO"
-        android:icon="@drawable/baseline_add_a_photo_24"
-        app:showAsAction="always"
-
-        />
-
-    
-
-    <item
-        android:id="@+id/fotoGaleria"
-        android:title="FOTO DE GALERIA"
-        android:icon="@drawable/baseline_photo_24"
-        app:showAsAction="always"
-
-        />
 
     <item
         android:id="@+id/editar"

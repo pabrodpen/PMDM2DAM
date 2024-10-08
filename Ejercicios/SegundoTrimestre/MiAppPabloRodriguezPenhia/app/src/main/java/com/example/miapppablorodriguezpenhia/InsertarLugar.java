@@ -44,14 +44,8 @@ public class InsertarLugar extends AppCompatActivity implements DialogLista.OnTi
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_insertar);
 
-
-
-        if (esTablet()) {
-            setContentView(R.layout.activity_insertar_tablet);
-        } else {
-            setContentView(R.layout.fragment_insertar);
-        }
 
         editTextNombre = findViewById(R.id.editTextNombre);
         editTextDirecc = findViewById(R.id.editTextTextPostalAddress);

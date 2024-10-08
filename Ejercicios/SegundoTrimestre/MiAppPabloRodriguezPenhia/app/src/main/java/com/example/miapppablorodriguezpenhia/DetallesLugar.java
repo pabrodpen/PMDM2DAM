@@ -45,13 +45,8 @@ public class DetallesLugar extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_detalles_lugar);
 
-
-        if (esTablet()) {
-            setContentView(R.layout.activity_detalles_tablet);
-        } else {
-            setContentView(R.layout.fragment_detalles_lugar);
-        }
 
         // Configurar Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar2);
@@ -205,17 +200,7 @@ public class DetallesLugar extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.volverAList) {
-            Intent intent = new Intent(DetallesLugar.this, ListLugares.class);
-            startActivity(intent);
-            return true;
-        } else if (id == R.id.hacerFoto) {
-            tomarFoto();
-            return true;
-        } else if (id == R.id.fotoGaleria) {
-            seleccionarFotoDeGaleria();
-            return true;
-        } else if (id == R.id.eliminar) {
+       if (id == R.id.eliminar) {
             String nombreLugar = tNombre.getText().toString();
             ListLugares.eliminarLugarPorNombre(nombreLugar);
             finish();
